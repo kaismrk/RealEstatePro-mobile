@@ -1,7 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
+import Toast from 'react-native-toast-message';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { AppErrorBoundary } from '@/components/shared/AppErrorBoundary';
 import '../global.css';
 
 const queryClient = new QueryClient({
@@ -21,8 +23,11 @@ export default function RootLayout() {
   }, [hydrate]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </QueryClientProvider>
+    <AppErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <Stack screenOptions={{ headerShown: false }} />
+        <Toast />
+      </QueryClientProvider>
+    </AppErrorBoundary>
   );
 }

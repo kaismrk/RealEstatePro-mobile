@@ -13,6 +13,7 @@ import {
 import { useSavedSearches } from '@/hooks/useSavedSearches';
 import { useSearchStore } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { haptic } from '@/lib/utils/haptics';
 
 interface SaveSearchSheetProps {
   visible: boolean;
@@ -55,7 +56,11 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
 
     create.mutate(payload, {
       onSuccess: () => {
+        void haptic.success();
         onClose();
+      },
+      onError: () => {
+        void haptic.error();
       },
     });
   }

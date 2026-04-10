@@ -7,8 +7,12 @@ import { AuthGate } from '@/components/auth/AuthGate';
 jest.mock('expo-router', () => ({
   router: {
     replace: jest.fn(),
+    push: jest.fn(),
+    back: jest.fn(),
   },
 }));
+
+// BottomSheet is now mocked globally via jest.config.js moduleNameMapper
 
 // Mock useAuthStore
 const mockAccessToken: { value: string | null } = { value: null };

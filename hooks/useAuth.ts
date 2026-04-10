@@ -73,7 +73,8 @@ export function useRegister() {
       await performLogin(email, password);
     },
     onSuccess: () => {
-      router.replace('/(tabs)/search');
+      // New users go through the onboarding wizard
+      router.replace('/onboarding/step-1');
     },
   });
 }

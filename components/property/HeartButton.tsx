@@ -2,6 +2,7 @@ import { TouchableOpacity, Text } from 'react-native';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useFavorites } from '@/hooks/useFavorites';
+import { haptic } from '@/lib/utils/haptics';
 
 interface HeartButtonProps {
   propertyId: number;
@@ -18,6 +19,7 @@ export function HeartButton({ propertyId }: HeartButtonProps) {
       router.push('/(auth)/welcome');
       return;
     }
+    void haptic.light();
     toggle(propertyId);
   }
 

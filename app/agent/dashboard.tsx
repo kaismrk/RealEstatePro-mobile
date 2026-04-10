@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  RefreshControl,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -83,8 +84,8 @@ function LeadRow({ item }: { item: MessageResponse }) {
 }
 
 export default function AgentDashboardScreen() {
-  const { data: dashboard, isLoading: dashLoading, isError: dashError } = useAgentDashboard();
-  const { data: leads, isLoading: leadsLoading } = useAgentLeads();
+  const { data: dashboard, isLoading: dashLoading, isRefetching: dashRefetching, isError: dashError, refetch: refetchDashboard } = useAgentDashboard();
+  const { data: leads, isLoading: leadsLoading, isRefetching: leadsRefetching, refetch: refetchLeads } = useAgentLeads();
 
   if (dashLoading) {
     return (
@@ -113,8 +114,21 @@ export default function AgentDashboardScreen() {
   const totalViews = dashboard?.items.reduce((sum, p) => sum + (p.view_count ?? 0), 0) ?? 0;
   const recentLeads = leads?.items.slice(0, 5) ?? [];
 
+  const isRefreshing = (dashRefetching || leadsRefetching) && !dashLoading && !leadsLoading;
+
+  function handleRefresh() {
+    void refetchDashboard();
+    void refetchLeads();
+  }
+
   return (
-    <ScrollView className="flex-1 bg-gray-50" showsVerticalScrollIndicator={false}>
+    <ScrollView
+      className="flex-1 bg-gray-50"
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+      }
+    >
       {/* Header */}
       <View className="px-4 pt-14 pb-4 bg-white border-b border-gray-100 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">

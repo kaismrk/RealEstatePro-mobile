@@ -8,6 +8,7 @@ import {
   Alert,
   Modal,
   ActivityIndicator,
+  RefreshControl,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -15,6 +16,7 @@ import { useMyListings } from '@/hooks/useMyListings';
 import { useDeleteProperty } from '@/hooks/useDeleteProperty';
 import { useListingQuota } from '@/hooks/useUser';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { haptic } from '@/lib/utils/haptics';
 import { PublishStatusBadge } from '@/components/property/PublishStatusBadge';
 import { CurrencyText } from '@/components/ui/CurrencyText';
 import { Button } from '@/components/ui/Button';
@@ -185,7 +187,7 @@ function ListingCard({
 export default function MyListingsScreen() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const countryCode = useAuthStore((s) => s.countryCode);
-  const { data, isLoading, isError, refetch } = useMyListings();
+  const { data, isLoading, isRefetching, isError, refetch } = useMyListings();
   const { data: quota } = useListingQuota();
   const deleteProperty = useDeleteProperty();
 
@@ -219,6 +221,7 @@ export default function MyListingsScreen() {
   }
 
   function handleDelete(id: number, title: string) {
+    void haptic.warning();
     Alert.alert(
       'Delete Listing',
       `Are you sure you want to delete "${title}"? This cannot be undone.`,
@@ -291,6 +294,12 @@ export default function MyListingsScreen() {
           renderItem={renderItem}
           keyExtractor={(item) => String(item.id)}
           contentContainerStyle={{ padding: 16 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching && !isLoading}
+              onRefresh={() => void refetch()}
+            />
+          }
           ListEmptyComponent={
             <View className="items-center justify-center pt-16">
               <Text className="text-5xl mb-4">🏠</Text>

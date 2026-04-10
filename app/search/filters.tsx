@@ -11,6 +11,7 @@ import {
 import { router } from 'expo-router';
 import { useSearchStore, type PropertyFilters } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { haptic } from '@/lib/utils/haptics';
 import { colors } from '@/constants/theme';
 import { RegionPicker } from '@/components/geo/RegionPicker';
 import { RegionBreadcrumb } from '@/components/geo/RegionBreadcrumb';
@@ -60,6 +61,7 @@ export default function FiltersScreen() {
   }
 
   function handleApply() {
+    void haptic.light();
     setStoreFilters(local);
     router.back();
   }

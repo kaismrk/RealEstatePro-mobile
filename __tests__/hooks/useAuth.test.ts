@@ -184,7 +184,8 @@ describe('useRegister', () => {
     expect(mockApi.post.mock.calls[0][0]).toBe('/users/');
     // Second call is login
     expect(mockApi.post.mock.calls[1][0]).toBe('/auth/login/access-token');
-    expect(mockRouter.replace).toHaveBeenCalledWith('/(tabs)/search');
+    // After registration, new users are sent to the onboarding wizard
+    expect(mockRouter.replace).toHaveBeenCalledWith('/onboarding/step-1');
   });
 });
 

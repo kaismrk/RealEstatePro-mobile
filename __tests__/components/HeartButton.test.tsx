@@ -13,6 +13,18 @@ jest.mock('expo-router', () => ({
   },
 }));
 
+// Mock haptics
+jest.mock('@/lib/utils/haptics', () => ({
+  haptic: {
+    light: jest.fn(),
+    medium: jest.fn(),
+    heavy: jest.fn(),
+    success: jest.fn(),
+    warning: jest.fn(),
+    error: jest.fn(),
+  },
+}));
+
 // Mock API client
 const mockApiGet = jest.fn();
 const mockApiPost = jest.fn();
