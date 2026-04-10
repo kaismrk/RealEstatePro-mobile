@@ -50,6 +50,8 @@ function setupApiGetMock() {
   mockApiGet.mockImplementation((url: string) => {
     if (url === '/users/me') return Promise.resolve({ data: MOCK_USER });
     if (url === '/messages/inbox') return Promise.resolve({ data: MOCK_INBOX });
+    if (url === '/agents/me') return Promise.reject(Object.assign(new Error('Not an agent'), { response: { status: 404 } }));
+    if (url.startsWith('/agencies/')) return Promise.resolve({ data: { total: 0, items: [] } });
     return Promise.resolve({ data: {} });
   });
 }

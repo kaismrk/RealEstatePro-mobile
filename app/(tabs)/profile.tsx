@@ -5,6 +5,7 @@ import { useLogout } from '@/hooks/useAuth';
 import { useCurrentUser } from '@/hooks/useUser';
 import { useInbox } from '@/hooks/useMessages';
 import { useAgentProfile } from '@/hooks/useAgentProfile';
+import { useAgencies } from '@/hooks/useAgencies';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { MenuRow } from '@/components/profile/MenuRow';
 import { MenuSection } from '@/components/profile/MenuSection';
@@ -33,8 +34,12 @@ function AuthenticatedProfile() {
   const { data: user } = useCurrentUser();
   const { data: inboxData } = useInbox();
   const { data: agentProfile } = useAgentProfile();
+  const { data: agencyList } = useAgencies();
   const logout = useLogout();
   const isAgent = !!agentProfile;
+
+  // Determine if the current user owns an agency
+  const ownedAgency = agencyList?.items.find((a) => user && a.owner_id === user.id) ?? null;
 
   const unreadCount = inboxData?.items.filter((m) => !m.is_read).length ?? 0;
 
@@ -101,6 +106,26 @@ function AuthenticatedProfile() {
             icon="🏢"
             label="Become an Agent"
             onPress={() => router.push('/agent/register')}
+          />
+        )}
+        {ownedAgency ? (
+          <>
+            <MenuRow
+              icon="🏛"
+              label="My Agency"
+              onPress={() => router.push('/agency/manage')}
+            />
+            <MenuRow
+              icon="💳"
+              label="Agency Subscription"
+              onPress={() => router.push('/agency/subscription')}
+            />
+          </>
+        ) : (
+          <MenuRow
+            icon="🏛"
+            label="Create Agency"
+            onPress={() => router.push('/agency/create')}
           />
         )}
       </MenuSection>
