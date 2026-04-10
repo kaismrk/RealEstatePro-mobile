@@ -5,6 +5,8 @@ function TabIcon({ icon }: { icon: string }) {
   return <Text style={{ fontSize: 20 }}>{icon}</Text>;
 }
 
+// Guests may browse search. Auth is enforced at the action level (favorites,
+// contact, profile) via AuthGate components, not at the tab layout level.
 export default function TabLayout() {
   return (
     <Tabs
