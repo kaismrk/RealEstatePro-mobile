@@ -15,10 +15,30 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.realestatepro.app"
+      "bundleIdentifier": "com.realestatepro.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Show properties near you",
+        "NSCameraUsageDescription": "Take photos of your property",
+        "NSPhotoLibraryUsageDescription": "Select photos for your listing"
+      }
     },
     "android": {
       "package": "com.realestatepro.app",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "INTERNET",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "PLACEHOLDER_KEY_SET_IN_EAS"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#006AFF"
@@ -27,7 +47,9 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png",
+      "output": "static"
     },
     "plugins": [
       "expo-router"
