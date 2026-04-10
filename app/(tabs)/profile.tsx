@@ -4,6 +4,7 @@ import { useAuthStore } from '@/lib/stores/auth.store';
 import { useLogout } from '@/hooks/useAuth';
 import { useCurrentUser } from '@/hooks/useUser';
 import { useInbox } from '@/hooks/useMessages';
+import { useAgentProfile } from '@/hooks/useAgentProfile';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { MenuRow } from '@/components/profile/MenuRow';
 import { MenuSection } from '@/components/profile/MenuSection';
@@ -31,7 +32,9 @@ function GuestView() {
 function AuthenticatedProfile() {
   const { data: user } = useCurrentUser();
   const { data: inboxData } = useInbox();
+  const { data: agentProfile } = useAgentProfile();
   const logout = useLogout();
+  const isAgent = !!agentProfile;
 
   const unreadCount = inboxData?.items.filter((m) => !m.is_read).length ?? 0;
 
@@ -82,6 +85,24 @@ function AuthenticatedProfile() {
           label="Listing Quota"
           onPress={() => router.push('/profile/quota')}
         />
+        <MenuRow
+          icon="🎁"
+          label="Listing Packs"
+          onPress={() => router.push('/listings/packs')}
+        />
+        {isAgent ? (
+          <MenuRow
+            icon="📈"
+            label="Agent Dashboard"
+            onPress={() => router.push('/agent/dashboard')}
+          />
+        ) : (
+          <MenuRow
+            icon="🏢"
+            label="Become an Agent"
+            onPress={() => router.push('/agent/register')}
+          />
+        )}
       </MenuSection>
 
       {/* Activity section */}
