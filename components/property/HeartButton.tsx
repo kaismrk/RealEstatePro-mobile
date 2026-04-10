@@ -1,25 +1,24 @@
-import { useState } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { useFavorites } from '@/hooks/useFavorites';
 
 interface HeartButtonProps {
   propertyId: number;
-  initialSaved?: boolean;
 }
 
-export function HeartButton({ propertyId: _propertyId, initialSaved = false }: HeartButtonProps) {
-  const [saved, setSaved] = useState(initialSaved);
+export function HeartButton({ propertyId }: HeartButtonProps) {
   const accessToken = useAuthStore((s) => s.accessToken);
+  const { isFavorited, toggle } = useFavorites();
+
+  const saved = isFavorited(propertyId);
 
   function handlePress() {
     if (!accessToken) {
-      // Not authenticated — redirect to auth flow (full AuthGate modal in F5)
       router.push('/(auth)/welcome');
       return;
     }
-    // Toggle local state — full mutation wired in F5
-    setSaved((prev) => !prev);
+    toggle(propertyId);
   }
 
   return (
@@ -29,7 +28,7 @@ export function HeartButton({ propertyId: _propertyId, initialSaved = false }: H
       accessibilityLabel={saved ? 'Remove from saved' : 'Save property'}
       accessibilityRole="button"
     >
-      <Text className="text-xl">{saved ? '❤️' : '🤍'}</Text>
+      <Text className="text-xl">{saved ? '\u2764\uFE0F' : '\uD83E\uDD0D'}</Text>
     </TouchableOpacity>
   );
 }

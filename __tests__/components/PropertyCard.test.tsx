@@ -9,6 +9,26 @@ jest.mock('expo-router', () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
 
+// Mock API client (required transitively by HeartButton -> useFavorites)
+jest.mock('@/lib/api/client', () => ({
+  api: {
+    get: jest.fn(),
+    post: jest.fn(),
+    delete: jest.fn(),
+  },
+}));
+
+// Mock useFavorites (HeartButton depends on it)
+jest.mock('@/hooks/useFavorites', () => ({
+  useFavorites: () => ({
+    list: { data: { total: 0, items: [] }, isLoading: false },
+    isFavorited: () => false,
+    toggle: jest.fn(),
+    add: { mutate: jest.fn() },
+    remove: { mutate: jest.fn() },
+  }),
+}));
+
 // Mock auth store
 const mockAccessToken: { value: string | null } = { value: null };
 jest.mock('@/lib/stores/auth.store', () => ({

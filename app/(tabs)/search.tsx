@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -16,6 +17,7 @@ import { PropertyCardSkeleton } from '@/components/property/PropertyCardSkeleton
 import { SearchBar } from '@/components/search/SearchBar';
 import { SortPicker } from '@/components/search/SortPicker';
 import { FilterChip } from '@/components/search/FilterChip';
+import { SaveSearchSheet } from '@/components/search/SaveSearchSheet';
 import { CountrySelector } from '@/components/shared/CountrySelector';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -45,6 +47,7 @@ export default function SearchScreen() {
   const setFilters = useSearchStore((s) => s.setFilters);
   const setCountry = useAuthStore((s) => s.setCountry);
   const countryCode = useAuthStore((s) => s.countryCode);
+  const [saveSheetVisible, setSaveSheetVisible] = useState(false);
 
   const {
     data,
@@ -142,6 +145,15 @@ export default function SearchScreen() {
         />
         <View className="flex-1" />
         <TouchableOpacity
+          onPress={() => setSaveSheetVisible(true)}
+          className="flex-row items-center gap-1 px-3 py-2 bg-gray-100 rounded-lg mr-2"
+          accessibilityLabel="Save search"
+          accessibilityRole="button"
+        >
+          <Text className="text-base">{'\uD83D\uDD14'}</Text>
+          <Text className="text-sm font-medium text-gray-700">Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => router.push('/search/map')}
           className="flex-row items-center gap-1 px-3 py-2 bg-gray-100 rounded-lg"
           accessibilityLabel="Map view"
@@ -186,6 +198,11 @@ export default function SearchScreen() {
           showsVerticalScrollIndicator={false}
         />
       )}
+
+      <SaveSearchSheet
+        visible={saveSheetVisible}
+        onClose={() => setSaveSheetVisible(false)}
+      />
     </SafeAreaView>
   );
 }
