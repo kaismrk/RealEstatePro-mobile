@@ -11,7 +11,11 @@ import {
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
 import { useUIStore } from '@/lib/stores/ui.store';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { Button } from '@/components/ui/Button';
+import { RegionPicker } from '@/components/geo/RegionPicker';
+import { RegionBreadcrumb } from '@/components/geo/RegionBreadcrumb';
+import type { Region } from '@/hooks/useRegions';
 
 const DISCLOSURE_LEVELS = [
   { value: 'exact', label: 'Exact address (shown on map)' },
@@ -22,7 +26,12 @@ const DISCLOSURE_LEVELS = [
 export default function CreateStep2() {
   const draft = useUIStore((s) => s.createListingDraft);
   const setDraft = useUIStore((s) => s.setDraft);
+  const countryCode = useAuthStore((s) => s.countryCode);
 
+  const [regionId, setRegionId] = useState<number | null>(
+    (draft?.region_id as number | null) ?? null
+  );
+  const [locationPath, setLocationPath] = useState<Region[]>([]);
   const [city, setCity] = useState<string>((draft?.city as string) ?? '');
   const [address, setAddress] = useState<string>((draft?.address as string) ?? '');
   const [zipCode, setZipCode] = useState<string>((draft?.zip_code as string) ?? '');
@@ -69,6 +78,7 @@ export default function CreateStep2() {
   function handleNext() {
     if (!validate()) return;
     setDraft({
+      region_id: regionId ?? null,
       city: city.trim(),
       address: address.trim() || null,
       zip_code: zipCode.trim() || null,
@@ -89,6 +99,28 @@ export default function CreateStep2() {
       </View>
 
       <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+        {/* Region picker — cascading geo hierarchy */}
+        <View className="mb-5">
+          <RegionPicker
+            countryCode={countryCode}
+            value={regionId}
+            onChange={(id, path) => {
+              setRegionId(id);
+              setLocationPath(path);
+              // Auto-fill city from selected city name
+              if (path.length > 0) {
+                const cityNode = path[path.length - 1];
+                if (cityNode.level === 'city') {
+                  setCity(cityNode.name);
+                }
+              }
+            }}
+          />
+          {locationPath.length > 0 && (
+            <RegionBreadcrumb path={locationPath} className="mt-2" />
+          )}
+        </View>
+
         {/* Use current location */}
         <TouchableOpacity
           onPress={handleUseLocation}
@@ -106,7 +138,7 @@ export default function CreateStep2() {
           )}
         </TouchableOpacity>
 
-        {/* City */}
+        {/* City — auto-filled from RegionPicker but editable for street-level precision */}
         <Text className="text-base font-semibold text-gray-800 mb-1">
           City <Text className="text-red-500">*</Text>
         </Text>

@@ -10,7 +10,11 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSearchStore, type PropertyFilters } from '@/lib/stores/search.store';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { colors } from '@/constants/theme';
+import { RegionPicker } from '@/components/geo/RegionPicker';
+import { RegionBreadcrumb } from '@/components/geo/RegionBreadcrumb';
+import type { Region } from '@/hooks/useRegions';
 
 const LISTING_TYPES = [
   { label: 'For Sale', value: 'sale' },
@@ -46,8 +50,10 @@ export default function FiltersScreen() {
   const storeFilters = useSearchStore((s) => s.filters);
   const setStoreFilters = useSearchStore((s) => s.setFilters);
   const resetStoreFilters = useSearchStore((s) => s.resetFilters);
+  const countryCode = useAuthStore((s) => s.countryCode);
 
   const [local, setLocal] = useState<PropertyFilters>({ ...storeFilters });
+  const [locationPath, setLocationPath] = useState<Region[]>([]);
 
   function setField<K extends keyof PropertyFilters>(key: K, value: PropertyFilters[K]) {
     setLocal((prev) => ({ ...prev, [key]: value }));
@@ -60,6 +66,7 @@ export default function FiltersScreen() {
 
   function handleReset() {
     resetStoreFilters();
+    setLocationPath([]);
     router.back();
   }
 
@@ -288,14 +295,19 @@ export default function FiltersScreen() {
           </View>
         </View>
 
-        {/* Location — placeholder */}
+        {/* Location */}
         <View className="mb-6">
-          <SectionTitle>Location</SectionTitle>
-          <View className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-            <Text className="text-sm text-gray-500 text-center">
-              Region / City filters coming in Phase F10
-            </Text>
-          </View>
+          <RegionPicker
+            countryCode={countryCode}
+            value={local.region_id ?? null}
+            onChange={(regionId, path) => {
+              setField('region_id', regionId ?? undefined);
+              setLocationPath(path);
+            }}
+          />
+          {locationPath.length > 0 && (
+            <RegionBreadcrumb path={locationPath} className="mt-2" />
+          )}
         </View>
       </ScrollView>
 
