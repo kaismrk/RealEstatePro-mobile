@@ -49,17 +49,17 @@ export default function AgentRegisterScreen() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">Cancel</Text>
+          <Text className="text-primary-500 text-base">Cancel</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900">Become an Agent</Text>
       </View>
 
       <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
-        <View className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-5">
-          <Text className="text-sm font-semibold text-blue-900 mb-1">
+        <View className="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-5">
+          <Text className="text-sm font-semibold text-primary-900 mb-1">
             Agent Benefits
           </Text>
-          <Text className="text-sm text-blue-700">
+          <Text className="text-sm text-primary-700">
             As an agent, you get access to a full dashboard, lead tracking, per-listing
             statistics, and the ability to link your profile to an agency.
           </Text>

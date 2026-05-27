@@ -25,7 +25,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
   return (
     <View className="flex-row items-center px-4 py-6 border-b border-gray-100">
       {/* Avatar */}
-      <View className="w-16 h-16 rounded-full bg-blue-600 items-center justify-center mr-4">
+      <View className="w-16 h-16 rounded-full bg-primary-500 items-center justify-center mr-4">
         <Text className="text-white text-2xl font-bold">{initials}</Text>
       </View>
 

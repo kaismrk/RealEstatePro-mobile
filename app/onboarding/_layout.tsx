@@ -35,7 +35,7 @@ function OnboardingHeader() {
           </View>
           <View className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
             <View
-              className="h-full bg-blue-600 rounded-full"
+              className="h-full bg-primary-500 rounded-full"
               style={{ width: `${(stepNumber / totalSteps) * 100}%` }}
             />
           </View>

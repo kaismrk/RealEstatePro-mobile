@@ -83,7 +83,7 @@ function ToggleRow({
     >
       <Text className="text-base text-gray-800">{label}</Text>
       <View
-        className={`w-12 h-6 rounded-full ${value ? 'bg-blue-600' : 'bg-gray-300'} items-center justify-center`}
+        className={`w-12 h-6 rounded-full ${value ? 'bg-primary-500' : 'bg-gray-300'} items-center justify-center`}
       >
         <View
           className={`w-5 h-5 rounded-full bg-white shadow ${
@@ -117,7 +117,7 @@ function SelectRow({
               onPress={() => onChange(opt.value)}
               className={`px-3 py-1.5 rounded-full border ${
                 value === opt.value
-                  ? 'bg-blue-600 border-blue-600'
+                  ? 'bg-primary-500 border-primary-500'
                   : 'bg-white border-gray-300'
               }`}
               accessibilityRole="radio"
@@ -232,7 +232,7 @@ export default function CreateStep3() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-blue-600 text-sm">Back</Text>
+          <Text className="text-primary-500 text-sm">Back</Text>
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-gray-900">Property Details</Text>
         <Text className="text-sm text-gray-500 mt-1">Step 3 of 5 — Specs &amp; Amenities</Text>
@@ -245,12 +245,12 @@ export default function CreateStep3() {
             key={tab}
             onPress={() => setActiveTab(tab)}
             className={`mr-5 pb-2 ${
-              activeTab === tab ? 'border-b-2 border-blue-600' : ''
+              activeTab === tab ? 'border-b-2 border-primary-500' : ''
             }`}
           >
             <Text
               className={`text-sm font-medium capitalize ${
-                activeTab === tab ? 'text-blue-600' : 'text-gray-500'
+                activeTab === tab ? 'text-primary-500' : 'text-gray-500'
               }`}
             >
               {tab === 'specs' ? 'Specs' : tab === 'amenities' ? 'Amenities' : 'Description'}
@@ -297,7 +297,7 @@ export default function CreateStep3() {
                   onPress={() => setEnergyRating(energyRating === r ? '' : r)}
                   className={`w-10 h-10 rounded-full border items-center justify-center ${
                     energyRating === r
-                      ? 'bg-blue-600 border-blue-600'
+                      ? 'bg-primary-500 border-primary-500'
                       : 'bg-white border-gray-300'
                   }`}
                   accessibilityRole="radio"

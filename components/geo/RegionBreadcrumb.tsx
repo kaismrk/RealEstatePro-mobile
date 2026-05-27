@@ -26,7 +26,7 @@ export function RegionBreadcrumb({ path, className }: RegionBreadcrumbProps) {
           <Text
             className={`text-sm ${
               index === path.length - 1
-                ? 'text-blue-600 font-semibold'
+                ? 'text-primary-500 font-semibold'
                 : 'text-gray-500'
             }`}
           >

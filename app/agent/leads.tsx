@@ -44,7 +44,7 @@ function LeadItem({ item }: { item: MessageResponse }) {
         <View className="ml-3 items-end">
           <Text className="text-xs text-gray-400">{date}</Text>
           {!item.is_read && (
-            <View className="w-2.5 h-2.5 rounded-full bg-blue-600 mt-1" />
+            <View className="w-2.5 h-2.5 rounded-full bg-primary-500 mt-1" />
           )}
         </View>
       </View>
@@ -60,7 +60,7 @@ export default function AgentLeadsScreen() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 bg-white border-b border-gray-100 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">Back</Text>
+          <Text className="text-primary-500 text-base">Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900">All Leads</Text>
         {data && (

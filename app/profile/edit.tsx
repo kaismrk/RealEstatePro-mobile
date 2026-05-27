@@ -83,7 +83,7 @@ function EditProfileContent() {
         {/* Header */}
         <View className="flex-row items-center px-4 pt-14 pb-4 border-b border-gray-100">
           <TouchableOpacity onPress={() => router.back()} className="mr-3">
-            <Text className="text-blue-600 text-base">‹ Back</Text>
+            <Text className="text-primary-500 text-base">‹ Back</Text>
           </TouchableOpacity>
           <Text className="text-xl font-bold text-gray-900 flex-1">Edit Profile</Text>
         </View>

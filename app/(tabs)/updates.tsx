@@ -51,7 +51,7 @@ export default function UpdatesScreen() {
           Save your searches and get notified when new homes match.
         </Text>
         <TouchableOpacity
-          className="bg-blue-600 px-6 py-3 rounded-xl"
+          className="bg-primary-500 px-6 py-3 rounded-xl"
           onPress={() => router.push('/(auth)/welcome')}
           accessibilityRole="button"
           accessibilityLabel="Sign in"
@@ -129,7 +129,7 @@ export default function UpdatesScreen() {
         </Text>
         <TouchableOpacity
           onPress={() => setSheetVisible(true)}
-          className="bg-blue-600 px-3 py-2 rounded-lg flex-row items-center gap-1"
+          className="bg-primary-500 px-3 py-2 rounded-lg flex-row items-center gap-1"
           accessibilityRole="button"
           accessibilityLabel="Save new search"
         >

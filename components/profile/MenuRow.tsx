@@ -32,7 +32,7 @@ export function MenuRow({
       </Text>
       <View className="flex-row items-center">
         {badge !== undefined && badge > 0 ? (
-          <View className="bg-blue-600 rounded-full px-2 py-0.5 min-w-5 items-center mr-2">
+          <View className="bg-primary-500 rounded-full px-2 py-0.5 min-w-5 items-center mr-2">
             <Text className="text-white text-xs font-semibold">{badge}</Text>
           </View>
         ) : null}

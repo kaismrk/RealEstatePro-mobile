@@ -94,7 +94,7 @@ export default function PropertyDetailScreen() {
           This listing may no longer be available.
         </Text>
         <TouchableOpacity
-          className="bg-blue-600 rounded-xl px-6 py-3"
+          className="bg-primary-500 rounded-xl px-6 py-3"
           onPress={() => router.back()}
         >
           <Text className="text-white font-semibold">Go Back</Text>
@@ -256,7 +256,7 @@ export default function PropertyDetailScreen() {
                   onPress={() => setDescriptionExpanded((v) => !v)}
                   accessibilityRole="button"
                 >
-                  <Text className="text-blue-600 text-sm mt-1 font-medium">
+                  <Text className="text-primary-500 text-sm mt-1 font-medium">
                     {descriptionExpanded ? 'Show less' : 'Read more'}
                   </Text>
                 </TouchableOpacity>
@@ -299,15 +299,15 @@ export default function PropertyDetailScreen() {
       {/* 14. Sticky Bottom Bar */}
       <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex-row gap-3">
         <TouchableOpacity
-          className="flex-1 border border-blue-600 rounded-xl py-3.5 items-center"
+          className="flex-1 border border-primary-500 rounded-xl py-3.5 items-center"
           onPress={handleContact}
           accessibilityRole="button"
           accessibilityLabel="Contact agent"
         >
-          <Text className="text-blue-600 font-semibold">Contact</Text>
+          <Text className="text-primary-500 font-semibold">Contact</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="flex-1 bg-blue-600 rounded-xl py-3.5 items-center"
+          className="flex-1 bg-primary-500 rounded-xl py-3.5 items-center"
           onPress={handleRequestTour}
           accessibilityRole="button"
           accessibilityLabel="Request a tour"

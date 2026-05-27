@@ -63,7 +63,7 @@ export default function RegisterScreen() {
             <View className="flex-row items-center mb-6">
               <Text className="text-base text-gray-600 mr-2">{email}</Text>
               <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Change email">
-                <Text className="text-base text-blue-600 font-semibold">Change</Text>
+                <Text className="text-base text-primary-500 font-semibold">Change</Text>
               </TouchableOpacity>
             </View>
 
@@ -107,7 +107,7 @@ export default function RegisterScreen() {
                 }
                 accessibilityLabel="Sign in"
               >
-                <Text className="text-base text-blue-600 font-semibold">Sign In</Text>
+                <Text className="text-base text-primary-500 font-semibold">Sign In</Text>
               </TouchableOpacity>
             </View>
           </View>

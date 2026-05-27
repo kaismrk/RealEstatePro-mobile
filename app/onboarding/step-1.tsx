@@ -43,7 +43,7 @@ export default function OnboardingStep1() {
             <TouchableOpacity
               key={option.id}
               onPress={() => handleSelect(option.id)}
-              className="flex-row items-center p-5 bg-gray-50 border border-gray-200 rounded-2xl active:bg-blue-50 active:border-blue-300"
+              className="flex-row items-center p-5 bg-gray-50 border border-gray-200 rounded-2xl active:bg-primary-50 active:border-blue-300"
               accessibilityRole="button"
               accessibilityLabel={option.label}
             >

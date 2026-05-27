@@ -82,7 +82,7 @@ export default function CountrySelectScreen() {
   if (isLoading || detecting) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#006AFF" />
+        <ActivityIndicator size="large" color="#5f09fe" />
         <Text className="text-base text-gray-500 mt-4">Detecting your country...</Text>
       </View>
     );

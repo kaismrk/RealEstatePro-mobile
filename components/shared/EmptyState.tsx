@@ -29,7 +29,7 @@ export function EmptyState({ title, subtitle, icon, action }: EmptyStateProps) {
       {action ? (
         <TouchableOpacity
           onPress={action.onPress}
-          className="bg-blue-600 px-6 py-3 rounded-xl"
+          className="bg-primary-500 px-6 py-3 rounded-xl"
         >
           <Text className="text-white font-semibold text-base">
             {action.label}

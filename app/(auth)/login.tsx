@@ -122,7 +122,7 @@ export default function LoginScreen() {
                 onPress={() => setShowPassword((v) => !v)}
                 accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
               >
-                <Text className="text-sm text-blue-600 font-semibold">
+                <Text className="text-sm text-primary-500 font-semibold">
                   {showPassword ? 'Hide' : 'Show'}
                 </Text>
               </TouchableOpacity>
@@ -134,7 +134,7 @@ export default function LoginScreen() {
               onPress={handleForgotPassword}
               accessibilityLabel="Forgot password"
             >
-              <Text className="text-sm text-blue-600">Forgot password?</Text>
+              <Text className="text-sm text-primary-500">Forgot password?</Text>
             </TouchableOpacity>
 
             {/* Rate limit banner */}
@@ -172,7 +172,7 @@ export default function LoginScreen() {
                 onPress={() => router.replace('/(auth)/welcome')}
                 accessibilityLabel="Register"
               >
-                <Text className="text-base text-blue-600 font-semibold">Register</Text>
+                <Text className="text-base text-primary-500 font-semibold">Register</Text>
               </TouchableOpacity>
             </View>
           </View>

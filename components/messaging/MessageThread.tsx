@@ -30,7 +30,7 @@ export function MessageThread({ message }: MessageThreadProps) {
     <ScrollView className="flex-1 bg-white">
       {/* Sender info */}
       <View className="flex-row items-center px-4 py-4 border-b border-gray-100">
-        <View className="w-12 h-12 rounded-full bg-blue-600 items-center justify-center mr-3">
+        <View className="w-12 h-12 rounded-full bg-primary-500 items-center justify-center mr-3">
           <Text className="text-white text-base font-semibold">{initials}</Text>
         </View>
         <View className="flex-1">
@@ -54,7 +54,7 @@ export function MessageThread({ message }: MessageThreadProps) {
             {message.property.title}
           </Text>
           {message.property.price > 0 && (
-            <Text className="text-sm text-blue-600 mt-0.5">
+            <Text className="text-sm text-primary-500 mt-0.5">
               {message.property.price.toLocaleString()}
             </Text>
           )}

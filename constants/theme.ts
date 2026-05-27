@@ -1,17 +1,30 @@
 export const colors = {
-  primary: '#006AFF',
-  primaryDark: '#0050CC',
-  accent: '#E8F0FE',
-  surface: '#FFFFFF',
-  background: '#F5F5F5',
-  error: '#DC2626',
-  success: '#16A34A',
-  warning: '#F59E0B',
-  textPrimary: '#1A1A1A',
-  textSecondary: '#6B7280',
-  textTertiary: '#9CA3AF',
-  border: '#E5E7EB',
-  heartRed: '#E53E3E',
+  // Brand
+  primary:      '#5f09fe',   // electric violet
+  primaryDark:  '#3a0699',   // deep violet
+  primaryLight: '#f3edff',   // tinted backgrounds, selected states
+  accent:       '#ee8b60',   // coral — Featured badges, gradient end
+
+  // Surfaces
+  surface:      '#ffffff',
+  surfaceMuted: '#fafafb',   // scroll backgrounds
+  surfaceSunken:'#f5f5f7',  // inputs, quiet chips
+  background:   '#fafafb',
+
+  // Foreground (warm neutrals)
+  textPrimary:   '#0f0f14',
+  textSecondary: '#4a4a55',
+  textTertiary:  '#a1a1ac',
+
+  // Border
+  border:       '#e7e7ec',
+  borderStrong: '#d3d3db',
+
+  // Semantic
+  error:   '#dc2626',
+  success: '#16a34a',
+  warning: '#f59e0b',
+  heartRed:'#e53e3e',
 } as const;
 
 export const spacing = {

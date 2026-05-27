@@ -40,7 +40,7 @@ function ReviewSection({
           onPress={() => router.push(`/listings/create/step-${stepIndex}` as never)}
           accessibilityRole="button"
         >
-          <Text className="text-blue-600 text-sm">Edit</Text>
+          <Text className="text-primary-500 text-sm">Edit</Text>
         </TouchableOpacity>
       </View>
       <View className="bg-gray-50 rounded-xl px-4 py-1">{children}</View>
@@ -135,7 +135,7 @@ export default function CreateStep5() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-blue-600 text-sm">Back</Text>
+          <Text className="text-primary-500 text-sm">Back</Text>
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-gray-900">Review</Text>
         <Text className="text-sm text-gray-500 mt-1">Step 5 of 5 — Review &amp; Submit</Text>

@@ -1,64 +1,49 @@
 import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { Icon } from '@/components/ui/Icon';
+import { colors } from '@/constants/theme';
 
-function TabIcon({ icon }: { icon: string }) {
-  return <Text style={{ fontSize: 20 }}>{icon}</Text>;
-}
-
-// Guests may browse search. Auth is enforced at the action level (favorites,
-// contact, profile) via AuthGate components, not at the tab layout level.
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#006AFF',
-        tabBarInactiveTintColor: '#9CA3AF',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textTertiary,
       }}
     >
       <Tabs.Screen
         name="search"
         options={{
           title: 'Search',
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={focused ? '🔍' : '🔍'} />
-          ),
+          tabBarIcon: ({ color }) => <Icon name="search" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="updates"
         options={{
           title: 'Updates',
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={focused ? '🔔' : '🔔'} />
-          ),
+          tabBarIcon: ({ color }) => <Icon name="bell" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="saved"
         options={{
           title: 'Saved',
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={focused ? '❤️' : '❤️'} />
-          ),
+          tabBarIcon: ({ color }) => <Icon name="heart" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="loans"
         options={{
           title: 'Loans',
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={focused ? '💰' : '💰'} />
-          ),
+          tabBarIcon: ({ color }) => <Icon name="coins" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={focused ? '👤' : '👤'} />
-          ),
+          tabBarIcon: ({ color }) => <Icon name="user" size={22} color={color} />,
         }}
       />
     </Tabs>

@@ -69,7 +69,7 @@ export default function AgentProfileScreen() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">Back</Text>
+          <Text className="text-primary-500 text-base">Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900">Agent Profile</Text>
       </View>

@@ -119,7 +119,7 @@ export default function PasswordCreateScreen() {
                 onPress={() => setShowPassword((v) => !v)}
                 accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
               >
-                <Text className="text-sm text-blue-600 font-semibold">
+                <Text className="text-sm text-primary-500 font-semibold">
                   {showPassword ? 'Hide' : 'Show'}
                 </Text>
               </TouchableOpacity>

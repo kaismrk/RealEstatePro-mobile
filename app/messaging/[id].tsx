@@ -34,7 +34,7 @@ function MessageDetailContent() {
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
-            <Text className="text-blue-600 text-base">Back</Text>
+            <Text className="text-primary-500 text-base">Back</Text>
           </TouchableOpacity>
           <Text className="flex-1 text-base font-semibold text-gray-900">Message</Text>
         </View>
@@ -55,7 +55,7 @@ function MessageDetailContent() {
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Text className="text-blue-600 text-base">Back</Text>
+          <Text className="text-primary-500 text-base">Back</Text>
         </TouchableOpacity>
         <Text className="flex-1 text-base font-semibold text-gray-900" numberOfLines={1}>
           {message.sender_name ?? message.sender_email ?? 'Message'}
@@ -67,7 +67,7 @@ function MessageDetailContent() {
       {/* Reply stub */}
       <View className="px-4 py-3 border-t border-gray-100">
         <TouchableOpacity
-          className="bg-blue-600 rounded-xl py-3 items-center"
+          className="bg-primary-500 rounded-xl py-3 items-center"
           accessibilityRole="button"
           accessibilityLabel="Reply to message"
           onPress={() => {

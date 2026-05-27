@@ -173,7 +173,7 @@ export default function OnboardingStep5() {
 
           {/* Save search toggle (only for authenticated users) */}
           {accessToken ? (
-            <View className="flex-row items-center justify-between bg-blue-50 rounded-2xl px-4 py-4 mb-6">
+            <View className="flex-row items-center justify-between bg-primary-50 rounded-2xl px-4 py-4 mb-6">
               <View className="flex-1 mr-3">
                 <Text className="text-base font-semibold text-gray-900 mb-0.5">
                   Save my search
@@ -185,7 +185,7 @@ export default function OnboardingStep5() {
               <Switch
                 value={saveSearch}
                 onValueChange={setSaveSearch}
-                trackColor={{ false: '#D1D5DB', true: '#006AFF' }}
+                trackColor={{ false: '#D1D5DB', true: '#5f09fe' }}
                 thumbColor="#FFFFFF"
                 accessibilityLabel="Save search toggle"
               />
@@ -207,7 +207,7 @@ export default function OnboardingStep5() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => void handleFinish()}
-          className={`flex-1 py-3.5 bg-blue-600 rounded-xl flex-row items-center justify-center gap-x-2 ${isSaving ? 'opacity-60' : ''}`}
+          className={`flex-1 py-3.5 bg-primary-500 rounded-xl flex-row items-center justify-center gap-x-2 ${isSaving ? 'opacity-60' : ''}`}
           disabled={isSaving}
           accessibilityRole="button"
           accessibilityLabel="Finish onboarding"

@@ -81,7 +81,7 @@ export default function CreateStep1() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-blue-600 text-sm">Cancel</Text>
+          <Text className="text-primary-500 text-sm">Cancel</Text>
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-gray-900">Create Listing</Text>
         <Text className="text-sm text-gray-500 mt-1">Step 1 of 5 — Basic Info</Text>
@@ -99,7 +99,7 @@ export default function CreateStep1() {
               onPress={() => setListingType(lt.value)}
               className={`px-4 py-2 rounded-full border ${
                 listingType === lt.value
-                  ? 'bg-blue-600 border-blue-600'
+                  ? 'bg-primary-500 border-primary-500'
                   : 'bg-white border-gray-300'
               }`}
               accessibilityRole="radio"
@@ -127,7 +127,7 @@ export default function CreateStep1() {
               onPress={() => setPropertyType(pt.value)}
               className={`px-3 py-1.5 rounded-full border ${
                 propertyType === pt.value
-                  ? 'bg-blue-600 border-blue-600'
+                  ? 'bg-primary-500 border-primary-500'
                   : 'bg-white border-gray-300'
               }`}
               accessibilityRole="checkbox"

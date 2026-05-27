@@ -176,7 +176,7 @@ export default function ManageAgencyScreen() {
           You don't own an agency. Create one to start listing properties under your brand.
         </Text>
         <TouchableOpacity
-          className="bg-blue-600 rounded-xl px-6 py-3"
+          className="bg-primary-500 rounded-xl px-6 py-3"
           onPress={() => router.push('/agency/create')}
           accessibilityRole="button"
         >
@@ -199,7 +199,7 @@ export default function ManageAgencyScreen() {
           accessibilityLabel="Go back"
           className="mr-3"
         >
-          <Text className="text-blue-600 text-base">‹ Back</Text>
+          <Text className="text-primary-500 text-base">‹ Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900 flex-1">Manage Agency</Text>
         <TouchableOpacity
@@ -207,7 +207,7 @@ export default function ManageAgencyScreen() {
           accessibilityRole="button"
           accessibilityLabel="View public profile"
         >
-          <Text className="text-blue-600 text-sm">View Profile</Text>
+          <Text className="text-primary-500 text-sm">View Profile</Text>
         </TouchableOpacity>
       </View>
 
@@ -261,7 +261,7 @@ export default function ManageAgencyScreen() {
         {/* Save button */}
         <TouchableOpacity
           className={`rounded-xl py-4 items-center mt-4 ${
-            updateAgency.isPending ? 'bg-blue-300' : 'bg-blue-600'
+            updateAgency.isPending ? 'bg-primary-300' : 'bg-primary-500'
           }`}
           onPress={handleSave}
           disabled={updateAgency.isPending}
@@ -277,12 +277,12 @@ export default function ManageAgencyScreen() {
 
         {/* Subscription shortcut */}
         <TouchableOpacity
-          className="rounded-xl py-4 items-center mt-3 border border-blue-600"
+          className="rounded-xl py-4 items-center mt-3 border border-primary-500"
           onPress={() => router.push('/agency/subscription')}
           accessibilityRole="button"
           accessibilityLabel="Manage subscription"
         >
-          <Text className="text-blue-600 font-semibold text-base">Manage Subscription</Text>
+          <Text className="text-primary-500 font-semibold text-base">Manage Subscription</Text>
         </TouchableOpacity>
 
         {/* Agent roster shortcut */}

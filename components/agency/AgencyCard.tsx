@@ -28,7 +28,7 @@ export function AgencyCard({ agency, onPress }: AgencyCardProps) {
           accessibilityLabel={`${agency.name} logo`}
         />
       ) : (
-        <View className="w-14 h-14 rounded-xl bg-blue-100 items-center justify-center mr-3">
+        <View className="w-14 h-14 rounded-xl bg-primary-100 items-center justify-center mr-3">
           <Text className="text-2xl">🏢</Text>
         </View>
       )}

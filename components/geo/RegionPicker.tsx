@@ -62,7 +62,7 @@ function SelectorRow({ label, placeholder, selectedName, disabled, onPress, test
           disabled
             ? 'bg-gray-50 border-gray-200'
             : selectedName
-            ? 'bg-white border-blue-500'
+            ? 'bg-white border-primary-500'
             : 'bg-white border-gray-300'
         }`}
       >
@@ -130,7 +130,7 @@ function RegionSheet({ visible, title, items, isLoading, onSelect, onClose }: Re
               accessibilityLabel="Close"
               className="px-3 py-1"
             >
-              <Text className="text-blue-600 font-medium">Done</Text>
+              <Text className="text-primary-500 font-medium">Done</Text>
             </TouchableOpacity>
           </View>
 
@@ -247,7 +247,7 @@ export function RegionPicker({ countryCode, value: _value, onChange }: RegionPic
             accessibilityRole="button"
             accessibilityLabel="Clear location selection"
           >
-            <Text className="text-sm text-blue-600 font-medium">Clear</Text>
+            <Text className="text-sm text-primary-500 font-medium">Clear</Text>
           </TouchableOpacity>
         )}
       </View>

@@ -94,7 +94,7 @@ export default function OnboardingStep3() {
                   onPress={() => handlePreset(index)}
                   className={`flex-1 py-2.5 rounded-xl border items-center ${
                     activePreset === index
-                      ? 'bg-blue-600 border-blue-600'
+                      ? 'bg-primary-500 border-primary-500'
                       : 'bg-gray-100 border-gray-200'
                   }`}
                   accessibilityRole="button"
@@ -185,7 +185,7 @@ export default function OnboardingStep3() {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleNext}
-            className="flex-1 py-3.5 bg-blue-600 rounded-xl items-center"
+            className="flex-1 py-3.5 bg-primary-500 rounded-xl items-center"
             accessibilityRole="button"
             accessibilityLabel="Next step"
           >

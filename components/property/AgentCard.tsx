@@ -34,8 +34,8 @@ export function AgentCard({ agentId, agencyId, propertyId }: AgentCardProps) {
 
       <View className="flex-row items-center mb-3">
         {/* Avatar placeholder */}
-        <View className="w-12 h-12 rounded-full bg-blue-100 items-center justify-center mr-3">
-          <Text className="text-blue-600 font-bold text-lg">
+        <View className="w-12 h-12 rounded-full bg-primary-100 items-center justify-center mr-3">
+          <Text className="text-primary-500 font-bold text-lg">
             {String(agentId).charAt(0)}
           </Text>
         </View>
@@ -74,7 +74,7 @@ export function AgentCard({ agentId, agencyId, propertyId }: AgentCardProps) {
       )}
 
       <TouchableOpacity
-        className="bg-blue-600 rounded-xl py-3 items-center"
+        className="bg-primary-500 rounded-xl py-3 items-center"
         onPress={handleContact}
         accessibilityRole="button"
         accessibilityLabel="Contact agent"

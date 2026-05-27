@@ -74,7 +74,7 @@ export function SearchBar({ activeFilterCount = 0 }: SearchBarProps) {
       >
         <Text className="text-sm font-semibold text-gray-700">Filters</Text>
         {activeFilterCount > 0 && (
-          <View className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-blue-600 rounded-full items-center justify-center">
+          <View className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-primary-500 rounded-full items-center justify-center">
             <Text className="text-xs text-white font-bold">{activeFilterCount}</Text>
           </View>
         )}

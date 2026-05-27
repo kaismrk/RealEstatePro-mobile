@@ -147,7 +147,7 @@ function ListingCard({
         <CurrencyText
           amount={item.price}
           currency={currency}
-          className="text-base font-bold text-blue-600 mb-2"
+          className="text-base font-bold text-primary-500 mb-2"
         />
 
         {/* Action row */}
@@ -170,12 +170,12 @@ function ListingCard({
           </TouchableOpacity>
           {item.publish_status === 'published' && (
             <TouchableOpacity
-              className="flex-1 border border-blue-600 rounded-xl py-2 items-center"
+              className="flex-1 border border-primary-500 rounded-xl py-2 items-center"
               onPress={onBoost}
               accessibilityRole="button"
               accessibilityLabel="Boost listing"
             >
-              <Text className="text-xs text-blue-600 font-medium">Boost</Text>
+              <Text className="text-xs text-primary-500 font-medium">Boost</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -265,7 +265,7 @@ export default function MyListingsScreen() {
         </View>
         <TouchableOpacity
           onPress={handleCreate}
-          className="bg-blue-600 rounded-xl px-4 py-2"
+          className="bg-primary-500 rounded-xl px-4 py-2"
           accessibilityRole="button"
           accessibilityLabel="Create new listing"
         >

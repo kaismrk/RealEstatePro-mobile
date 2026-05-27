@@ -18,7 +18,7 @@ export function NetworkError({ onRetry, message }: NetworkErrorProps) {
       {onRetry ? (
         <TouchableOpacity
           onPress={onRetry}
-          className="bg-blue-600 px-6 py-3 rounded-xl"
+          className="bg-primary-500 px-6 py-3 rounded-xl"
           accessibilityRole="button"
           accessibilityLabel="Retry"
         >

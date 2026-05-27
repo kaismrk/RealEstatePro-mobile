@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   View,
   Text,
+  Image,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
@@ -69,8 +70,12 @@ export default function WelcomeScreen() {
           {/* Branding */}
           <View className="flex-1 px-6 pt-10 pb-8">
             <View className="items-center mb-12">
-              <Text className="text-4xl font-bold text-blue-600 mb-2">RealEstatePro</Text>
-              <Text className="text-base text-gray-500 text-center">
+              <Image
+                source={require('@/assets/homy-logo-violet.png')}
+                style={{ height: 48, width: 180, marginBottom: 8 }}
+                resizeMode="contain"
+              />
+              <Text className="text-base text-neutral-500 text-center">
                 Find your perfect home
               </Text>
             </View>

@@ -103,7 +103,7 @@ export default function SubscriptionScreen() {
           Create an agency first to manage subscriptions.
         </Text>
         <TouchableOpacity
-          className="bg-blue-600 rounded-xl px-6 py-3"
+          className="bg-primary-500 rounded-xl px-6 py-3"
           onPress={() => router.push('/agency/create')}
           accessibilityRole="button"
         >
@@ -125,7 +125,7 @@ export default function SubscriptionScreen() {
           accessibilityLabel="Go back"
           className="mr-3"
         >
-          <Text className="text-blue-600 text-base">‹ Back</Text>
+          <Text className="text-primary-500 text-base">‹ Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900 flex-1">Subscription</Text>
       </View>

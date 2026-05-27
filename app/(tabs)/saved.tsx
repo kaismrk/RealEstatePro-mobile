@@ -34,7 +34,7 @@ export default function SavedScreen() {
           Save properties you love and access them anytime.
         </Text>
         <TouchableOpacity
-          className="bg-blue-600 px-6 py-3 rounded-xl"
+          className="bg-primary-500 px-6 py-3 rounded-xl"
           onPress={() => router.push('/(auth)/welcome')}
           accessibilityRole="button"
           accessibilityLabel="Sign in"
@@ -83,7 +83,7 @@ export default function SavedScreen() {
             onPress={() => toggleSelect(item.property_id)}
             className={`absolute top-3 left-5 z-10 w-6 h-6 rounded-full border-2 items-center justify-center ${
               isSelected
-                ? 'bg-blue-600 border-blue-600'
+                ? 'bg-primary-500 border-primary-500'
                 : 'bg-white border-gray-400'
             }`}
             accessibilityRole="checkbox"
@@ -136,7 +136,7 @@ export default function SavedScreen() {
             onPress={handleComparePress}
             className={`px-3 py-2 rounded-lg ${
               compareMode && selectedIds.size >= 2
-                ? 'bg-blue-600'
+                ? 'bg-primary-500'
                 : compareMode
                 ? 'bg-gray-200'
                 : 'bg-gray-100'
@@ -168,8 +168,8 @@ export default function SavedScreen() {
       </View>
 
       {compareMode && (
-        <View className="px-4 py-2 bg-blue-50 border-b border-blue-100">
-          <Text className="text-sm text-blue-700">
+        <View className="px-4 py-2 bg-primary-50 border-b border-primary-100">
+          <Text className="text-sm text-primary-700">
             Select 2–5 properties to compare. {selectedIds.size} selected.
           </Text>
         </View>

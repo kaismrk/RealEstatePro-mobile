@@ -154,7 +154,7 @@ export default function EditPropertyScreen() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">Cancel</Text>
+          <Text className="text-primary-500 text-base">Cancel</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900">Edit Listing</Text>
       </View>
@@ -168,7 +168,7 @@ export default function EditPropertyScreen() {
               key={lt.value}
               onPress={() => setListingType(lt.value)}
               className={`px-4 py-2 rounded-full border ${
-                listingType === lt.value ? 'bg-blue-600 border-blue-600' : 'bg-white border-gray-300'
+                listingType === lt.value ? 'bg-primary-500 border-primary-500' : 'bg-white border-gray-300'
               }`}
             >
               <Text className={`text-sm ${listingType === lt.value ? 'text-white' : 'text-gray-700'}`}>
@@ -187,7 +187,7 @@ export default function EditPropertyScreen() {
                 key={pt.value}
                 onPress={() => setPropertyType(pt.value)}
                 className={`px-3 py-1.5 rounded-full border ${
-                  propertyType === pt.value ? 'bg-blue-600 border-blue-600' : 'bg-white border-gray-300'
+                  propertyType === pt.value ? 'bg-primary-500 border-primary-500' : 'bg-white border-gray-300'
                 }`}
               >
                 <Text className={`text-sm ${propertyType === pt.value ? 'text-white' : 'text-gray-700'}`}>

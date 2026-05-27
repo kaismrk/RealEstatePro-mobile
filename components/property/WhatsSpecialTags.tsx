@@ -50,9 +50,9 @@ export function WhatsSpecialTags({ property }: WhatsSpecialTagsProps) {
           {activeTags.map((label) => (
             <View
               key={label}
-              className="bg-blue-50 border border-blue-200 rounded-full px-3 py-1.5"
+              className="bg-primary-50 border border-primary-200 rounded-full px-3 py-1.5"
             >
-              <Text className="text-sm text-blue-700 font-medium">{label}</Text>
+              <Text className="text-sm text-primary-700 font-medium">{label}</Text>
             </View>
           ))}
         </View>

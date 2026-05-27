@@ -120,7 +120,7 @@ export default function CompareScreen() {
         </Text>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="bg-blue-600 px-6 py-3 rounded-xl"
+          className="bg-primary-500 px-6 py-3 rounded-xl"
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >

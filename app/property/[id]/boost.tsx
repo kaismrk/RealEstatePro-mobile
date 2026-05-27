@@ -97,7 +97,7 @@ export default function BoostScreen() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">Back</Text>
+          <Text className="text-primary-500 text-base">Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900">Boost Listing</Text>
       </View>
@@ -122,7 +122,7 @@ export default function BoostScreen() {
             onPress={() => setSelectedPlacement(opt.value)}
             className={`flex-row items-start p-4 rounded-xl border mb-3 ${
               selectedPlacement === opt.value
-                ? 'border-blue-600 bg-blue-50'
+                ? 'border-primary-500 bg-primary-50'
                 : 'border-gray-200 bg-white'
             }`}
             accessibilityRole="radio"
@@ -131,17 +131,17 @@ export default function BoostScreen() {
           >
             <View
               className={`w-5 h-5 rounded-full border-2 mr-3 mt-0.5 items-center justify-center flex-shrink-0 ${
-                selectedPlacement === opt.value ? 'border-blue-600' : 'border-gray-400'
+                selectedPlacement === opt.value ? 'border-primary-500' : 'border-gray-400'
               }`}
             >
               {selectedPlacement === opt.value && (
-                <View className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                <View className="w-2.5 h-2.5 rounded-full bg-primary-500" />
               )}
             </View>
             <View className="flex-1">
               <Text className="text-sm font-semibold text-gray-900">{opt.label}</Text>
               <Text className="text-xs text-gray-500 mt-0.5">{opt.description}</Text>
-              <Text className="text-xs text-blue-600 mt-1">{opt.pricePerDay} TND/day</Text>
+              <Text className="text-xs text-primary-500 mt-1">{opt.pricePerDay} TND/day</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -155,7 +155,7 @@ export default function BoostScreen() {
               onPress={() => setSelectedDuration(days)}
               className={`flex-1 py-3 rounded-xl border items-center ${
                 selectedDuration === days
-                  ? 'bg-blue-600 border-blue-600'
+                  ? 'bg-primary-500 border-primary-500'
                   : 'bg-white border-gray-300'
               }`}
               accessibilityRole="radio"

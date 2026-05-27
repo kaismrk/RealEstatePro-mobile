@@ -86,7 +86,7 @@ export default function OnboardingStep4() {
                 onPress={() => !isDisabled && onSelect(isSelected ? null : opt.value)}
                 className={`px-5 py-3 rounded-xl border ${
                   isSelected
-                    ? 'bg-blue-600 border-blue-600'
+                    ? 'bg-primary-500 border-primary-500'
                     : isDisabled
                     ? 'bg-gray-100 border-gray-100 opacity-40'
                     : 'bg-gray-50 border-gray-200'
@@ -161,7 +161,7 @@ export default function OnboardingStep4() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleNext}
-          className="flex-1 py-3.5 bg-blue-600 rounded-xl items-center"
+          className="flex-1 py-3.5 bg-primary-500 rounded-xl items-center"
           accessibilityRole="button"
           accessibilityLabel="Next step"
         >

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "RealEstatePro",
+    "name": "Homy",
     "slug": "RealEstatePro-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#006AFF"
+      "backgroundColor": "#5f09fe"
     },
     "ios": {
       "supportsTablet": true,
@@ -41,7 +41,7 @@
       },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#006AFF"
+        "backgroundColor": "#5f09fe"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false

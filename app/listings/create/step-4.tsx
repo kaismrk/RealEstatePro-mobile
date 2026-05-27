@@ -80,7 +80,7 @@ export default function CreateStep4() {
           <Text className="text-white text-xs font-bold">×</Text>
         </TouchableOpacity>
         {index === 0 && (
-          <View className="absolute bottom-1 left-1 bg-blue-600 rounded px-1 py-0.5">
+          <View className="absolute bottom-1 left-1 bg-primary-500 rounded px-1 py-0.5">
             <Text className="text-white text-xs">Cover</Text>
           </View>
         )}
@@ -93,7 +93,7 @@ export default function CreateStep4() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-blue-600 text-sm">Back</Text>
+          <Text className="text-primary-500 text-sm">Back</Text>
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-gray-900">Photos</Text>
         <Text className="text-sm text-gray-500 mt-1">

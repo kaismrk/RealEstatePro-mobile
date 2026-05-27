@@ -40,13 +40,13 @@ export function MessageCard({ message, onPress }: MessageCardProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`flex-row items-center px-4 py-3 border-b border-gray-100 ${isUnread ? 'bg-blue-50' : 'bg-white'}`}
+      className={`flex-row items-center px-4 py-3 border-b border-gray-100 ${isUnread ? 'bg-primary-50' : 'bg-white'}`}
       activeOpacity={0.8}
       accessibilityRole="button"
       accessibilityLabel={`Message from ${message.sender_name ?? 'Unknown sender'}`}
     >
       {/* Sender avatar */}
-      <View className="w-11 h-11 rounded-full bg-blue-600 items-center justify-center mr-3 shrink-0">
+      <View className="w-11 h-11 rounded-full bg-primary-500 items-center justify-center mr-3 shrink-0">
         <Text className="text-white text-sm font-semibold">{initials}</Text>
       </View>
 
@@ -63,7 +63,7 @@ export function MessageCard({ message, onPress }: MessageCardProps) {
         </View>
 
         {message.property?.title && (
-          <Text className="text-xs text-blue-600 mb-0.5" numberOfLines={1}>
+          <Text className="text-xs text-primary-500 mb-0.5" numberOfLines={1}>
             {message.property.title}
           </Text>
         )}
@@ -79,7 +79,7 @@ export function MessageCard({ message, onPress }: MessageCardProps) {
       {/* Unread dot */}
       {isUnread && (
         <View
-          className="w-2.5 h-2.5 rounded-full bg-blue-600 ml-3 shrink-0"
+          className="w-2.5 h-2.5 rounded-full bg-primary-500 ml-3 shrink-0"
           accessibilityLabel="Unread"
         />
       )}

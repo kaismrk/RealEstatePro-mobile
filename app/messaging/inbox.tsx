@@ -15,7 +15,7 @@ function InboxContent() {
       <View className="flex-row items-center px-4 pt-14 pb-3 border-b border-gray-100">
         <Text className="text-xl font-bold text-gray-900 flex-1">Messages</Text>
         {unreadCount > 0 && (
-          <View className="bg-blue-600 rounded-full px-2 py-0.5 min-w-5 items-center">
+          <View className="bg-primary-500 rounded-full px-2 py-0.5 min-w-5 items-center">
             <Text className="text-white text-xs font-semibold">{unreadCount}</Text>
           </View>
         )}

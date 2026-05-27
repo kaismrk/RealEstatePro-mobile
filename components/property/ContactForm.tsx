@@ -40,7 +40,7 @@ export function ContactForm({ propertyId, onSuccess, onError }: ContactFormProps
       />
 
       <TouchableOpacity
-        className={`mt-4 rounded-xl py-3.5 items-center ${isPending || !message.trim() ? 'bg-blue-300' : 'bg-blue-600'}`}
+        className={`mt-4 rounded-xl py-3.5 items-center ${isPending || !message.trim() ? 'bg-primary-300' : 'bg-primary-500'}`}
         onPress={handleSend}
         disabled={isPending || !message.trim()}
         accessibilityRole="button"

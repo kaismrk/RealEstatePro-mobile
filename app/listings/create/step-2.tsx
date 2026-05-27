@@ -92,7 +92,7 @@ export default function CreateStep2() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-blue-600 text-sm">Back</Text>
+          <Text className="text-primary-500 text-sm">Back</Text>
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-gray-900">Location</Text>
         <Text className="text-sm text-gray-500 mt-1">Step 2 of 5 — Location</Text>
@@ -125,7 +125,7 @@ export default function CreateStep2() {
         <TouchableOpacity
           onPress={handleUseLocation}
           disabled={locating}
-          className="flex-row items-center justify-center border border-blue-600 rounded-xl py-3 mb-5"
+          className="flex-row items-center justify-center border border-primary-500 rounded-xl py-3 mb-5"
           accessibilityRole="button"
         >
           {locating ? (
@@ -133,7 +133,7 @@ export default function CreateStep2() {
           ) : (
             <>
               <Text className="text-base mr-2">📍</Text>
-              <Text className="text-blue-600 font-medium">Use my current location</Text>
+              <Text className="text-primary-500 font-medium">Use my current location</Text>
             </>
           )}
         </TouchableOpacity>
@@ -200,7 +200,7 @@ export default function CreateStep2() {
             onPress={() => setDisclosureLevel(dl.value)}
             className={`flex-row items-center px-4 py-3 rounded-xl border mb-2 ${
               disclosureLevel === dl.value
-                ? 'border-blue-600 bg-blue-50'
+                ? 'border-primary-500 bg-primary-50'
                 : 'border-gray-200 bg-white'
             }`}
             accessibilityRole="radio"
@@ -208,11 +208,11 @@ export default function CreateStep2() {
           >
             <View
               className={`w-5 h-5 rounded-full border-2 mr-3 items-center justify-center ${
-                disclosureLevel === dl.value ? 'border-blue-600' : 'border-gray-400'
+                disclosureLevel === dl.value ? 'border-primary-500' : 'border-gray-400'
               }`}
             >
               {disclosureLevel === dl.value && (
-                <View className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                <View className="w-2.5 h-2.5 rounded-full bg-primary-500" />
               )}
             </View>
             <Text className="text-sm text-gray-800 flex-1">{dl.label}</Text>

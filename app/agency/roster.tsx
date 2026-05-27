@@ -37,7 +37,7 @@ export default function AgentRosterScreen() {
           accessibilityLabel="Go back"
           className="mr-3"
         >
-          <Text className="text-blue-600 text-base">‹ Back</Text>
+          <Text className="text-primary-500 text-base">‹ Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900 flex-1">
           {ownedAgency ? `${ownedAgency.name} — Agents` : 'Agent Roster'}

@@ -113,7 +113,7 @@ export default function CreateAgencyScreen() {
           accessibilityLabel="Go back"
           className="mr-3"
         >
-          <Text className="text-blue-600 text-base">‹ Back</Text>
+          <Text className="text-primary-500 text-base">‹ Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900 flex-1">Create Agency</Text>
       </View>
@@ -174,7 +174,7 @@ export default function CreateAgencyScreen() {
         {/* Submit */}
         <TouchableOpacity
           className={`rounded-xl py-4 items-center mt-4 mb-8 ${
-            create.isPending ? 'bg-blue-300' : 'bg-blue-600'
+            create.isPending ? 'bg-primary-300' : 'bg-primary-500'
           }`}
           onPress={handleSubmit}
           disabled={create.isPending}

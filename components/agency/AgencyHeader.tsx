@@ -26,7 +26,7 @@ export function AgencyHeader({ agency }: AgencyHeaderProps) {
           accessibilityLabel={`${agency.name} logo`}
         />
       ) : (
-        <View className="w-24 h-24 rounded-2xl bg-blue-100 items-center justify-center mb-3">
+        <View className="w-24 h-24 rounded-2xl bg-primary-100 items-center justify-center mb-3">
           <Text className="text-5xl">🏢</Text>
         </View>
       )}
@@ -48,7 +48,7 @@ export function AgencyHeader({ agency }: AgencyHeaderProps) {
           accessibilityRole="link"
           accessibilityLabel="Open agency website"
         >
-          <Text className="text-blue-600 text-sm underline">{website}</Text>
+          <Text className="text-primary-500 text-sm underline">{website}</Text>
         </TouchableOpacity>
       ) : null}
 
@@ -61,7 +61,7 @@ export function AgencyHeader({ agency }: AgencyHeaderProps) {
               accessibilityRole="link"
               accessibilityLabel="Facebook"
             >
-              <Text className="text-blue-700 text-sm font-medium">Facebook</Text>
+              <Text className="text-primary-700 text-sm font-medium">Facebook</Text>
             </TouchableOpacity>
           ) : null}
           {agency.social_links.instagram ? (

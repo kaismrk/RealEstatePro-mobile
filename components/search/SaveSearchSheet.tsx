@@ -144,14 +144,14 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
 
             {/* Active filter summary */}
             {Object.keys(filters).length > 0 && (
-              <View className="bg-blue-50 rounded-xl p-3">
-                <Text className="text-xs font-semibold text-blue-700 mb-1">
+              <View className="bg-primary-50 rounded-xl p-3">
+                <Text className="text-xs font-semibold text-primary-700 mb-1">
                   Current Filters
                 </Text>
                 {Object.entries(filters)
                   .filter(([, v]) => v != null && v !== '')
                   .map(([key, value]) => (
-                    <Text key={key} className="text-xs text-blue-600">
+                    <Text key={key} className="text-xs text-primary-500">
                       {key}: {String(value)}
                     </Text>
                   ))}
@@ -167,7 +167,7 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
               className={`py-4 rounded-xl items-center ${
                 create.isPending || !name.trim()
                   ? 'bg-gray-300'
-                  : 'bg-blue-600'
+                  : 'bg-primary-500'
               }`}
               accessibilityRole="button"
               accessibilityLabel="Save search"

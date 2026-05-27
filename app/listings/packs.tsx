@@ -55,14 +55,14 @@ export default function PacksScreen() {
               {item.listing_count} listing slot{item.listing_count !== 1 ? 's' : ''}
             </Text>
           </View>
-          <Text className="text-lg font-bold text-blue-600 ml-3">
+          <Text className="text-lg font-bold text-primary-500 ml-3">
             {item.price.toFixed(2)} TND
           </Text>
         </View>
         <TouchableOpacity
           onPress={() => handlePurchase(item)}
           disabled={purchasePack.isPending}
-          className="bg-blue-600 rounded-xl py-3 items-center mt-2"
+          className="bg-primary-500 rounded-xl py-3 items-center mt-2"
           accessibilityRole="button"
           accessibilityLabel={`Purchase ${item.name}`}
         >
@@ -79,16 +79,16 @@ export default function PacksScreen() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 bg-white border-b border-gray-100 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">Back</Text>
+          <Text className="text-primary-500 text-base">Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900">Listing Packs</Text>
       </View>
 
       {/* Current quota */}
       {quota && (
-        <View className="mx-4 mt-4 bg-blue-50 border border-blue-200 rounded-xl p-3">
-          <Text className="text-sm font-semibold text-blue-900">Current Quota</Text>
-          <Text className="text-sm text-blue-700 mt-0.5">
+        <View className="mx-4 mt-4 bg-primary-50 border border-primary-200 rounded-xl p-3">
+          <Text className="text-sm font-semibold text-primary-900">Current Quota</Text>
+          <Text className="text-sm text-primary-700 mt-0.5">
             {quota.free_remaining} free slot{quota.free_remaining !== 1 ? 's' : ''} +{' '}
             {quota.paid_remaining} paid slot{quota.paid_remaining !== 1 ? 's' : ''} remaining
           </Text>

@@ -28,7 +28,7 @@ function SignInModal({ onClose }: { onClose: () => void }) {
             onClose();
             router.push('/(auth)/welcome');
           }}
-          className="w-full bg-blue-600 py-4 rounded-xl items-center mb-3"
+          className="w-full bg-primary-500 py-4 rounded-xl items-center mb-3"
           accessibilityRole="button"
           accessibilityLabel="Sign in"
         >

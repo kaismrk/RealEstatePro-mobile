@@ -36,7 +36,7 @@ export default function AgencyProfileScreen() {
           This agency may no longer be available.
         </Text>
         <TouchableOpacity
-          className="bg-blue-600 rounded-xl px-6 py-3"
+          className="bg-primary-500 rounded-xl px-6 py-3"
           onPress={() => router.back()}
           accessibilityRole="button"
         >
@@ -77,7 +77,7 @@ export default function AgencyProfileScreen() {
           {agency.social_links?.website ? (
             <View className="flex-row items-center mb-2">
               <Text className="text-gray-500 text-sm w-28">Website</Text>
-              <Text className="text-blue-600 text-sm">{agency.social_links.website}</Text>
+              <Text className="text-primary-500 text-sm">{agency.social_links.website}</Text>
             </View>
           ) : null}
           <View className="flex-row items-center">
@@ -97,7 +97,7 @@ export default function AgencyProfileScreen() {
       {/* Sticky Contact CTA */}
       <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
         <TouchableOpacity
-          className="bg-blue-600 rounded-xl py-3.5 items-center"
+          className="bg-primary-500 rounded-xl py-3.5 items-center"
           accessibilityRole="button"
           accessibilityLabel="Contact agency"
           onPress={() => {

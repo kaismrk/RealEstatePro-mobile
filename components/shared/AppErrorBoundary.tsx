@@ -46,7 +46,7 @@ export class AppErrorBoundary extends Component<Props, State> {
           ) : null}
           <TouchableOpacity
             onPress={this.handleRetry}
-            className="bg-blue-600 px-8 py-4 rounded-xl"
+            className="bg-primary-500 px-8 py-4 rounded-xl"
             accessibilityRole="button"
             accessibilityLabel="Try again"
           >

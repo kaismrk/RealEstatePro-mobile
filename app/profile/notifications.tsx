@@ -45,15 +45,15 @@ function NotificationsContent() {
       {/* Header */}
       <View className="flex-row items-center px-4 pt-14 pb-4 bg-white border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">‹ Back</Text>
+          <Text className="text-primary-500 text-base">‹ Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900 flex-1">Notifications</Text>
       </View>
 
       {/* Coming soon banner */}
-      <View className="mx-4 mt-4 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
-        <Text className="text-sm text-blue-700 font-medium">Coming soon</Text>
-        <Text className="text-xs text-blue-500 mt-0.5">
+      <View className="mx-4 mt-4 bg-primary-50 border border-primary-200 rounded-xl px-4 py-3">
+        <Text className="text-sm text-primary-700 font-medium">Coming soon</Text>
+        <Text className="text-xs text-primary-500 mt-0.5">
           Push notification preferences will be available in a future update.
         </Text>
       </View>

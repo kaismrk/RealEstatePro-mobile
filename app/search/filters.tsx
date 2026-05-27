@@ -103,7 +103,7 @@ export default function FiltersScreen() {
                   }
                   className={`rounded-full px-4 py-2 border ${
                     isSelected
-                      ? 'bg-blue-600 border-blue-600'
+                      ? 'bg-primary-500 border-primary-500'
                       : 'bg-white border-gray-300'
                   }`}
                   accessibilityRole="button"
@@ -231,7 +231,7 @@ export default function FiltersScreen() {
                   onPress={() => togglePropertyType(pt)}
                   className={`rounded-full px-3 py-1.5 border ${
                     isSelected
-                      ? 'bg-blue-600 border-blue-600'
+                      ? 'bg-primary-500 border-primary-500'
                       : 'bg-white border-gray-300'
                   }`}
                   accessibilityRole="button"
@@ -280,7 +280,7 @@ export default function FiltersScreen() {
                   onPress={() => toggleEnergyRating(rating)}
                   className={`w-10 h-10 rounded-lg items-center justify-center border ${
                     isSelected
-                      ? 'bg-blue-600 border-blue-600'
+                      ? 'bg-primary-500 border-primary-500'
                       : 'bg-white border-gray-300'
                   }`}
                   accessibilityRole="button"
@@ -325,7 +325,7 @@ export default function FiltersScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleApply}
-          className="flex-2 flex-1 py-3 rounded-xl bg-blue-600 items-center"
+          className="flex-2 flex-1 py-3 rounded-xl bg-primary-500 items-center"
           accessibilityRole="button"
           accessibilityLabel="Apply filters"
         >

@@ -17,16 +17,16 @@ interface ButtonProps extends Omit<TouchableOpacityProps, 'children'> {
 
 const variantClasses: Record<Variant, { container: string; text: string }> = {
   primary: {
-    container: 'bg-blue-600 rounded-xl',
+    container: 'bg-primary-500 rounded-xl',
     text: 'text-white font-semibold',
   },
   secondary: {
-    container: 'bg-white border border-blue-600 rounded-xl',
-    text: 'text-blue-600 font-semibold',
+    container: 'bg-white border border-primary-500 rounded-xl',
+    text: 'text-primary-500 font-semibold',
   },
   ghost: {
     container: 'bg-transparent rounded-xl',
-    text: 'text-blue-600 font-semibold',
+    text: 'text-primary-500 font-semibold',
   },
 };
 
@@ -57,7 +57,7 @@ export function Button({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'primary' ? '#ffffff' : '#006AFF'}
+          color={variant === 'primary' ? '#ffffff' : '#5f09fe'}
         />
       ) : (
         <Text className={`${variantStyle.text} ${sizeStyle.text}`}>

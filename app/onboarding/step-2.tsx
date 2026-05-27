@@ -117,11 +117,11 @@ export default function OnboardingStep2() {
           disabled={locationLoading}
         >
           {locationLoading ? (
-            <ActivityIndicator size="small" color="#006AFF" />
+            <ActivityIndicator size="small" color="#5f09fe" />
           ) : (
             <Text className="text-base">{'\uD83D\uDCCD'}</Text>
           )}
-          <Text className="text-sm font-semibold text-blue-600 ml-2">
+          <Text className="text-sm font-semibold text-primary-500 ml-2">
             {locationLoading ? 'Getting location…' : 'Use my current location'}
           </Text>
         </TouchableOpacity>
@@ -134,7 +134,7 @@ export default function OnboardingStep2() {
       {/* Region list */}
       {regionsLoading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#006AFF" />
+          <ActivityIndicator size="large" color="#5f09fe" />
         </View>
       ) : (
         <FlatList<Region>

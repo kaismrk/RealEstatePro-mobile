@@ -43,7 +43,7 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
   }
 
   return (
-    <View className="mb-6 bg-blue-50 rounded-2xl p-4">
+    <View className="mb-6 bg-primary-50 rounded-2xl p-4">
       <Text className="text-lg font-bold text-gray-900 mb-4">Mortgage Calculator</Text>
 
       {/* Property Price (readonly) */}
@@ -97,12 +97,12 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
       </View>
 
       {/* Result */}
-      <View className="bg-blue-600 rounded-xl p-4 items-center">
-        <Text className="text-xs text-blue-100 mb-1">Estimated Monthly Payment</Text>
+      <View className="bg-primary-500 rounded-xl p-4 items-center">
+        <Text className="text-xs text-primary-100 mb-1">Estimated Monthly Payment</Text>
         <Text className="text-2xl font-bold text-white">
           {monthly > 0 ? formatAmount(monthly) : '—'}
         </Text>
-        <Text className="text-xs text-blue-200 mt-0.5">
+        <Text className="text-xs text-primary-200 mt-0.5">
           Principal: {formatAmount(principal)}
         </Text>
       </View>

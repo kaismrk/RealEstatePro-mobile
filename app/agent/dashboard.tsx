@@ -132,7 +132,7 @@ export default function AgentDashboardScreen() {
       {/* Header */}
       <View className="px-4 pt-14 pb-4 bg-white border-b border-gray-100 flex-row items-center">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">Back</Text>
+          <Text className="text-primary-500 text-base">Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900">Agent Dashboard</Text>
       </View>
@@ -146,7 +146,7 @@ export default function AgentDashboardScreen() {
           { label: 'Views', value: totalViews },
         ].map((stat) => (
           <View key={stat.label} className="flex-1 bg-white rounded-xl p-3 items-center border border-gray-100">
-            <Text className="text-xl font-bold text-blue-600">{stat.value}</Text>
+            <Text className="text-xl font-bold text-primary-500">{stat.value}</Text>
             <Text className="text-xs text-gray-500 mt-0.5">{stat.label}</Text>
           </View>
         ))}
@@ -157,7 +157,7 @@ export default function AgentDashboardScreen() {
         <View className="flex-row items-center justify-between px-4 mb-3">
           <Text className="text-base font-bold text-gray-900">My Listings</Text>
           <TouchableOpacity onPress={() => router.push('/listings/my-listings')}>
-            <Text className="text-blue-600 text-sm">View all</Text>
+            <Text className="text-primary-500 text-sm">View all</Text>
           </TouchableOpacity>
         </View>
         {dashboard && dashboard.items.length > 0 ? (
@@ -178,7 +178,7 @@ export default function AgentDashboardScreen() {
               className="mt-3"
               onPress={() => router.push('/listings/create/step-1')}
             >
-              <Text className="text-blue-600 text-sm font-medium">Create your first listing</Text>
+              <Text className="text-primary-500 text-sm font-medium">Create your first listing</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -189,7 +189,7 @@ export default function AgentDashboardScreen() {
         <View className="flex-row items-center justify-between mb-3">
           <Text className="text-base font-bold text-gray-900">Recent Leads</Text>
           <TouchableOpacity onPress={() => router.push('/agent/leads')}>
-            <Text className="text-blue-600 text-sm">View all</Text>
+            <Text className="text-primary-500 text-sm">View all</Text>
           </TouchableOpacity>
         </View>
         {leadsLoading ? (

@@ -52,7 +52,7 @@ function QuotaContent() {
       {/* Header */}
       <View className="flex-row items-center px-4 pt-14 pb-4 bg-white border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-blue-600 text-base">‹ Back</Text>
+          <Text className="text-primary-500 text-base">‹ Back</Text>
         </TouchableOpacity>
         <Text className="text-xl font-bold text-gray-900 flex-1">Listing Quota</Text>
       </View>
@@ -61,7 +61,7 @@ function QuotaContent() {
         {/* Summary card */}
         <View className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
           <Text className="text-base font-semibold text-gray-900 mb-1">Total Available Slots</Text>
-          <Text className="text-4xl font-bold text-blue-600 mb-1">{totalSlots}</Text>
+          <Text className="text-4xl font-bold text-primary-500 mb-1">{totalSlots}</Text>
           <Text className="text-sm text-gray-500">listings you can publish right now</Text>
         </View>
 
@@ -83,12 +83,12 @@ function QuotaContent() {
         <View className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
           <View className="flex-row justify-between mb-3">
             <Text className="text-base font-semibold text-gray-900">Paid Slots</Text>
-            <Text className="text-base font-bold text-blue-600">
+            <Text className="text-base font-bold text-primary-500">
               {quota.paid_remaining} remaining
             </Text>
           </View>
           {quota.paid_remaining > 0 ? (
-            <QuotaBar used={0} total={quota.paid_remaining} color="bg-blue-500" />
+            <QuotaBar used={0} total={quota.paid_remaining} color="bg-primary-500" />
           ) : (
             <View className="h-3 bg-gray-200 rounded-full" />
           )}

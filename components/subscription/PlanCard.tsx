@@ -28,7 +28,7 @@ export function PlanCard({
     <View
       className={`rounded-2xl border p-5 mb-4 ${
         isCurrentPlan
-          ? 'border-blue-500 bg-blue-50'
+          ? 'border-primary-500 bg-primary-50'
           : 'border-gray-200 bg-white'
       }`}
     >
@@ -36,7 +36,7 @@ export function PlanCard({
       <View className="flex-row items-center justify-between mb-1">
         <Text className="text-lg font-bold text-gray-900">{plan.name}</Text>
         {isCurrentPlan && (
-          <View className="bg-blue-600 rounded-full px-2 py-0.5">
+          <View className="bg-primary-500 rounded-full px-2 py-0.5">
             <Text className="text-white text-xs font-semibold">Current</Text>
           </View>
         )}
@@ -62,7 +62,7 @@ export function PlanCard({
       {onSubscribe && !isCurrentPlan ? (
         <TouchableOpacity
           className={`rounded-xl py-3 items-center ${
-            isSubscribing ? 'bg-blue-300' : 'bg-blue-600'
+            isSubscribing ? 'bg-primary-300' : 'bg-primary-500'
           }`}
           onPress={() => onSubscribe(plan.id)}
           disabled={isSubscribing}
@@ -76,8 +76,8 @@ export function PlanCard({
           )}
         </TouchableOpacity>
       ) : isCurrentPlan ? (
-        <View className="rounded-xl py-3 items-center border border-blue-400">
-          <Text className="text-blue-600 font-semibold">Your current plan</Text>
+        <View className="rounded-xl py-3 items-center border border-primary-400">
+          <Text className="text-primary-500 font-semibold">Your current plan</Text>
         </View>
       ) : null}
     </View>
