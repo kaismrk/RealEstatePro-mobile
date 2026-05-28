@@ -7,14 +7,17 @@ import {
   FlatList,
   SafeAreaView,
   ActivityIndicator,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
+import { Icon } from '@/components/ui/Icon';
 import { useTopLevelRegions, type Region } from '@/hooks/useRegions';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { haptic } from '@/lib/utils/haptics';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 export default function OnboardingStep2() {
   const countryCode = useAuthStore((s) => s.countryCode);
@@ -54,8 +57,6 @@ export default function OnboardingStep2() {
         return;
       }
       await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-      // Pre-fill query with country name as a fallback since we don't have reverse geocoding
-      // endpoint on our backend; the user can refine from the list
       setQuery(countryCode);
     } catch {
       setLocationError('Could not get your location. Please try typing a city.');
@@ -68,34 +69,30 @@ export default function OnboardingStep2() {
     return (
       <TouchableOpacity
         onPress={() => handleSelectRegion(item)}
-        className="flex-row items-center px-4 py-3.5 border-b border-gray-100 bg-white"
+        style={styles.regionRow}
         accessibilityRole="button"
         accessibilityLabel={item.name}
       >
-        <Text className="text-base text-gray-800 flex-1">{item.name}</Text>
-        <Text className="text-gray-400">{'\u203A'}</Text>
+        <Text style={styles.regionName}>{item.name}</Text>
+        <Icon name="chevron-right" size={16} color={colors.textTertiary} />
       </TouchableOpacity>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.safeArea}>
       {/* Header */}
-      <View className="px-6 pt-6 pb-4">
-        <Text className="text-2xl font-bold text-gray-900 mb-2">
-          Where are you looking?
-        </Text>
-        <Text className="text-base text-gray-500 mb-5">
-          Choose a region to focus your search.
-        </Text>
+      <View style={styles.headerSection}>
+        <Text style={styles.title}>Where are you looking?</Text>
+        <Text style={styles.subtitle}>Choose a region to focus your search.</Text>
 
         {/* Search input */}
-        <View className="bg-gray-100 rounded-xl px-4 py-3 flex-row items-center mb-3">
-          <Text className="text-gray-400 mr-2">{'\uD83D\uDD0D'}</Text>
+        <View style={styles.searchBox}>
+          <Icon name="search" size={18} color={colors.textTertiary} />
           <TextInput
-            className="flex-1 text-base text-gray-900"
+            style={styles.searchInput}
             placeholder="Type a region or city…"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={colors.textTertiary}
             value={query}
             onChangeText={setQuery}
             autoCapitalize="words"
@@ -103,7 +100,7 @@ export default function OnboardingStep2() {
           />
           {query.length > 0 && (
             <TouchableOpacity onPress={() => setQuery('')} hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}>
-              <Text className="text-gray-400 text-lg">{'\u00D7'}</Text>
+              <Icon name="x" size={18} color={colors.textTertiary} />
             </TouchableOpacity>
           )}
         </View>
@@ -111,30 +108,30 @@ export default function OnboardingStep2() {
         {/* Use my location button */}
         <TouchableOpacity
           onPress={() => void handleUseLocation()}
-          className="flex-row items-center py-2"
+          style={styles.locationButton}
           accessibilityRole="button"
           accessibilityLabel="Use my current location"
           disabled={locationLoading}
         >
           {locationLoading ? (
-            <ActivityIndicator size="small" color="#5f09fe" />
+            <ActivityIndicator size="small" color={colors.primary} />
           ) : (
-            <Text className="text-base">{'\uD83D\uDCCD'}</Text>
+            <Icon name="map-pin" size={16} color={colors.primary} />
           )}
-          <Text className="text-sm font-semibold text-primary-500 ml-2">
+          <Text style={styles.locationButtonText}>
             {locationLoading ? 'Getting location…' : 'Use my current location'}
           </Text>
         </TouchableOpacity>
 
         {locationError ? (
-          <Text className="text-sm text-red-500 mt-1">{locationError}</Text>
+          <Text style={styles.locationError}>{locationError}</Text>
         ) : null}
       </View>
 
       {/* Region list */}
       {regionsLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#5f09fe" />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       ) : (
         <FlatList<Region>
@@ -144,32 +141,147 @@ export default function OnboardingStep2() {
           contentContainerStyle={{ paddingBottom: 80 }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <View className="px-6 py-8 items-center">
-              <Text className="text-gray-400 text-base">No regions found</Text>
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No regions found</Text>
             </View>
           }
         />
       )}
 
       {/* Footer: Skip / Back */}
-      <View className="px-6 py-4 border-t border-gray-100 flex-row gap-x-3">
+      <View style={styles.footer}>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="flex-1 py-3.5 bg-gray-100 rounded-xl items-center"
+          style={styles.backButton}
           accessibilityRole="button"
           accessibilityLabel="Back"
         >
-          <Text className="text-base font-semibold text-gray-700">Back</Text>
+          <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleSkip}
-          className="flex-1 py-3.5 border border-gray-300 rounded-xl items-center"
+          style={styles.skipButton}
           accessibilityRole="button"
           accessibilityLabel="Skip this step"
         >
-          <Text className="text-base font-semibold text-gray-600">Skip</Text>
+          <Text style={styles.skipButtonText}>Skip</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  headerSection: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    marginBottom: 20,
+  },
+  searchBox: {
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: colors.textPrimary,
+    marginLeft: 8,
+  },
+  locationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  locationButtonText: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.primary,
+    marginLeft: 8,
+  },
+  locationError: {
+    fontSize: 14,
+    color: colors.error,
+    marginTop: 4,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  regionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  regionName: {
+    fontSize: 16,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  emptyContainer: {
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: colors.textTertiary,
+  },
+  footer: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  backButton: {
+    flex: 1,
+    paddingVertical: 14,
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+  skipButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    alignItems: 'center',
+  },
+  skipButtonText: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+});

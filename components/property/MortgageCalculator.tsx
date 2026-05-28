@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface MortgageCalculatorProps {
   price: number;
@@ -43,22 +44,22 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
   }
 
   return (
-    <View className="mb-6 bg-primary-50 rounded-2xl p-4">
-      <Text className="text-lg font-bold text-gray-900 mb-4">Mortgage Calculator</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Mortgage Calculator</Text>
 
       {/* Property Price (readonly) */}
-      <View className="mb-3">
-        <Text className="text-xs text-gray-500 mb-1">Property Price</Text>
-        <View className="bg-gray-100 rounded-xl px-3 py-2.5">
-          <Text className="text-sm font-semibold text-gray-700">{formatAmount(price)}</Text>
+      <View style={styles.fieldGroup}>
+        <Text style={styles.fieldLabel}>Property Price</Text>
+        <View style={styles.readonlyField}>
+          <Text style={styles.readonlyText}>{formatAmount(price)}</Text>
         </View>
       </View>
 
       {/* Down Payment */}
-      <View className="mb-3">
-        <Text className="text-xs text-gray-500 mb-1">Down Payment (%)</Text>
+      <View style={styles.fieldGroup}>
+        <Text style={styles.fieldLabel}>Down Payment (%)</Text>
         <TextInput
-          className="bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900"
+          style={styles.input}
           keyboardType="decimal-pad"
           value={downPaymentPct}
           onChangeText={setDownPaymentPct}
@@ -66,15 +67,15 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
           accessibilityLabel="Down payment percentage"
         />
         {downPct > 0 && (
-          <Text className="text-xs text-gray-400 mt-0.5">= {formatAmount(downPayment)}</Text>
+          <Text style={styles.hint}>= {formatAmount(downPayment)}</Text>
         )}
       </View>
 
       {/* Loan Term */}
-      <View className="mb-3">
-        <Text className="text-xs text-gray-500 mb-1">Loan Term (years)</Text>
+      <View style={styles.fieldGroup}>
+        <Text style={styles.fieldLabel}>Loan Term (years)</Text>
         <TextInput
-          className="bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900"
+          style={styles.input}
           keyboardType="number-pad"
           value={termYears}
           onChangeText={setTermYears}
@@ -84,10 +85,10 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
       </View>
 
       {/* Interest Rate */}
-      <View className="mb-4">
-        <Text className="text-xs text-gray-500 mb-1">Annual Interest Rate (%)</Text>
+      <View style={styles.fieldGroupLast}>
+        <Text style={styles.fieldLabel}>Annual Interest Rate (%)</Text>
         <TextInput
-          className="bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-900"
+          style={styles.input}
           keyboardType="decimal-pad"
           value={interestRate}
           onChangeText={setInterestRate}
@@ -97,19 +98,98 @@ export function MortgageCalculator({ price }: MortgageCalculatorProps) {
       </View>
 
       {/* Result */}
-      <View className="bg-primary-500 rounded-xl p-4 items-center">
-        <Text className="text-xs text-primary-100 mb-1">Estimated Monthly Payment</Text>
-        <Text className="text-2xl font-bold text-white">
+      <View style={styles.resultCard}>
+        <Text style={styles.resultLabel}>Estimated Monthly Payment</Text>
+        <Text style={styles.resultAmount}>
           {monthly > 0 ? formatAmount(monthly) : '—'}
         </Text>
-        <Text className="text-xs text-primary-200 mt-0.5">
+        <Text style={styles.resultPrincipal}>
           Principal: {formatAmount(principal)}
         </Text>
       </View>
 
-      <Text className="text-xs text-gray-400 mt-2 text-center">
+      <Text style={styles.disclaimer}>
         Estimate only. Consult a financial advisor for accurate figures.
       </Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 24,
+    backgroundColor: colors.primaryLight,
+    borderRadius: radius.xl2,
+    padding: 16,
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 16,
+  },
+  fieldGroup: {
+    marginBottom: 12,
+  },
+  fieldGroupLast: {
+    marginBottom: 16,
+  },
+  fieldLabel: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginBottom: 4,
+  },
+  readonlyField: {
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  readonlyText: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+  input: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: colors.textPrimary,
+  },
+  hint: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginTop: 2,
+  },
+  resultCard: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    padding: 16,
+    alignItems: 'center',
+  },
+  resultLabel: {
+    fontSize: 12,
+    color: colors.primaryLight,
+    marginBottom: 4,
+  },
+  resultAmount: {
+    fontSize: 24,
+    fontWeight: fontWeight.bold,
+    color: colors.textOnBrand,
+  },
+  resultPrincipal: {
+    fontSize: 12,
+    color: colors.primaryLight,
+    marginTop: 2,
+  },
+  disclaimer: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+});

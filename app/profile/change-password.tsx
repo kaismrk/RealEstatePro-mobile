@@ -7,13 +7,16 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { Icon } from '@/components/ui/Icon';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { PasswordStrengthMeter } from '@/components/auth/PasswordStrengthMeter';
 import { useChangePassword } from '@/hooks/useUser';
+import { colors, fontWeight, radius } from '@/constants/theme';
 
 // Minimum password policy (matches backend)
 function meetsPolicy(pw: string): boolean {
@@ -65,7 +68,6 @@ function ChangePasswordContent() {
       { password: newPassword },
       {
         onSuccess: () => {
-          // onSuccess in hook handles clearAuth + router.replace — no extra action needed here
           Alert.alert(
             'Password Changed',
             'Your password has been changed. Please sign in again.',
@@ -86,20 +88,21 @@ function ChangePasswordContent() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white"
+      style={styles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
+      <ScrollView style={styles.scroll} keyboardShouldPersistTaps="handled">
         {/* Header */}
-        <View className="flex-row items-center px-4 pt-14 pb-4 border-b border-gray-100">
-          <TouchableOpacity onPress={() => router.back()} className="mr-3">
-            <Text className="text-primary-500 text-base">‹ Back</Text>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <Icon name="chevron-left" size={20} color={colors.primary} />
+            <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
-          <Text className="text-xl font-bold text-gray-900 flex-1">Change Password</Text>
+          <Text style={styles.headerTitle}>Change Password</Text>
         </View>
 
-        <View className="px-4 pt-6">
-          <Text className="text-sm text-gray-500 mb-6">
+        <View style={styles.form}>
+          <Text style={styles.hint}>
             After changing your password you will be signed out and asked to sign in again.
           </Text>
 
@@ -153,7 +156,7 @@ function ChangePasswordContent() {
             onPress={handleSubmit}
             loading={changePassword.isPending}
             size="lg"
-            className="mt-2"
+            style={styles.submitButton}
           >
             Change Password
           </Button>
@@ -170,3 +173,50 @@ export default function ChangePasswordScreen() {
     </AuthGate>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  scroll: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  backText: {
+    color: colors.primary,
+    fontSize: 16,
+    marginLeft: 2,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  form: {
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  hint: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 24,
+  },
+  submitButton: {
+    marginTop: 8,
+  },
+});

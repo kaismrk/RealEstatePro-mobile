@@ -1,7 +1,8 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useAgent } from '@/hooks/useAgent';
 import { useAgency } from '@/hooks/useAgency';
+import { colors, radius, fontWeight, shadows } from '@/constants/theme';
 
 interface AgentCardProps {
   agentId: number;
@@ -15,9 +16,9 @@ export function AgentCard({ agentId, agencyId, propertyId }: AgentCardProps) {
 
   if (agentLoading) {
     return (
-      <View className="mb-6 bg-gray-50 rounded-2xl p-4">
-        <View className="h-4 w-32 bg-gray-200 rounded mb-2" />
-        <View className="h-4 w-24 bg-gray-200 rounded" />
+      <View style={styles.container}>
+        <View style={styles.skeletonLine} />
+        <View style={styles.skeletonLineShort} />
       </View>
     );
   }
@@ -29,58 +30,161 @@ export function AgentCard({ agentId, agencyId, propertyId }: AgentCardProps) {
   }
 
   return (
-    <View className="mb-6 bg-gray-50 rounded-2xl p-4">
-      <Text className="text-lg font-bold text-gray-900 mb-3">Listed by</Text>
+    <View style={styles.container}>
+      <Text style={styles.sectionTitle}>Listed by</Text>
 
-      <View className="flex-row items-center mb-3">
-        {/* Avatar placeholder */}
-        <View className="w-12 h-12 rounded-full bg-primary-100 items-center justify-center mr-3">
-          <Text className="text-primary-500 font-bold text-lg">
+      <View style={styles.agentRow}>
+        <View style={styles.avatarCircle}>
+          <Text style={styles.avatarText}>
             {String(agentId).charAt(0)}
           </Text>
         </View>
 
-        <View className="flex-1">
-          <Text className="font-semibold text-gray-900">Agent #{agentId}</Text>
+        <View style={styles.agentInfo}>
+          <Text style={styles.agentName}>Agent #{agentId}</Text>
           {agent.phone && (
-            <Text className="text-sm text-gray-500">{agent.phone}</Text>
+            <Text style={styles.agentPhone}>{agent.phone}</Text>
           )}
         </View>
       </View>
 
-      {/* Agency info */}
       {agency && (
-        <View className="flex-row items-center mb-3 border-t border-gray-200 pt-3">
+        <View style={styles.agencyRow}>
           {agency.logo_url ? (
             <Image
               source={{ uri: agency.logo_url }}
-              className="w-8 h-8 rounded mr-2"
+              style={styles.agencyLogo}
               resizeMode="contain"
               accessibilityLabel={`${agency.name} logo`}
             />
           ) : (
-            <View className="w-8 h-8 rounded bg-gray-200 mr-2 items-center justify-center">
-              <Text className="text-xs text-gray-500">A</Text>
+            <View style={styles.agencyLogoPlaceholder}>
+              <Text style={styles.agencyLogoPlaceholderText}>A</Text>
             </View>
           )}
-          <Text className="text-sm text-gray-700 font-medium">{agency.name}</Text>
+          <Text style={styles.agencyName}>{agency.name}</Text>
         </View>
       )}
 
       {agent.bio && (
-        <Text className="text-sm text-gray-600 mb-3" numberOfLines={3}>
+        <Text style={styles.bio} numberOfLines={3}>
           {agent.bio}
         </Text>
       )}
 
       <TouchableOpacity
-        className="bg-primary-500 rounded-xl py-3 items-center"
+        style={styles.contactButton}
         onPress={handleContact}
         accessibilityRole="button"
         accessibilityLabel="Contact agent"
       >
-        <Text className="text-white font-semibold">Contact Agent</Text>
+        <Text style={styles.contactButtonText}>Contact Agent</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 24,
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.xl2,
+    padding: 16,
+  },
+  skeletonLine: {
+    height: 16,
+    width: 128,
+    backgroundColor: colors.border,
+    borderRadius: radius.xs,
+    marginBottom: 8,
+  },
+  skeletonLineShort: {
+    height: 16,
+    width: 96,
+    backgroundColor: colors.border,
+    borderRadius: radius.xs,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 12,
+  },
+  agentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  avatarCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  avatarText: {
+    color: colors.primary,
+    fontWeight: fontWeight.bold,
+    fontSize: 18,
+  },
+  agentInfo: {
+    flex: 1,
+  },
+  agentName: {
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  agentPhone: {
+    fontSize: 14,
+    color: colors.textTertiary,
+  },
+  agencyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingTop: 12,
+  },
+  agencyLogo: {
+    width: 32,
+    height: 32,
+    borderRadius: radius.xs,
+    marginRight: 8,
+  },
+  agencyLogoPlaceholder: {
+    width: 32,
+    height: 32,
+    borderRadius: radius.xs,
+    backgroundColor: colors.border,
+    marginRight: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  agencyLogoPlaceholderText: {
+    fontSize: 12,
+    color: colors.textTertiary,
+  },
+  agencyName: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    fontWeight: fontWeight.medium,
+  },
+  bio: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 12,
+  },
+  contactButton: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  contactButtonText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+});

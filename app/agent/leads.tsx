@@ -4,11 +4,14 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useAgentLeads } from '@/hooks/useAgentLeads';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 import type { MessageResponse } from '@/lib/types/message';
 
 function LeadItem({ item }: { item: MessageResponse }) {
@@ -16,36 +19,34 @@ function LeadItem({ item }: { item: MessageResponse }) {
 
   return (
     <TouchableOpacity
-      className="bg-white border border-gray-100 rounded-xl p-4 mb-2"
+      style={styles.leadItem}
       onPress={() => router.push(`/messaging/${item.id}`)}
       accessibilityRole="button"
       accessibilityLabel={`Lead from ${item.sender_name ?? 'user'}`}
     >
       {/* Property context */}
       {item.property && (
-        <View className="bg-gray-50 rounded-lg px-3 py-2 mb-2">
-          <Text className="text-xs text-gray-500">Property</Text>
-          <Text className="text-xs font-semibold text-gray-800" numberOfLines={1}>
+        <View style={styles.propertyContext}>
+          <Text style={styles.propertyContextLabel}>Property</Text>
+          <Text style={styles.propertyContextTitle} numberOfLines={1}>
             {item.property.title}
           </Text>
         </View>
       )}
 
       {/* Sender */}
-      <View className="flex-row items-start justify-between">
-        <View className="flex-1">
-          <Text className="text-sm font-semibold text-gray-900">
+      <View style={styles.senderRow}>
+        <View style={styles.senderBody}>
+          <Text style={styles.senderName}>
             {item.sender_name ?? item.sender_email ?? `Sender #${item.sender_id}`}
           </Text>
-          <Text className="text-sm text-gray-700 mt-1" numberOfLines={3}>
+          <Text style={styles.messageBody} numberOfLines={3}>
             {item.body}
           </Text>
         </View>
-        <View className="ml-3 items-end">
-          <Text className="text-xs text-gray-400">{date}</Text>
-          {!item.is_read && (
-            <View className="w-2.5 h-2.5 rounded-full bg-primary-500 mt-1" />
-          )}
+        <View style={styles.metaColumn}>
+          <Text style={styles.dateText}>{date}</Text>
+          {!item.is_read && <View style={styles.unreadDot} />}
         </View>
       </View>
     </TouchableOpacity>
@@ -56,27 +57,28 @@ export default function AgentLeadsScreen() {
   const { data, isLoading, isError, refetch } = useAgentLeads();
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.root}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 bg-white border-b border-gray-100 flex-row items-center">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-primary-500 text-base">Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBack}>
+          <Icon name="chevron-left" size={18} color={colors.primary} />
+          <Text style={styles.headerBackText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900">All Leads</Text>
+        <Text style={styles.headerTitle}>All Leads</Text>
         {data && (
-          <Text className="ml-2 text-sm text-gray-500">({data.total})</Text>
+          <Text style={styles.headerCount}>({data.total})</Text>
         )}
       </View>
 
       {isLoading && (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#2563eb" />
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       )}
 
       {isError && (
-        <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-gray-500 mb-4 text-center">Failed to load leads.</Text>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Failed to load leads.</Text>
           <Button onPress={() => refetch()} variant="secondary">
             Try Again
           </Button>
@@ -92,10 +94,10 @@ export default function AgentLeadsScreen() {
           keyExtractor={(item) => String(item.id)}
           contentContainerStyle={{ padding: 16 }}
           ListEmptyComponent={
-            <View className="items-center justify-center pt-16">
-              <Text className="text-4xl mb-3">📩</Text>
-              <Text className="text-lg font-semibold text-gray-900 mb-1">No leads yet</Text>
-              <Text className="text-gray-500 text-center">
+            <View style={styles.emptyState}>
+              <Icon name="chat" size={48} color={colors.textTertiary} />
+              <Text style={styles.emptyTitle}>No leads yet</Text>
+              <Text style={styles.emptyBody}>
                 Leads will appear here when potential buyers or renters contact you.
               </Text>
             </View>
@@ -106,3 +108,129 @@ export default function AgentLeadsScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  headerCount: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  errorText: {
+    color: colors.textSecondary,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  leadItem: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: 16,
+    marginBottom: 8,
+  },
+  propertyContext: {
+    backgroundColor: colors.background,
+    borderRadius: radius.sm,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 8,
+  },
+  propertyContextLabel: {
+    fontSize: 12,
+    color: colors.textSecondary,
+  },
+  propertyContextTitle: {
+    fontSize: 12,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  senderRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  senderBody: {
+    flex: 1,
+  },
+  senderName: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  messageBody: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: 4,
+  },
+  metaColumn: {
+    marginLeft: 12,
+    alignItems: 'flex-end',
+  },
+  dateText: {
+    fontSize: 12,
+    color: colors.textTertiary,
+  },
+  unreadDot: {
+    width: 10,
+    height: 10,
+    borderRadius: radius.pill,
+    backgroundColor: colors.primary,
+    marginTop: 4,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 64,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginTop: 16,
+    marginBottom: 4,
+  },
+  emptyBody: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    fontSize: 14,
+  },
+});

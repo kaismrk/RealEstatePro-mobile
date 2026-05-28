@@ -6,10 +6,13 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useProperty } from '@/hooks/useProperty';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -22,10 +25,10 @@ export default function GalleryScreen() {
 
   function renderItem({ item }: ListRenderItemInfo<string>) {
     return (
-      <View style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT }}>
+      <View style={styles.imageWrapper}>
         <Image
           source={{ uri: item }}
-          style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT }}
+          style={styles.fullImage}
           resizeMode="contain"
           accessibilityLabel="Property photo"
         />
@@ -35,20 +38,17 @@ export default function GalleryScreen() {
 
   if (!property || images.length === 0) {
     return (
-      <View className="flex-1 bg-black items-center justify-center">
-        <Text className="text-white text-lg">No photos available</Text>
-        <TouchableOpacity
-          className="mt-4 bg-white/20 rounded-xl px-6 py-3"
-          onPress={() => router.back()}
-        >
-          <Text className="text-white font-semibold">Go Back</Text>
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No photos available</Text>
+        <TouchableOpacity style={styles.goBackBtn} onPress={() => router.back()}>
+          <Text style={styles.goBackBtnText}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-black">
+    <View style={styles.container}>
       <FlatList<string>
         data={images}
         renderItem={renderItem}
@@ -70,18 +70,18 @@ export default function GalleryScreen() {
 
       {/* Close button */}
       <TouchableOpacity
-        className="absolute top-12 left-4 w-10 h-10 rounded-full bg-black/50 items-center justify-center"
+        style={styles.closeBtn}
         onPress={() => router.back()}
         accessibilityRole="button"
         accessibilityLabel="Close gallery"
       >
-        <Text className="text-white text-xl font-bold">×</Text>
+        <Icon name="x" size={20} color={colors.surface} />
       </TouchableOpacity>
 
       {/* Counter */}
-      <View className="absolute bottom-12 left-0 right-0 items-center">
-        <View className="bg-black/50 rounded-full px-4 py-1.5">
-          <Text className="text-white text-sm font-medium">
+      <View style={styles.counterWrapper}>
+        <View style={styles.counter}>
+          <Text style={styles.counterText}>
             {activeIndex + 1} / {images.length}
           </Text>
         </View>
@@ -89,11 +89,11 @@ export default function GalleryScreen() {
 
       {/* Dot indicators */}
       {images.length > 1 && images.length <= 10 && (
-        <View className="absolute bottom-6 left-0 right-0 flex-row justify-center gap-1.5">
+        <View style={styles.dotsContainer}>
           {images.map((_, i) => (
             <View
               key={i}
-              className={`rounded-full ${i === activeIndex ? 'w-2 h-2 bg-white' : 'w-1.5 h-1.5 bg-white/40'}`}
+              style={[styles.dot, i === activeIndex ? styles.dotActive : styles.dotInactive]}
             />
           ))}
         </View>
@@ -101,3 +101,90 @@ export default function GalleryScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
+  emptyContainer: {
+    flex: 1,
+    backgroundColor: '#000000',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    color: colors.surface,
+    fontSize: fontSize.lg,
+  },
+  goBackBtn: {
+    marginTop: 16,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: radius.md,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  goBackBtnText: {
+    color: colors.surface,
+    fontWeight: fontWeight.semibold,
+  },
+  imageWrapper: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  },
+  fullImage: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+  },
+  closeBtn: {
+    position: 'absolute',
+    top: 48,
+    left: 16,
+    width: 40,
+    height: 40,
+    borderRadius: radius.pill,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  counterWrapper: {
+    position: 'absolute',
+    bottom: 48,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  counter: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: radius.pill,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+  },
+  counterText: {
+    color: colors.surface,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+  },
+  dotsContainer: {
+    position: 'absolute',
+    bottom: 24,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  dot: {
+    borderRadius: radius.pill,
+  },
+  dotActive: {
+    width: 8,
+    height: 8,
+    backgroundColor: colors.surface,
+  },
+  dotInactive: {
+    width: 6,
+    height: 6,
+    backgroundColor: 'rgba(255,255,255,0.4)',
+  },
+});

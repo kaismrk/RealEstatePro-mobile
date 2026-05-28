@@ -1,5 +1,7 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { scorePassword } from '@/lib/utils/password';
+import { colors, radius, fontWeight } from '@/constants/theme';
+import { Icon } from '@/components/ui/Icon';
 
 interface PasswordStrengthMeterProps {
   password: string;
@@ -19,23 +21,28 @@ function getRules(password: string): Rule[] {
   ];
 }
 
-const SCORE_CONFIG = {
+type StrengthScore = 'weak' | 'good' | 'excellent';
+
+const SCORE_CONFIG: Record<StrengthScore, { label: string; filledSegments: number; segmentColor: string; labelColor: string }> = {
   weak: {
     label: 'Weak',
     filledSegments: 1,
-    activeColor: 'bg-red-500',
+    segmentColor: colors.error,
+    labelColor: colors.error,
   },
   good: {
     label: 'Good',
     filledSegments: 2,
-    activeColor: 'bg-orange-400',
+    segmentColor: colors.warning,
+    labelColor: colors.warning,
   },
   excellent: {
     label: 'Excellent',
     filledSegments: 3,
-    activeColor: 'bg-green-500',
+    segmentColor: colors.success,
+    labelColor: colors.success,
   },
-} as const;
+};
 
 export function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) {
   const score = scorePassword(password);
@@ -43,43 +50,37 @@ export function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) 
   const rules = getRules(password);
 
   return (
-    <View className="mt-2 mb-4">
+    <View style={styles.container}>
       {/* Strength bar */}
-      <View className="flex-row gap-1 mb-2">
+      <View style={styles.barRow}>
         {[0, 1, 2].map((index) => (
           <View
             key={index}
-            className={`flex-1 h-1.5 rounded-full ${
-              index < config.filledSegments ? config.activeColor : 'bg-gray-200'
-            }`}
+            style={[
+              styles.segment,
+              { backgroundColor: index < config.filledSegments ? config.segmentColor : colors.border },
+            ]}
           />
         ))}
       </View>
 
       {/* Label */}
-      <Text
-        className={`text-sm font-semibold mb-2 ${
-          score === 'weak'
-            ? 'text-red-500'
-            : score === 'good'
-            ? 'text-orange-400'
-            : 'text-green-500'
-        }`}
-      >
+      <Text style={[styles.scoreLabel, { color: config.labelColor }]}>
         {config.label}
       </Text>
 
       {/* Rule checklist */}
-      <View className="gap-1">
+      <View style={styles.rulesList}>
         {rules.map((rule) => (
-          <View key={rule.label} className="flex-row items-center gap-1.5">
-            <Text
-              className={rule.met ? 'text-green-500' : 'text-gray-400'}
-              accessibilityLabel={rule.met ? `${rule.label} met` : `${rule.label} not met`}
-            >
-              {rule.met ? '✓' : '✗'}
-            </Text>
-            <Text className={`text-sm ${rule.met ? 'text-gray-700' : 'text-gray-400'}`}>
+          <View key={rule.label} style={styles.ruleRow}>
+            <View accessible accessibilityLabel={rule.met ? `${rule.label} met` : `${rule.label} not met`}>
+              <Icon
+                name="check"
+                size={14}
+                color={rule.met ? colors.success : colors.textTertiary}
+              />
+            </View>
+            <Text style={[styles.ruleText, { color: rule.met ? colors.textSecondary : colors.textTertiary }]}>
               {rule.label}
             </Text>
           </View>
@@ -88,3 +89,36 @@ export function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) 
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  barRow: {
+    flexDirection: 'row',
+    gap: 4,
+    marginBottom: 8,
+  },
+  segment: {
+    flex: 1,
+    height: 6,
+    borderRadius: radius.pill,
+  },
+  scoreLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    marginBottom: 8,
+  },
+  rulesList: {
+    gap: 4,
+  },
+  ruleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  ruleText: {
+    fontSize: 14,
+  },
+});

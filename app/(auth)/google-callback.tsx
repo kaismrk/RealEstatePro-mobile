@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useGoogleLogin } from '@/hooks/useAuth';
+import { colors, fontSize } from '@/constants/theme';
 
 export default function GoogleCallbackScreen() {
   const { google_token, error: oauthError } = useLocalSearchParams<{
@@ -36,8 +37,8 @@ export default function GoogleCallbackScreen() {
 
   if (googleLogin.isError) {
     return (
-      <View className="flex-1 items-center justify-center bg-white px-6">
-        <Text className="text-base text-red-600 text-center mb-4">
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>
           Google sign in failed. Please try again.
         </Text>
       </View>
@@ -45,9 +46,36 @@ export default function GoogleCallbackScreen() {
   }
 
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <ActivityIndicator size="large" color="#5f09fe" />
-      <Text className="text-base text-gray-500 mt-4">Signing you in...</Text>
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color={colors.primary} />
+      <Text style={styles.loadingText}>Signing you in...</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+    paddingHorizontal: 24,
+  },
+  errorText: {
+    fontSize: fontSize.base,
+    color: colors.error,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  loadingText: {
+    fontSize: fontSize.base,
+    color: colors.textTertiary,
+    marginTop: 16,
+  },
+});

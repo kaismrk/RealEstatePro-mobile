@@ -9,10 +9,12 @@
  * When available, replace the placeholder content with the fetched roster.
  */
 
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useAgencies } from '@/hooks/useAgencies';
 import { useCurrentUser } from '@/hooks/useUser';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 export default function AgentRosterScreen() {
   const { data: user } = useCurrentUser();
@@ -21,41 +23,104 @@ export default function AgentRosterScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.root}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-3 bg-white border-b border-gray-100 flex-row items-center">
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          className="mr-3"
+          style={styles.headerBack}
         >
-          <Text className="text-primary-500 text-base">‹ Back</Text>
+          <Icon name="chevron-left" size={18} color={colors.primary} />
+          <Text style={styles.headerBackText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900 flex-1">
+        <Text style={styles.headerTitle} numberOfLines={1}>
           {ownedAgency ? `${ownedAgency.name} — Agents` : 'Agent Roster'}
         </Text>
       </View>
 
       {/* Placeholder — backend endpoint not yet available */}
-      <View className="flex-1 items-center justify-center px-6">
-        <Text className="text-5xl mb-4">👥</Text>
-        <Text className="text-lg font-bold text-gray-900 mb-2">Agent Roster</Text>
-        <Text className="text-gray-500 text-center mb-4">
+      <View style={styles.placeholder}>
+        <Icon name="user" size={48} color={colors.textTertiary} />
+        <Text style={styles.placeholderTitle}>Agent Roster</Text>
+        <Text style={styles.placeholderBody}>
           Agent listing for agencies is coming soon. The backend does not yet expose a
           GET /agencies/{'{id}'}/agents endpoint.
         </Text>
-        <Text className="text-xs text-gray-400 text-center">
+        <Text style={styles.placeholderNote}>
           Agents can link themselves to your agency by setting their agency_id in their agent profile.
         </Text>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 12,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  placeholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  placeholderTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  placeholderBody: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 16,
+    fontSize: 14,
+  },
+  placeholderNote: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    textAlign: 'center',
+  },
+});

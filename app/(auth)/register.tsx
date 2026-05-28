@@ -7,10 +7,12 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 export default function RegisterScreen() {
   const { email } = useLocalSearchParams<{ email: string }>();
@@ -46,24 +48,24 @@ export default function RegisterScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        className="flex-1"
+        style={styles.flex1}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView
-          className="flex-1"
+          style={styles.flex1}
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="flex-1 px-6 pt-12 pb-8">
-            <Text className="text-2xl font-bold text-gray-900 mb-2">Create your account</Text>
+          <View style={styles.inner}>
+            <Text style={styles.title}>Create your account</Text>
 
             {/* Email display */}
-            <View className="flex-row items-center mb-6">
-              <Text className="text-base text-gray-600 mr-2">{email}</Text>
+            <View style={styles.emailRow}>
+              <Text style={styles.emailText}>{email}</Text>
               <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Change email">
-                <Text className="text-base text-primary-500 font-semibold">Change</Text>
+                <Text style={styles.changeLink}>Change</Text>
               </TouchableOpacity>
             </View>
 
@@ -94,20 +96,20 @@ export default function RegisterScreen() {
               onSubmitEditing={handleNext}
             />
 
-            <Button onPress={handleNext} size="lg" className="w-full mb-6">
+            <Button onPress={handleNext} size="lg" style={styles.nextButton}>
               Next
             </Button>
 
             {/* Sign in link */}
-            <View className="flex-row justify-center">
-              <Text className="text-base text-gray-600">Already have an account? </Text>
+            <View style={styles.signInRow}>
+              <Text style={styles.signInText}>Already have an account? </Text>
               <TouchableOpacity
                 onPress={() =>
                   router.replace({ pathname: '/(auth)/login', params: { email } })
                 }
                 accessibilityLabel="Sign in"
               >
-                <Text className="text-base text-primary-500 font-semibold">Sign In</Text>
+                <Text style={styles.signInLink}>Sign In</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -116,3 +118,57 @@ export default function RegisterScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  flex1: {
+    flex: 1,
+  },
+  inner: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 48,
+    paddingBottom: 32,
+  },
+  title: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  emailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  emailText: {
+    fontSize: fontSize.base,
+    color: colors.textSecondary,
+    marginRight: 8,
+  },
+  changeLink: {
+    fontSize: fontSize.base,
+    color: colors.primary,
+    fontWeight: fontWeight.semibold,
+  },
+  nextButton: {
+    width: '100%',
+    marginBottom: 24,
+  },
+  signInRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  signInText: {
+    fontSize: fontSize.base,
+    color: colors.textSecondary,
+  },
+  signInLink: {
+    fontSize: fontSize.base,
+    color: colors.primary,
+    fontWeight: fontWeight.semibold,
+  },
+});

@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Button } from '@/components/ui/Button';
@@ -14,6 +15,7 @@ import { Input } from '@/components/ui/Input';
 import { PasswordStrengthMeter } from '@/components/auth/PasswordStrengthMeter';
 import { useRegister } from '@/hooks/useAuth';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 export default function PasswordCreateScreen() {
   const { email, first_name, last_name } = useLocalSearchParams<{
@@ -83,24 +85,24 @@ export default function PasswordCreateScreen() {
   const isRateLimited = rateLimitCountdown > 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        className="flex-1"
+        style={styles.flex1}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView
-          className="flex-1"
+          style={styles.flex1}
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="flex-1 px-6 pt-12 pb-8">
-            <Text className="text-2xl font-bold text-gray-900 mb-2">Create a password</Text>
-            <Text className="text-base text-gray-500 mb-8">
+          <View style={styles.inner}>
+            <Text style={styles.title}>Create a password</Text>
+            <Text style={styles.subtitle}>
               Choose a strong password to protect your account.
             </Text>
 
             {/* Password field with show/hide toggle */}
-            <View className="relative">
+            <View style={styles.passwordWrapper}>
               <Input
                 label="Password"
                 value={password}
@@ -115,11 +117,11 @@ export default function PasswordCreateScreen() {
                 onSubmitEditing={handleCreateAccount}
               />
               <TouchableOpacity
-                className="absolute right-3 top-9"
+                style={styles.showHideBtn}
                 onPress={() => setShowPassword((v) => !v)}
                 accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
               >
-                <Text className="text-sm text-primary-500 font-semibold">
+                <Text style={styles.showHideText}>
                   {showPassword ? 'Hide' : 'Show'}
                 </Text>
               </TouchableOpacity>
@@ -130,8 +132,8 @@ export default function PasswordCreateScreen() {
 
             {/* Rate limit banner */}
             {isRateLimited && (
-              <View className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-3 mb-4">
-                <Text className="text-orange-700 text-sm font-medium">
+              <View style={styles.rateLimitBanner}>
+                <Text style={styles.rateLimitText}>
                   Too many attempts. Please wait {rateLimitCountdown}s before trying again.
                 </Text>
               </View>
@@ -140,7 +142,7 @@ export default function PasswordCreateScreen() {
             <Button
               onPress={handleCreateAccount}
               size="lg"
-              className="w-full"
+              style={styles.createBtn}
               loading={register.isPending}
               disabled={isRateLimited || register.isPending}
             >
@@ -152,3 +154,60 @@ export default function PasswordCreateScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  flex1: {
+    flex: 1,
+  },
+  inner: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 48,
+    paddingBottom: 32,
+  },
+  title: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: fontSize.base,
+    color: colors.textTertiary,
+    marginBottom: 32,
+  },
+  passwordWrapper: {
+    position: 'relative',
+  },
+  showHideBtn: {
+    position: 'absolute',
+    right: 12,
+    top: 36,
+  },
+  showHideText: {
+    fontSize: fontSize.sm,
+    color: colors.primary,
+    fontWeight: fontWeight.semibold,
+  },
+  rateLimitBanner: {
+    backgroundColor: colors.warningBg,
+    borderWidth: 1,
+    borderColor: colors.warning,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  rateLimitText: {
+    color: '#92400e',
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+  },
+  createBtn: {
+    width: '100%',
+  },
+});

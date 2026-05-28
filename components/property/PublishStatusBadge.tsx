@@ -1,5 +1,6 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import type { PublishStatus } from '@/lib/types/property';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface PublishStatusBadgeProps {
   status: PublishStatus;
@@ -18,26 +19,58 @@ function statusLabel(status: PublishStatus): string {
   }
 }
 
-function statusColors(status: PublishStatus): { container: string; text: string } {
+type StatusStyle = { container: object; text: object };
+
+function statusStyles(status: PublishStatus): StatusStyle {
   switch (status) {
     case 'pending':
-      return { container: 'bg-amber-100', text: 'text-amber-700' };
+      return { container: styles.containerWarning, text: styles.textWarning };
     case 'rejected':
-      return { container: 'bg-red-100', text: 'text-red-700' };
+      return { container: styles.containerError, text: styles.textError };
     case 'not_published':
-      return { container: 'bg-gray-100', text: 'text-gray-600' };
     default:
-      return { container: 'bg-gray-100', text: 'text-gray-600' };
+      return { container: styles.containerNeutral, text: styles.textNeutral };
   }
 }
 
 export function PublishStatusBadge({ status }: PublishStatusBadgeProps) {
-  const colors = statusColors(status);
+  const s = statusStyles(status);
   return (
-    <View className={`rounded-full px-3 py-1 self-start ${colors.container}`}>
-      <Text className={`text-xs font-semibold ${colors.text}`}>
+    <View style={[styles.badge, s.container]}>
+      <Text style={[styles.label, s.text]}>
         {statusLabel(status)}
       </Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    alignSelf: 'flex-start',
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: fontWeight.semibold,
+  },
+  containerWarning: {
+    backgroundColor: colors.warningBg,
+  },
+  textWarning: {
+    color: colors.warning,
+  },
+  containerError: {
+    backgroundColor: colors.errorBg,
+  },
+  textError: {
+    color: colors.error,
+  },
+  containerNeutral: {
+    backgroundColor: colors.surfaceSunken,
+  },
+  textNeutral: {
+    color: colors.textSecondary,
+  },
+});

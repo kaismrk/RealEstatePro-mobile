@@ -1,5 +1,6 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface Props {
   children: ReactNode;
@@ -35,18 +36,16 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
       return (
-        <View className="flex-1 items-center justify-center px-8">
-          <Text className="text-xl font-semibold text-gray-800 text-center mb-2">
-            Something went wrong
-          </Text>
-          <Text className="text-base text-gray-500 text-center mb-6">
+        <View style={styles.container}>
+          <Text style={styles.title}>Something went wrong</Text>
+          <Text style={styles.message}>
             {this.state.error?.message ?? 'An unexpected error occurred.'}
           </Text>
           <TouchableOpacity
             onPress={this.handleRetry}
-            className="bg-primary-500 px-6 py-3 rounded-xl"
+            style={styles.retryButton}
           >
-            <Text className="text-white font-semibold text-base">Try Again</Text>
+            <Text style={styles.retryText}>Try Again</Text>
           </TouchableOpacity>
         </View>
       );
@@ -55,3 +54,36 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  message: {
+    fontSize: 16,
+    color: colors.textTertiary,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  retryButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+  },
+  retryText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+});

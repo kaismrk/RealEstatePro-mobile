@@ -1,7 +1,8 @@
-import { FlatList, View, Text, RefreshControl, ActivityIndicator } from 'react-native';
+import { FlatList, View, Text, RefreshControl, ActivityIndicator, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import type { MessageResponse } from '@/lib/types/message';
 import { MessageCard } from './MessageCard';
+import { colors, fontWeight, fontSize } from '@/constants/theme';
 
 interface InboxListProps {
   messages: MessageResponse[];
@@ -12,10 +13,10 @@ interface InboxListProps {
 
 function EmptyState() {
   return (
-    <View className="flex-1 items-center justify-center py-20">
-      <Text className="text-5xl mb-4">💬</Text>
-      <Text className="text-lg font-semibold text-gray-800 mb-1">No messages yet</Text>
-      <Text className="text-sm text-gray-500 text-center px-8">
+    <View style={styles.emptyWrap}>
+      <Text style={styles.emptyIcon}>{'💬'}</Text>
+      <Text style={styles.emptyTitle}>No messages yet</Text>
+      <Text style={styles.emptySubtitle}>
         When someone sends you an inquiry, it will appear here.
       </Text>
     </View>
@@ -25,8 +26,8 @@ function EmptyState() {
 export function InboxList({ messages, isRefreshing = false, onRefresh, isLoading = false }: InboxListProps) {
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.loadingWrap}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -51,7 +52,40 @@ export function InboxList({ messages, isRefreshing = false, onRefresh, isLoading
           <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
         ) : undefined
       }
-      contentContainerStyle={messages.length === 0 ? { flex: 1 } : undefined}
+      contentContainerStyle={messages.length === 0 ? styles.emptyContainer : undefined}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  loadingWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+  },
+  emptyWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 80,
+  },
+  emptyIcon: {
+    fontSize: 48,
+    marginBottom: 16,
+  },
+  emptyTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 4,
+  },
+  emptySubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    textAlign: 'center',
+    paddingHorizontal: 32,
+  },
+});

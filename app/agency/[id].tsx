@@ -9,10 +9,12 @@
  * Agent roster is shown via the dedicated /agency/roster route (owner only).
  */
 
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useAgency } from '@/hooks/useAgencies';
 import { AgencyHeader } from '@/components/agency/AgencyHeader';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, shadows } from '@/constants/theme';
 
 export default function AgencyProfileScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -21,42 +23,42 @@ export default function AgencyProfileScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (isError || !agency) {
     return (
-      <View className="flex-1 items-center justify-center bg-white px-6">
-        <Text className="text-4xl mb-4">🏢</Text>
-        <Text className="text-lg font-semibold text-gray-900 mb-2">Agency not found</Text>
-        <Text className="text-gray-500 text-center mb-6">
+      <View style={styles.errorContainer}>
+        <Icon name="home" size={48} color={colors.textTertiary} />
+        <Text style={styles.errorTitle}>Agency not found</Text>
+        <Text style={styles.errorBody}>
           This agency may no longer be available.
         </Text>
         <TouchableOpacity
-          className="bg-primary-500 rounded-xl px-6 py-3"
+          style={styles.errorBtn}
           onPress={() => router.back()}
           accessibilityRole="button"
         >
-          <Text className="text-white font-semibold">Go Back</Text>
+          <Text style={styles.errorBtnText}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.root}>
       {/* Back button */}
-      <View className="absolute top-12 left-4 z-10">
+      <View style={styles.backBtnContainer}>
         <TouchableOpacity
-          className="w-9 h-9 rounded-full bg-black/30 items-center justify-center"
+          style={styles.backBtn}
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Text className="text-white text-base">‹</Text>
+          <Icon name="chevron-left" size={20} color={colors.textOnBrand} />
         </TouchableOpacity>
       </View>
 
@@ -65,24 +67,24 @@ export default function AgencyProfileScreen() {
         <AgencyHeader agency={agency} />
 
         {/* Divider */}
-        <View className="h-2 bg-gray-100" />
+        <View style={styles.divider} />
 
         {/* Info section */}
-        <View className="bg-white px-4 py-5">
-          <Text className="text-base font-semibold text-gray-900 mb-3">About</Text>
-          <View className="flex-row items-center mb-2">
-            <Text className="text-gray-500 text-sm w-28">Country</Text>
-            <Text className="text-gray-900 text-sm font-medium">{agency.country_code}</Text>
+        <View style={styles.infoSection}>
+          <Text style={styles.infoTitle}>About</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Country</Text>
+            <Text style={styles.infoValue}>{agency.country_code}</Text>
           </View>
           {agency.social_links?.website ? (
-            <View className="flex-row items-center mb-2">
-              <Text className="text-gray-500 text-sm w-28">Website</Text>
-              <Text className="text-primary-500 text-sm">{agency.social_links.website}</Text>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Website</Text>
+              <Text style={styles.infoLink}>{agency.social_links.website}</Text>
             </View>
           ) : null}
-          <View className="flex-row items-center">
-            <Text className="text-gray-500 text-sm w-28">Member since</Text>
-            <Text className="text-gray-900 text-sm">
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Member since</Text>
+            <Text style={styles.infoValue}>
               {new Date(agency.created_at).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -91,13 +93,13 @@ export default function AgencyProfileScreen() {
           </View>
         </View>
 
-        <View className="h-8" />
+        <View style={styles.scrollPadBottom} />
       </ScrollView>
 
       {/* Sticky Contact CTA */}
-      <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
+      <View style={styles.ctaBar}>
         <TouchableOpacity
-          className="bg-primary-500 rounded-xl py-3.5 items-center"
+          style={styles.ctaBtn}
           accessibilityRole="button"
           accessibilityLabel="Contact agency"
           onPress={() => {
@@ -105,9 +107,124 @@ export default function AgencyProfileScreen() {
             // Requires property association — left as placeholder
           }}
         >
-          <Text className="text-white font-semibold">Contact Agency</Text>
+          <Text style={styles.ctaBtnText}>Contact Agency</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+    paddingHorizontal: 24,
+  },
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  errorBody: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 24,
+    fontSize: 14,
+  },
+  errorBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  errorBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+  backBtnContainer: {
+    position: 'absolute',
+    top: 48,
+    left: 16,
+    zIndex: 10,
+  },
+  backBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.pill,
+    backgroundColor: 'rgba(0,0,0,0.30)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  divider: {
+    height: 8,
+    backgroundColor: colors.surfaceSunken,
+  },
+  infoSection: {
+    backgroundColor: colors.surface,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+  },
+  infoTitle: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 12,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  infoLabel: {
+    color: colors.textSecondary,
+    fontSize: 14,
+    width: 112,
+  },
+  infoValue: {
+    color: colors.textPrimary,
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+  },
+  infoLink: {
+    color: colors.primary,
+    fontSize: 14,
+  },
+  scrollPadBottom: {
+    height: 32,
+  },
+  ctaBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  ctaBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  ctaBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+});

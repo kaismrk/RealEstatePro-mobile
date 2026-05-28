@@ -1,5 +1,7 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import type { AgencyResponse } from '@/hooks/useAgencies';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, shadows } from '@/constants/theme';
 
 interface AgencyCardProps {
   agency: AgencyResponse;
@@ -14,7 +16,7 @@ export function AgencyCard({ agency, onPress }: AgencyCardProps) {
 
   return (
     <TouchableOpacity
-      className="bg-white rounded-xl border border-gray-100 p-4 mb-3 flex-row items-center shadow-sm"
+      style={styles.card}
       onPress={onPress}
       activeOpacity={0.75}
       accessibilityRole="button"
@@ -23,31 +25,78 @@ export function AgencyCard({ agency, onPress }: AgencyCardProps) {
       {agency.logo_url ? (
         <Image
           source={{ uri: agency.logo_url }}
-          className="w-14 h-14 rounded-xl mr-3"
+          style={styles.logo}
           resizeMode="cover"
           accessibilityLabel={`${agency.name} logo`}
         />
       ) : (
-        <View className="w-14 h-14 rounded-xl bg-primary-100 items-center justify-center mr-3">
-          <Text className="text-2xl">🏢</Text>
+        <View style={styles.logoPlaceholder}>
+          <Icon name="home" size={28} color={colors.primary} />
         </View>
       )}
 
-      <View className="flex-1">
-        <Text className="text-base font-semibold text-gray-900" numberOfLines={1}>
+      <View style={styles.body}>
+        <Text style={styles.name} numberOfLines={1}>
           {agency.name}
         </Text>
         {snippet.length > 0 && (
-          <Text className="text-sm text-gray-500 mt-0.5" numberOfLines={2}>
+          <Text style={styles.description} numberOfLines={2}>
             {snippet}
           </Text>
         )}
-        <Text className="text-xs text-gray-400 mt-1 uppercase tracking-wide">
-          {agency.country_code}
-        </Text>
+        <Text style={styles.countryCode}>{agency.country_code}</Text>
       </View>
 
-      <Text className="text-gray-400 text-base ml-2">›</Text>
+      <Icon name="chevron-right" size={18} color={colors.textTertiary} />
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    ...shadows.sm,
+  },
+  logo: {
+    width: 56,
+    height: 56,
+    borderRadius: radius.md,
+    marginRight: 12,
+  },
+  logoPlaceholder: {
+    width: 56,
+    height: 56,
+    borderRadius: radius.md,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  body: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  description: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+  countryCode: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginTop: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+  },
+});

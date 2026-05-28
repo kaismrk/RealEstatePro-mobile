@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { useSendInquiry } from '@/hooks/useSendInquiry';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface ContactFormProps {
   propertyId: number | string;
@@ -25,11 +26,13 @@ export function ContactForm({ propertyId, onSuccess, onError }: ContactFormProps
     );
   }
 
+  const isDisabled = isPending || !message.trim();
+
   return (
     <View>
-      <Text className="text-sm text-gray-500 mb-2">Message</Text>
+      <Text style={styles.label}>Message</Text>
       <TextInput
-        className="border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 bg-white min-h-[120px]"
+        style={styles.textInput}
         multiline
         numberOfLines={5}
         textAlignVertical="top"
@@ -40,18 +43,52 @@ export function ContactForm({ propertyId, onSuccess, onError }: ContactFormProps
       />
 
       <TouchableOpacity
-        className={`mt-4 rounded-xl py-3.5 items-center ${isPending || !message.trim() ? 'bg-primary-300' : 'bg-primary-500'}`}
+        style={[styles.button, isDisabled && styles.buttonDisabled]}
         onPress={handleSend}
-        disabled={isPending || !message.trim()}
+        disabled={isDisabled}
         accessibilityRole="button"
         accessibilityLabel="Send inquiry"
       >
         {isPending ? (
-          <ActivityIndicator color="white" />
+          <ActivityIndicator color={colors.textOnBrand} />
         ) : (
-          <Text className="text-white font-semibold text-base">Send Message</Text>
+          <Text style={styles.buttonText}>Send Message</Text>
         )}
       </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  label: {
+    fontSize: 14,
+    color: colors.textTertiary,
+    marginBottom: 8,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 14,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface,
+    minHeight: 120,
+  },
+  button: {
+    marginTop: 16,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  buttonText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+});

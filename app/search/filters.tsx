@@ -7,12 +7,13 @@ import {
   TextInput,
   Switch,
   SafeAreaView,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSearchStore, type PropertyFilters } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { haptic } from '@/lib/utils/haptics';
-import { colors } from '@/constants/theme';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 import { RegionPicker } from '@/components/geo/RegionPicker';
 import { RegionBreadcrumb } from '@/components/geo/RegionBreadcrumb';
 import type { Region } from '@/hooks/useRegions';
@@ -42,9 +43,7 @@ const AMENITY_FIELDS: { label: string; key: keyof PropertyFilters }[] = [
 ];
 
 function SectionTitle({ children }: { children: string }) {
-  return (
-    <Text className="text-base font-bold text-gray-800 mb-3">{children}</Text>
-  );
+  return <Text style={styles.sectionTitle}>{children}</Text>;
 }
 
 export default function FiltersScreen() {
@@ -83,16 +82,16 @@ export default function FiltersScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.container}>
       <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
+        style={styles.flex1}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Transaction type */}
-        <View className="mb-6">
+        <View style={styles.section}>
           <SectionTitle>Transaction Type</SectionTitle>
-          <View className="flex-row flex-wrap gap-2">
+          <View style={styles.chipRow}>
             {LISTING_TYPES.map((lt) => {
               const isSelected = local.listing_type === lt.value;
               return (
@@ -101,17 +100,11 @@ export default function FiltersScreen() {
                   onPress={() =>
                     setField('listing_type', isSelected ? undefined : lt.value)
                   }
-                  className={`rounded-full px-4 py-2 border ${
-                    isSelected
-                      ? 'bg-primary-500 border-primary-500'
-                      : 'bg-white border-gray-300'
-                  }`}
+                  style={[styles.chip, isSelected ? styles.chipSelected : styles.chipUnselected]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: isSelected }}
                 >
-                  <Text
-                    className={`text-sm font-medium ${isSelected ? 'text-white' : 'text-gray-700'}`}
-                  >
+                  <Text style={[styles.chipText, isSelected ? styles.chipTextSelected : styles.chipTextUnselected]}>
                     {lt.label}
                   </Text>
                 </TouchableOpacity>
@@ -121,13 +114,13 @@ export default function FiltersScreen() {
         </View>
 
         {/* Price range */}
-        <View className="mb-6">
+        <View style={styles.section}>
           <SectionTitle>Price Range</SectionTitle>
-          <View className="flex-row gap-3">
-            <View className="flex-1">
-              <Text className="text-xs text-gray-500 mb-1">Min price</Text>
+          <View style={styles.row}>
+            <View style={styles.flex1}>
+              <Text style={styles.inputLabel}>Min price</Text>
               <TextInput
-                className="border border-gray-300 rounded-xl px-3 py-2 text-base text-gray-900"
+                style={styles.textInput}
                 placeholder="0"
                 keyboardType="numeric"
                 value={local.min_price != null ? String(local.min_price) : ''}
@@ -137,10 +130,11 @@ export default function FiltersScreen() {
                 accessibilityLabel="Minimum price"
               />
             </View>
-            <View className="flex-1">
-              <Text className="text-xs text-gray-500 mb-1">Max price</Text>
+            <View style={styles.rowGap} />
+            <View style={styles.flex1}>
+              <Text style={styles.inputLabel}>Max price</Text>
               <TextInput
-                className="border border-gray-300 rounded-xl px-3 py-2 text-base text-gray-900"
+                style={styles.textInput}
                 placeholder="Any"
                 keyboardType="numeric"
                 value={local.max_price != null ? String(local.max_price) : ''}
@@ -154,13 +148,13 @@ export default function FiltersScreen() {
         </View>
 
         {/* Bedrooms */}
-        <View className="mb-6">
+        <View style={styles.section}>
           <SectionTitle>Bedrooms</SectionTitle>
-          <View className="flex-row gap-3">
-            <View className="flex-1">
-              <Text className="text-xs text-gray-500 mb-1">Min</Text>
+          <View style={styles.row}>
+            <View style={styles.flex1}>
+              <Text style={styles.inputLabel}>Min</Text>
               <TextInput
-                className="border border-gray-300 rounded-xl px-3 py-2 text-base text-gray-900"
+                style={styles.textInput}
                 placeholder="0"
                 keyboardType="numeric"
                 value={local.min_bedrooms != null ? String(local.min_bedrooms) : ''}
@@ -170,10 +164,11 @@ export default function FiltersScreen() {
                 accessibilityLabel="Minimum bedrooms"
               />
             </View>
-            <View className="flex-1">
-              <Text className="text-xs text-gray-500 mb-1">Max</Text>
+            <View style={styles.rowGap} />
+            <View style={styles.flex1}>
+              <Text style={styles.inputLabel}>Max</Text>
               <TextInput
-                className="border border-gray-300 rounded-xl px-3 py-2 text-base text-gray-900"
+                style={styles.textInput}
                 placeholder="Any"
                 keyboardType="numeric"
                 value={local.max_bedrooms != null ? String(local.max_bedrooms) : ''}
@@ -187,13 +182,13 @@ export default function FiltersScreen() {
         </View>
 
         {/* Area */}
-        <View className="mb-6">
+        <View style={styles.section}>
           <SectionTitle>Area (m²)</SectionTitle>
-          <View className="flex-row gap-3">
-            <View className="flex-1">
-              <Text className="text-xs text-gray-500 mb-1">Min area</Text>
+          <View style={styles.row}>
+            <View style={styles.flex1}>
+              <Text style={styles.inputLabel}>Min area</Text>
               <TextInput
-                className="border border-gray-300 rounded-xl px-3 py-2 text-base text-gray-900"
+                style={styles.textInput}
                 placeholder="0"
                 keyboardType="numeric"
                 value={local.min_area != null ? String(local.min_area) : ''}
@@ -203,10 +198,11 @@ export default function FiltersScreen() {
                 accessibilityLabel="Minimum area"
               />
             </View>
-            <View className="flex-1">
-              <Text className="text-xs text-gray-500 mb-1">Max area</Text>
+            <View style={styles.rowGap} />
+            <View style={styles.flex1}>
+              <Text style={styles.inputLabel}>Max area</Text>
               <TextInput
-                className="border border-gray-300 rounded-xl px-3 py-2 text-base text-gray-900"
+                style={styles.textInput}
                 placeholder="Any"
                 keyboardType="numeric"
                 value={local.max_area != null ? String(local.max_area) : ''}
@@ -220,25 +216,25 @@ export default function FiltersScreen() {
         </View>
 
         {/* Property type */}
-        <View className="mb-6">
+        <View style={styles.section}>
           <SectionTitle>Property Type</SectionTitle>
-          <View className="flex-row flex-wrap gap-2">
+          <View style={styles.chipRow}>
             {PROPERTY_TYPES.map((pt) => {
               const isSelected = local.property_type === pt;
               return (
                 <TouchableOpacity
                   key={pt}
                   onPress={() => togglePropertyType(pt)}
-                  className={`rounded-full px-3 py-1.5 border ${
-                    isSelected
-                      ? 'bg-primary-500 border-primary-500'
-                      : 'bg-white border-gray-300'
-                  }`}
+                  style={[styles.chipSm, isSelected ? styles.chipSelected : styles.chipUnselected]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: isSelected }}
                 >
                   <Text
-                    className={`text-sm capitalize ${isSelected ? 'text-white font-medium' : 'text-gray-700'}`}
+                    style={[
+                      styles.chipTextSm,
+                      isSelected ? styles.chipTextSelected : styles.chipTextUnselected,
+                      { textTransform: 'capitalize' },
+                    ]}
                   >
                     {pt}
                   </Text>
@@ -249,19 +245,16 @@ export default function FiltersScreen() {
         </View>
 
         {/* Amenities */}
-        <View className="mb-6">
+        <View style={styles.section}>
           <SectionTitle>Amenities</SectionTitle>
           {AMENITY_FIELDS.map(({ label, key }) => (
-            <View
-              key={key}
-              className="flex-row items-center justify-between py-2 border-b border-gray-100"
-            >
-              <Text className="text-base text-gray-700">{label}</Text>
+            <View key={key} style={styles.amenityRow}>
+              <Text style={styles.amenityLabel}>{label}</Text>
               <Switch
                 value={!!local[key]}
                 onValueChange={(v) => setField(key, v || undefined)}
                 trackColor={{ false: colors.border, true: colors.primary }}
-                thumbColor="#ffffff"
+                thumbColor={colors.surface}
                 accessibilityLabel={label}
               />
             </View>
@@ -269,25 +262,24 @@ export default function FiltersScreen() {
         </View>
 
         {/* Energy rating */}
-        <View className="mb-6">
+        <View style={styles.section}>
           <SectionTitle>Energy Rating</SectionTitle>
-          <View className="flex-row flex-wrap gap-2">
+          <View style={styles.chipRow}>
             {ENERGY_RATINGS.map((rating) => {
               const isSelected = local.energy_rating === rating;
               return (
                 <TouchableOpacity
                   key={rating}
                   onPress={() => toggleEnergyRating(rating)}
-                  className={`w-10 h-10 rounded-lg items-center justify-center border ${
-                    isSelected
-                      ? 'bg-primary-500 border-primary-500'
-                      : 'bg-white border-gray-300'
-                  }`}
+                  style={[styles.energyChip, isSelected ? styles.chipSelected : styles.chipUnselected]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: isSelected }}
                 >
                   <Text
-                    className={`text-base font-bold ${isSelected ? 'text-white' : 'text-gray-700'}`}
+                    style={[
+                      styles.energyChipText,
+                      isSelected ? styles.chipTextSelected : styles.chipTextUnselected,
+                    ]}
                   >
                     {rating}
                   </Text>
@@ -298,7 +290,7 @@ export default function FiltersScreen() {
         </View>
 
         {/* Location */}
-        <View className="mb-6">
+        <View style={styles.section}>
           <RegionPicker
             countryCode={countryCode}
             value={local.region_id ?? null}
@@ -308,30 +300,178 @@ export default function FiltersScreen() {
             }}
           />
           {locationPath.length > 0 && (
-            <RegionBreadcrumb path={locationPath} className="mt-2" />
+            <RegionBreadcrumb path={locationPath} />
           )}
         </View>
       </ScrollView>
 
       {/* Footer actions */}
-      <View className="absolute bottom-0 left-0 right-0 flex-row items-center px-4 py-4 bg-white border-t border-gray-200 gap-3">
+      <View style={styles.footer}>
         <TouchableOpacity
           onPress={handleReset}
-          className="flex-1 py-3 rounded-xl border border-gray-300 items-center"
+          style={styles.resetBtn}
           accessibilityRole="button"
           accessibilityLabel="Reset all filters"
         >
-          <Text className="text-base font-semibold text-gray-600">Reset</Text>
+          <Text style={styles.resetBtnText}>Reset</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleApply}
-          className="flex-2 flex-1 py-3 rounded-xl bg-primary-500 items-center"
+          style={styles.applyBtn}
           accessibilityRole="button"
           accessibilityLabel="Apply filters"
         >
-          <Text className="text-base font-semibold text-white">Apply Filters</Text>
+          <Text style={styles.applyBtnText}>Apply Filters</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  flex1: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 120,
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 12,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  chip: {
+    borderRadius: radius.pill,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderWidth: 1,
+  },
+  chipSm: {
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+  },
+  chipSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  chipUnselected: {
+    backgroundColor: colors.surface,
+    borderColor: colors.borderStrong,
+  },
+  chipText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+  },
+  chipTextSm: {
+    fontSize: fontSize.sm,
+  },
+  chipTextSelected: {
+    color: colors.textOnBrand,
+  },
+  chipTextUnselected: {
+    color: colors.textSecondary,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  rowGap: {
+    width: 12,
+  },
+  inputLabel: {
+    fontSize: fontSize.xs,
+    color: colors.textTertiary,
+    marginBottom: 4,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: fontSize.base,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface,
+  },
+  amenityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  amenityLabel: {
+    fontSize: fontSize.base,
+    color: colors.textSecondary,
+  },
+  energyChip: {
+    width: 40,
+    height: 40,
+    borderRadius: radius.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+  },
+  energyChipText: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.bold,
+  },
+  breadcrumb: {
+    marginTop: 8,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    gap: 12,
+  },
+  resetBtn: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    alignItems: 'center',
+  },
+  resetBtnText: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+  applyBtn: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+  },
+  applyBtnText: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    color: colors.textOnBrand,
+  },
+});

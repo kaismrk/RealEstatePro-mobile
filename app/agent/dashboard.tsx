@@ -7,6 +7,7 @@ import {
   Image,
   ActivityIndicator,
   RefreshControl,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -14,6 +15,8 @@ import { useAgentDashboard, type PropertyWithStats } from '@/hooks/useAgentDashb
 import { useAgentLeads } from '@/hooks/useAgentLeads';
 import { PublishStatusBadge } from '@/components/property/PublishStatusBadge';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, shadows } from '@/constants/theme';
 import type { PublishStatus } from '@/lib/types/property';
 import type { MessageResponse } from '@/lib/types/message';
 
@@ -22,36 +25,37 @@ function ListingStatCard({ item }: { item: PropertyWithStats }) {
 
   return (
     <TouchableOpacity
-      className="bg-white border border-gray-200 rounded-xl mr-3 overflow-hidden w-52"
+      style={styles.listingCard}
       onPress={() => router.push(`/property/${item.id}`)}
       accessibilityRole="button"
       accessibilityLabel={item.title}
     >
-      <View className="h-28 bg-gray-200">
+      <View style={styles.listingImageContainer}>
         {cover ? (
-          <Image source={{ uri: cover }} className="w-full h-full" resizeMode="cover" accessibilityLabel="Property photo" />
+          <Image
+            source={{ uri: cover }}
+            style={styles.listingImage}
+            resizeMode="cover"
+            accessibilityLabel="Property photo"
+          />
         ) : (
-          <View className="flex-1 items-center justify-center">
-            <Text className="text-3xl">🏠</Text>
+          <View style={styles.listingImagePlaceholder}>
+            <Icon name="home" size={32} color={colors.textTertiary} />
           </View>
         )}
       </View>
-      <View className="p-3">
+      <View style={styles.listingCardBody}>
         {item.publish_status && (
-          <View className="mb-1">
+          <View style={styles.listingBadgeWrapper}>
             <PublishStatusBadge status={item.publish_status as PublishStatus} />
           </View>
         )}
-        <Text className="text-sm font-semibold text-gray-900 mb-1" numberOfLines={1}>
+        <Text style={styles.listingTitle} numberOfLines={1}>
           {item.title}
         </Text>
-        <View className="flex-row gap-3 mt-1">
-          <Text className="text-xs text-gray-500">
-            {item.inquiry_count} inquiries
-          </Text>
-          <Text className="text-xs text-gray-500">
-            {item.favorite_count} saves
-          </Text>
+        <View style={styles.listingStats}>
+          <Text style={styles.listingStatText}>{item.inquiry_count} inquiries</Text>
+          <Text style={styles.listingStatText}>{item.favorite_count} saves</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -61,45 +65,56 @@ function ListingStatCard({ item }: { item: PropertyWithStats }) {
 function LeadRow({ item }: { item: MessageResponse }) {
   return (
     <TouchableOpacity
-      className="bg-white border border-gray-100 rounded-xl p-4 mb-2 flex-row items-start"
+      style={styles.leadRow}
       onPress={() => router.push(`/messaging/${item.id}`)}
       accessibilityRole="button"
     >
-      <View className="flex-1">
-        <Text className="text-sm font-semibold text-gray-900" numberOfLines={1}>
+      <View style={styles.leadRowBody}>
+        <Text style={styles.leadSender} numberOfLines={1}>
           {item.sender_name ?? item.sender_email ?? `Sender #${item.sender_id}`}
         </Text>
         {item.property && (
-          <Text className="text-xs text-gray-500 mt-0.5" numberOfLines={1}>
+          <Text style={styles.leadProperty} numberOfLines={1}>
             Re: {item.property.title}
           </Text>
         )}
-        <Text className="text-sm text-gray-700 mt-1" numberOfLines={2}>
+        <Text style={styles.leadMessage} numberOfLines={2}>
           {item.body}
         </Text>
       </View>
-      <Text className="text-gray-400 ml-2">›</Text>
+      <Icon name="chevron-right" size={18} color={colors.textTertiary} />
     </TouchableOpacity>
   );
 }
 
 export default function AgentDashboardScreen() {
-  const { data: dashboard, isLoading: dashLoading, isRefetching: dashRefetching, isError: dashError, refetch: refetchDashboard } = useAgentDashboard();
-  const { data: leads, isLoading: leadsLoading, isRefetching: leadsRefetching, refetch: refetchLeads } = useAgentLeads();
+  const {
+    data: dashboard,
+    isLoading: dashLoading,
+    isRefetching: dashRefetching,
+    isError: dashError,
+    refetch: refetchDashboard,
+  } = useAgentDashboard();
+  const {
+    data: leads,
+    isLoading: leadsLoading,
+    isRefetching: leadsRefetching,
+    refetch: refetchLeads,
+  } = useAgentLeads();
 
   if (dashLoading) {
     return (
-      <View className="flex-1 bg-white items-center justify-center">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (dashError) {
     return (
-      <View className="flex-1 bg-white items-center justify-center px-6">
-        <Text className="text-lg font-semibold text-gray-900 mb-2">No agent profile</Text>
-        <Text className="text-gray-500 text-center mb-5">
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorTitle}>No agent profile</Text>
+        <Text style={styles.errorBody}>
           You need to register as an agent to access the dashboard.
         </Text>
         <Button onPress={() => router.push('/agent/register')} size="lg">
@@ -121,43 +136,46 @@ export default function AgentDashboardScreen() {
     void refetchLeads();
   }
 
+  const stats = [
+    { label: 'Listings', value: dashboard?.total ?? 0 },
+    { label: 'Inquiries', value: totalInquiries },
+    { label: 'Saves', value: totalFavorites },
+    { label: 'Views', value: totalViews },
+  ];
+
   return (
     <ScrollView
-      className="flex-1 bg-gray-50"
+      style={styles.root}
       showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
       }
     >
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 bg-white border-b border-gray-100 flex-row items-center">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-primary-500 text-base">Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBack}>
+          <Icon name="chevron-left" size={18} color={colors.primary} />
+          <Text style={styles.headerBackText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900">Agent Dashboard</Text>
+        <Text style={styles.headerTitle}>Agent Dashboard</Text>
       </View>
 
       {/* Stats row */}
-      <View className="flex-row px-4 pt-4 gap-3 mb-5">
-        {[
-          { label: 'Listings', value: dashboard?.total ?? 0 },
-          { label: 'Inquiries', value: totalInquiries },
-          { label: 'Saves', value: totalFavorites },
-          { label: 'Views', value: totalViews },
-        ].map((stat) => (
-          <View key={stat.label} className="flex-1 bg-white rounded-xl p-3 items-center border border-gray-100">
-            <Text className="text-xl font-bold text-primary-500">{stat.value}</Text>
-            <Text className="text-xs text-gray-500 mt-0.5">{stat.label}</Text>
+      <View style={styles.statsRow}>
+        {stats.map((stat) => (
+          <View key={stat.label} style={styles.statCard}>
+            <Text style={styles.statValue}>{stat.value}</Text>
+            <Text style={styles.statLabel}>{stat.label}</Text>
           </View>
         ))}
       </View>
 
       {/* Listings horizontal scroll */}
-      <View className="mb-5">
-        <View className="flex-row items-center justify-between px-4 mb-3">
-          <Text className="text-base font-bold text-gray-900">My Listings</Text>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>My Listings</Text>
           <TouchableOpacity onPress={() => router.push('/listings/my-listings')}>
-            <Text className="text-primary-500 text-sm">View all</Text>
+            <Text style={styles.sectionLink}>View all</Text>
           </TouchableOpacity>
         </View>
         {dashboard && dashboard.items.length > 0 ? (
@@ -172,36 +190,245 @@ export default function AgentDashboardScreen() {
             contentContainerStyle={{ paddingHorizontal: 16 }}
           />
         ) : (
-          <View className="mx-4 bg-white rounded-xl p-5 border border-gray-100 items-center">
-            <Text className="text-gray-500 text-sm">No listings yet.</Text>
+          <View style={styles.emptyListings}>
+            <Text style={styles.emptyListingsText}>No listings yet.</Text>
             <TouchableOpacity
-              className="mt-3"
+              style={styles.emptyListingsLink}
               onPress={() => router.push('/listings/create/step-1')}
             >
-              <Text className="text-primary-500 text-sm font-medium">Create your first listing</Text>
+              <Text style={styles.emptyListingsLinkText}>Create your first listing</Text>
             </TouchableOpacity>
           </View>
         )}
       </View>
 
       {/* Recent Leads */}
-      <View className="px-4 mb-8">
-        <View className="flex-row items-center justify-between mb-3">
-          <Text className="text-base font-bold text-gray-900">Recent Leads</Text>
+      <View style={styles.leadsSection}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Recent Leads</Text>
           <TouchableOpacity onPress={() => router.push('/agent/leads')}>
-            <Text className="text-primary-500 text-sm">View all</Text>
+            <Text style={styles.sectionLink}>View all</Text>
           </TouchableOpacity>
         </View>
         {leadsLoading ? (
-          <ActivityIndicator size="small" color="#2563eb" />
+          <ActivityIndicator size="small" color={colors.primary} />
         ) : recentLeads.length > 0 ? (
           recentLeads.map((lead) => <LeadRow key={lead.id} item={lead} />)
         ) : (
-          <View className="bg-white rounded-xl p-5 border border-gray-100 items-center">
-            <Text className="text-gray-500 text-sm">No leads yet.</Text>
+          <View style={styles.emptyLeads}>
+            <Text style={styles.emptyLeadsText}>No leads yet.</Text>
           </View>
         )}
       </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  centered: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  errorBody: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 20,
+    fontSize: 14,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    gap: 12,
+    marginBottom: 20,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    padding: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.primary,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  sectionLink: {
+    color: colors.primary,
+    fontSize: 14,
+  },
+  listingCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    marginRight: 12,
+    overflow: 'hidden',
+    width: 208,
+  },
+  listingImageContainer: {
+    height: 112,
+    backgroundColor: colors.surfaceSunken,
+  },
+  listingImage: {
+    width: '100%',
+    height: '100%',
+  },
+  listingImagePlaceholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  listingCardBody: {
+    padding: 12,
+  },
+  listingBadgeWrapper: {
+    marginBottom: 4,
+  },
+  listingTitle: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 4,
+  },
+  listingStats: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 4,
+  },
+  listingStatText: {
+    fontSize: 12,
+    color: colors.textSecondary,
+  },
+  emptyListings: {
+    marginHorizontal: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+  },
+  emptyListingsText: {
+    color: colors.textSecondary,
+    fontSize: 14,
+  },
+  emptyListingsLink: {
+    marginTop: 12,
+  },
+  emptyListingsLinkText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+  },
+  leadsSection: {
+    paddingHorizontal: 16,
+    marginBottom: 32,
+  },
+  leadRow: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: 16,
+    marginBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  leadRowBody: {
+    flex: 1,
+  },
+  leadSender: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  leadProperty: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+  leadMessage: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: 4,
+  },
+  emptyLeads: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+  },
+  emptyLeadsText: {
+    color: colors.textSecondary,
+    fontSize: 14,
+  },
+});

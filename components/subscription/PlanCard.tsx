@@ -1,4 +1,6 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 import type { SubscriptionPlanResponse } from '@/hooks/useSubscription';
 
 interface PlanCardProps {
@@ -25,61 +27,87 @@ export function PlanCard({
   ];
 
   return (
-    <View
-      className={`rounded-2xl border p-5 mb-4 ${
-        isCurrentPlan
-          ? 'border-primary-500 bg-primary-50'
-          : 'border-gray-200 bg-white'
-      }`}
-    >
-      {/* Plan name + current indicator */}
-      <View className="flex-row items-center justify-between mb-1">
-        <Text className="text-lg font-bold text-gray-900">{plan.name}</Text>
+    <View style={[styles.card, isCurrentPlan && styles.cardCurrent]}>
+      <View style={styles.headerRow}>
+        <Text style={styles.name}>{plan.name}</Text>
         {isCurrentPlan && (
-          <View className="bg-primary-500 rounded-full px-2 py-0.5">
-            <Text className="text-white text-xs font-semibold">Current</Text>
+          <View style={styles.currentBadge}>
+            <Text style={styles.currentBadgeText}>Current</Text>
           </View>
         )}
       </View>
 
-      {/* Price */}
-      <View className="flex-row items-baseline mb-3">
-        <Text className="text-3xl font-extrabold text-gray-900">${plan.price}</Text>
-        <Text className="text-sm text-gray-500 ml-1">{cycleLabel}</Text>
+      <View style={styles.priceRow}>
+        <Text style={styles.price}>${plan.price}</Text>
+        <Text style={styles.cycle}>{cycleLabel}</Text>
       </View>
 
-      {/* Features */}
-      <View className="mb-4">
+      <View style={styles.featuresWrap}>
         {features.map((f, i) => (
-          <View key={i} className="flex-row items-center mb-1">
-            <Text className="text-green-500 mr-2">✓</Text>
-            <Text className="text-sm text-gray-700">{f}</Text>
+          <View key={i} style={styles.featureRow}>
+            <Icon name="check" size={16} color={colors.success} />
+            <Text style={styles.featureText}>{f}</Text>
           </View>
         ))}
       </View>
 
-      {/* Subscribe button */}
       {onSubscribe && !isCurrentPlan ? (
         <TouchableOpacity
-          className={`rounded-xl py-3 items-center ${
-            isSubscribing ? 'bg-primary-300' : 'bg-primary-500'
-          }`}
+          style={[styles.subscribeBtn, isSubscribing && styles.subscribeBtnPending]}
           onPress={() => onSubscribe(plan.id)}
           disabled={isSubscribing}
           accessibilityRole="button"
           accessibilityLabel={`Subscribe to ${plan.name}`}
         >
           {isSubscribing ? (
-            <ActivityIndicator size="small" color="#ffffff" />
+            <ActivityIndicator size="small" color={colors.textOnBrand} />
           ) : (
-            <Text className="text-white font-semibold">Subscribe</Text>
+            <Text style={styles.subscribeBtnText}>Subscribe</Text>
           )}
         </TouchableOpacity>
       ) : isCurrentPlan ? (
-        <View className="rounded-xl py-3 items-center border border-primary-400">
-          <Text className="text-primary-500 font-semibold">Your current plan</Text>
+        <View style={styles.currentPlanBtn}>
+          <Text style={styles.currentPlanBtnText}>Your current plan</Text>
         </View>
       ) : null}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: radius.xl2,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: 20,
+    marginBottom: 16,
+  },
+  cardCurrent: { borderColor: colors.primary, backgroundColor: colors.primaryLight },
+  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
+  name: { fontSize: 18, fontWeight: fontWeight.bold, color: colors.textPrimary },
+  currentBadge: { backgroundColor: colors.primary, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 3 },
+  currentBadgeText: { color: colors.textOnBrand, fontSize: 11, fontWeight: fontWeight.semibold },
+  priceRow: { flexDirection: 'row', alignItems: 'baseline', marginBottom: 12 },
+  price: { fontSize: 30, fontWeight: fontWeight.bold, color: colors.textPrimary },
+  cycle: { fontSize: 14, color: colors.textSecondary, marginLeft: 4 },
+  featuresWrap: { marginBottom: 16, gap: 8 },
+  featureRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  featureText: { fontSize: 14, color: colors.textPrimary },
+  subscribeBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 13,
+    alignItems: 'center',
+  },
+  subscribeBtnPending: { opacity: 0.6 },
+  subscribeBtnText: { color: colors.textOnBrand, fontWeight: fontWeight.semibold, fontSize: 15 },
+  currentPlanBtn: {
+    borderRadius: radius.md,
+    paddingVertical: 13,
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: colors.borderBrand,
+  },
+  currentPlanBtnText: { color: colors.primary, fontWeight: fontWeight.semibold, fontSize: 15 },
+});

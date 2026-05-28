@@ -6,11 +6,14 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useAgentProfile, useUpdateAgentProfile } from '@/hooks/useAgentProfile';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 export default function AgentProfileScreen() {
   const { data: agent, isLoading, isError } = useAgentProfile();
@@ -44,17 +47,17 @@ export default function AgentProfileScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 bg-white items-center justify-center">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (isError || !agent) {
     return (
-      <View className="flex-1 bg-white items-center justify-center px-6">
-        <Text className="text-lg font-semibold text-gray-900 mb-2">No agent profile found</Text>
-        <Text className="text-gray-500 text-center mb-5">
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorTitle}>No agent profile found</Text>
+        <Text style={styles.errorBody}>
           You need to register as an agent first.
         </Text>
         <Button onPress={() => router.replace('/agent/register')} size="lg">
@@ -65,39 +68,38 @@ export default function AgentProfileScreen() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.root}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 border-b border-gray-100 flex-row items-center">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-primary-500 text-base">Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBack}>
+          <Icon name="chevron-left" size={18} color={colors.primary} />
+          <Text style={styles.headerBackText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900">Agent Profile</Text>
+        <Text style={styles.headerTitle}>Agent Profile</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Verified badge */}
-        <View className="flex-row items-center mb-4">
-          <View
-            className={`rounded-full px-3 py-1 ${agent.verified ? 'bg-green-100' : 'bg-gray-100'}`}
-          >
-            <Text
-              className={`text-xs font-semibold ${agent.verified ? 'text-green-700' : 'text-gray-500'}`}
-            >
+        <View style={styles.verifiedRow}>
+          <View style={[styles.verifiedBadge, agent.verified ? styles.verifiedBadgeActive : styles.verifiedBadgeInactive]}>
+            <Text style={[styles.verifiedBadgeText, agent.verified ? styles.verifiedBadgeTextActive : styles.verifiedBadgeTextInactive]}>
               {agent.verified ? 'Verified Agent' : 'Not yet verified'}
             </Text>
           </View>
-          {agent.verified && <Text className="ml-2 text-green-600 text-base">✓</Text>}
+          {agent.verified && (
+            <Icon name="check" size={18} color={colors.success} style={{ marginLeft: 8 }} />
+          )}
         </View>
 
         {agent.agency && (
-          <View className="bg-gray-50 rounded-xl p-3 mb-4">
-            <Text className="text-xs text-gray-500">Agency</Text>
-            <Text className="text-sm font-semibold text-gray-900 mt-0.5">{agent.agency.name}</Text>
+          <View style={styles.agencyCard}>
+            <Text style={styles.agencyLabel}>Agency</Text>
+            <Text style={styles.agencyName}>{agent.agency.name}</Text>
           </View>
         )}
 
-        <Text className="text-sm font-medium text-gray-700 mb-1">Bio</Text>
-        <View className="mb-4">
+        <Text style={styles.fieldLabel}>Bio</Text>
+        <View style={styles.bioWrapper}>
           <Input
             value={bio}
             onChangeText={setBio}
@@ -116,15 +118,15 @@ export default function AgentProfileScreen() {
           keyboardType="phone-pad"
         />
 
-        <Text className="text-xs text-gray-400 mt-1 mb-6">
+        <Text style={styles.footNote}>
           Verified status is set by the admin team and cannot be changed here.
         </Text>
 
-        <View className="h-24" />
+        <View style={styles.scrollPadBottom} />
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 pb-8 pt-3 border-t border-gray-100 bg-white">
+      <View style={styles.footer}>
         <Button onPress={handleSave} loading={updateAgent.isPending} size="lg">
           Save Changes
         </Button>
@@ -132,3 +134,131 @@ export default function AgentProfileScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  centered: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  errorBody: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 20,
+    fontSize: 14,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  scrollContent: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  verifiedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  verifiedBadge: {
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  verifiedBadgeActive: {
+    backgroundColor: colors.successBg,
+  },
+  verifiedBadgeInactive: {
+    backgroundColor: colors.surfaceSunken,
+  },
+  verifiedBadgeText: {
+    fontSize: 12,
+    fontWeight: fontWeight.semibold,
+  },
+  verifiedBadgeTextActive: {
+    color: colors.success,
+  },
+  verifiedBadgeTextInactive: {
+    color: colors.textSecondary,
+  },
+  agencyCard: {
+    backgroundColor: colors.background,
+    borderRadius: radius.md,
+    padding: 12,
+    marginBottom: 16,
+  },
+  agencyLabel: {
+    fontSize: 12,
+    color: colors.textSecondary,
+  },
+  agencyName: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginTop: 2,
+  },
+  fieldLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  bioWrapper: {
+    marginBottom: 16,
+  },
+  footNote: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginTop: 4,
+    marginBottom: 24,
+  },
+  scrollPadBottom: {
+    height: 96,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+});

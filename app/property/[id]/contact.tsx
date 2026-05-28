@@ -1,9 +1,10 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { ContactForm } from '@/components/property/ContactForm';
 import { useProperty } from '@/hooks/useProperty';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 function ContactContent() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -27,32 +28,30 @@ function ContactContent() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="flex-row items-center px-4 pt-14 pb-4 border-b border-gray-100">
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="mr-3"
+          style={styles.cancelBtn}
           accessibilityRole="button"
           accessibilityLabel="Close"
         >
-          <Text className="text-gray-600 text-base">Cancel</Text>
+          <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
-        <Text className="flex-1 text-base font-semibold text-gray-900 text-center">
-          Contact Agent
-        </Text>
+        <Text style={styles.headerTitle}>Contact Agent</Text>
         {/* Spacer to balance the Cancel text */}
-        <View className="w-14" />
+        <View style={styles.headerSpacer} />
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="handled">
         {property && (
-          <View className="mb-4 bg-gray-50 rounded-xl p-3">
-            <Text className="text-xs text-gray-500 mb-0.5">About</Text>
-            <Text className="text-sm font-medium text-gray-900" numberOfLines={2}>
+          <View style={styles.propertyCard}>
+            <Text style={styles.propertyCardLabel}>About</Text>
+            <Text style={styles.propertyCardTitle} numberOfLines={2}>
               {property.title}
             </Text>
-            <Text className="text-xs text-gray-500">{property.city}</Text>
+            <Text style={styles.propertyCardCity}>{property.city}</Text>
           </View>
         )}
 
@@ -62,7 +61,7 @@ function ContactContent() {
           onError={handleError}
         />
 
-        <View className="h-8" />
+        <View style={styles.bottomSpacer} />
       </ScrollView>
     </View>
   );
@@ -75,3 +74,64 @@ export default function ContactScreen() {
     </AuthGate>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  cancelBtn: {
+    marginRight: 12,
+  },
+  cancelText: {
+    color: colors.textSecondary,
+    fontSize: fontSize.base,
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    textAlign: 'center',
+  },
+  headerSpacer: {
+    width: 56,
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  propertyCard: {
+    marginBottom: 16,
+    backgroundColor: colors.surfaceMuted,
+    borderRadius: radius.md,
+    padding: 12,
+  },
+  propertyCardLabel: {
+    fontSize: fontSize.xs,
+    color: colors.textTertiary,
+    marginBottom: 2,
+  },
+  propertyCardTitle: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    color: colors.textPrimary,
+  },
+  propertyCardCity: {
+    fontSize: fontSize.xs,
+    color: colors.textTertiary,
+  },
+  bottomSpacer: {
+    height: 32,
+  },
+});

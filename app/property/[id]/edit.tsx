@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useProperty } from '@/hooks/useProperty';
@@ -14,6 +15,7 @@ import { useUpdateProperty } from '@/hooks/useUpdateProperty';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 import type { ListingType, PropertyType } from '@/lib/types/property';
 
 const LISTING_TYPES: { value: ListingType; label: string }[] = [
@@ -76,16 +78,16 @@ export default function EditPropertyScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 bg-white items-center justify-center">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (!property) {
     return (
-      <View className="flex-1 bg-white items-center justify-center px-6">
-        <Text className="text-lg font-semibold text-gray-900 mb-2">Property not found</Text>
+      <View style={[styles.centered, styles.centeredPadded]}>
+        <Text style={styles.accessTitle}>Property not found</Text>
         <Button onPress={() => router.back()} variant="secondary">
           Go Back
         </Button>
@@ -96,8 +98,8 @@ export default function EditPropertyScreen() {
   // Only owner can edit
   if (currentUser && property.owner_id !== currentUser.id) {
     return (
-      <View className="flex-1 bg-white items-center justify-center px-6">
-        <Text className="text-lg font-semibold text-gray-900 mb-2">Access denied</Text>
+      <View style={[styles.centered, styles.centeredPadded]}>
+        <Text style={styles.accessTitle}>Access denied</Text>
         <Button onPress={() => router.back()} variant="secondary">
           Go Back
         </Button>
@@ -150,28 +152,34 @@ export default function EditPropertyScreen() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 border-b border-gray-100 flex-row items-center">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-primary-500 text-base">Cancel</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.cancelBtn}>
+          <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900">Edit Listing</Text>
+        <Text style={styles.headerTitle}>Edit Listing</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Listing Type */}
-        <Text className="text-sm font-medium text-gray-700 mb-2">Listing Type</Text>
-        <View className="flex-row gap-2 mb-4 flex-wrap">
+        <Text style={styles.fieldLabel}>Listing Type</Text>
+        <View style={styles.chipRow}>
           {LISTING_TYPES.map((lt) => (
             <TouchableOpacity
               key={lt.value}
               onPress={() => setListingType(lt.value)}
-              className={`px-4 py-2 rounded-full border ${
-                listingType === lt.value ? 'bg-primary-500 border-primary-500' : 'bg-white border-gray-300'
-              }`}
+              style={[
+                styles.chip,
+                listingType === lt.value ? styles.chipSelected : styles.chipUnselected,
+              ]}
             >
-              <Text className={`text-sm ${listingType === lt.value ? 'text-white' : 'text-gray-700'}`}>
+              <Text
+                style={[
+                  styles.chipText,
+                  listingType === lt.value ? styles.chipTextSelected : styles.chipTextUnselected,
+                ]}
+              >
                 {lt.label}
               </Text>
             </TouchableOpacity>
@@ -179,18 +187,28 @@ export default function EditPropertyScreen() {
         </View>
 
         {/* Property Type */}
-        <Text className="text-sm font-medium text-gray-700 mb-2">Property Type</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
-          <View className="flex-row gap-2">
+        <Text style={styles.fieldLabel}>Property Type</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.horizontalScrollView}
+        >
+          <View style={styles.chipRow}>
             {PROPERTY_TYPES.map((pt) => (
               <TouchableOpacity
                 key={pt.value}
                 onPress={() => setPropertyType(pt.value)}
-                className={`px-3 py-1.5 rounded-full border ${
-                  propertyType === pt.value ? 'bg-primary-500 border-primary-500' : 'bg-white border-gray-300'
-                }`}
+                style={[
+                  styles.chipSm,
+                  propertyType === pt.value ? styles.chipSelected : styles.chipUnselected,
+                ]}
               >
-                <Text className={`text-sm ${propertyType === pt.value ? 'text-white' : 'text-gray-700'}`}>
+                <Text
+                  style={[
+                    styles.chipText,
+                    propertyType === pt.value ? styles.chipTextSelected : styles.chipTextUnselected,
+                  ]}
+                >
                   {pt.label}
                 </Text>
               </TouchableOpacity>
@@ -198,12 +216,7 @@ export default function EditPropertyScreen() {
           </View>
         </ScrollView>
 
-        <Input
-          label="Title *"
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Listing title"
-        />
+        <Input label="Title *" value={title} onChangeText={setTitle} placeholder="Listing title" />
         <Input
           label="Price *"
           value={price}
@@ -211,12 +224,7 @@ export default function EditPropertyScreen() {
           keyboardType="numeric"
           placeholder="0"
         />
-        <Input
-          label="City *"
-          value={city}
-          onChangeText={setCity}
-          placeholder="e.g. Tunis"
-        />
+        <Input label="City *" value={city} onChangeText={setCity} placeholder="e.g. Tunis" />
         <Input
           label="Address"
           value={address}
@@ -246,25 +254,24 @@ export default function EditPropertyScreen() {
         />
 
         {/* Description */}
-        <Text className="text-sm font-medium text-gray-700 mb-1">
+        <Text style={styles.fieldLabel}>
           Description ({description.length}/5000)
         </Text>
         <TextInput
           value={description}
           onChangeText={(v) => v.length <= 5000 && setDescription(v)}
           placeholder="Describe the property..."
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={colors.textTertiary}
           multiline
           numberOfLines={6}
-          className="border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 bg-white mb-4"
-          style={{ minHeight: 120, textAlignVertical: 'top' }}
+          style={styles.descriptionInput}
         />
 
-        <View className="h-32" />
+        <View style={styles.bottomSpacer} />
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 pb-8 pt-3 border-t border-gray-100 bg-white">
+      <View style={styles.footer}>
         <Button onPress={handleSave} loading={updateProperty.isPending} size="lg">
           Save Changes
         </Button>
@@ -272,3 +279,119 @@ export default function EditPropertyScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  centered: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  centeredPadded: {
+    paddingHorizontal: 24,
+  },
+  accessTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cancelBtn: {
+    marginRight: 12,
+  },
+  cancelText: {
+    color: colors.primary,
+    fontSize: fontSize.base,
+  },
+  headerTitle: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  fieldLabel: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+    flexWrap: 'wrap',
+  },
+  horizontalScrollView: {
+    marginBottom: 16,
+  },
+  chip: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+  },
+  chipSm: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+  },
+  chipSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  chipUnselected: {
+    backgroundColor: colors.surface,
+    borderColor: colors.borderStrong,
+  },
+  chipText: {
+    fontSize: fontSize.sm,
+  },
+  chipTextSelected: {
+    color: colors.textOnBrand,
+  },
+  chipTextUnselected: {
+    color: colors.textSecondary,
+  },
+  descriptionInput: {
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: fontSize.base,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface,
+    marginBottom: 16,
+    minHeight: 120,
+    textAlignVertical: 'top',
+  },
+  bottomSpacer: {
+    height: 128,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+});

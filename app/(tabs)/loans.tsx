@@ -1,9 +1,24 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { colors, fontWeight } from '@/constants/theme';
 
 export default function LoansScreen() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-semibold text-gray-800">Home Loans</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Home Loans</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: fontWeight.semibold,
+    color: '#1f2937',
+  },
+});

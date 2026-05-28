@@ -10,7 +10,7 @@
  * filter client-side by owner_id matching the current user.
  */
 
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useAgencies } from '@/hooks/useAgencies';
 import { useSubscription, useSubscribe, useCancelSubscription } from '@/hooks/useSubscription';
@@ -18,6 +18,8 @@ import { useSubscriptionPlans } from '@/hooks/useSubscriptionPlans';
 import { useCurrentUser } from '@/hooks/useUser';
 import { PlanCard } from '@/components/subscription/PlanCard';
 import { SubscriptionBadge } from '@/components/subscription/SubscriptionBadge';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, shadows } from '@/constants/theme';
 
 export default function SubscriptionScreen() {
   const { data: user } = useCurrentUser();
@@ -88,26 +90,26 @@ export default function SubscriptionScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (!ownedAgency) {
     return (
-      <View className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-5xl mb-4">🏢</Text>
-        <Text className="text-lg font-bold text-gray-900 mb-2">No Agency</Text>
-        <Text className="text-gray-500 text-center mb-6">
+      <View style={styles.emptyContainer}>
+        <Icon name="home" size={48} color={colors.textTertiary} />
+        <Text style={styles.emptyTitle}>No Agency</Text>
+        <Text style={styles.emptyBody}>
           Create an agency first to manage subscriptions.
         </Text>
         <TouchableOpacity
-          className="bg-primary-500 rounded-xl px-6 py-3"
+          style={styles.emptyBtn}
           onPress={() => router.push('/agency/create')}
           accessibilityRole="button"
         >
-          <Text className="text-white font-semibold">Create Agency</Text>
+          <Text style={styles.emptyBtnText}>Create Agency</Text>
         </TouchableOpacity>
       </View>
     );
@@ -116,80 +118,80 @@ export default function SubscriptionScreen() {
   const hasActiveSubscription = subscription?.status === 'active';
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.root}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-3 bg-white border-b border-gray-100 flex-row items-center">
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          className="mr-3"
+          style={styles.headerBack}
         >
-          <Text className="text-primary-500 text-base">‹ Back</Text>
+          <Icon name="chevron-left" size={18} color={colors.primary} />
+          <Text style={styles.headerBackText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900 flex-1">Subscription</Text>
+        <Text style={styles.headerTitle}>Subscription</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Current subscription card */}
         {subscription ? (
-          <View className="bg-white rounded-2xl border border-gray-100 p-5 mb-6 shadow-sm">
-            <View className="flex-row items-center justify-between mb-3">
-              <Text className="text-base font-bold text-gray-900">Current Plan</Text>
+          <View style={styles.currentPlanCard}>
+            <View style={styles.currentPlanRow}>
+              <Text style={styles.currentPlanHeading}>Current Plan</Text>
               <SubscriptionBadge status={subscription.status} />
             </View>
 
             {subscription.plan && (
               <>
-                <Text className="text-lg font-semibold text-gray-900 mb-1">
-                  {subscription.plan.name}
-                </Text>
-                <Text className="text-sm text-gray-500 mb-2">
+                <Text style={styles.planName}>{subscription.plan.name}</Text>
+                <Text style={styles.planPrice}>
                   ${subscription.plan.price}
                   {subscription.plan.billing_cycle === 'annual' ? '/year' : '/month'}
                 </Text>
-                <Text className="text-sm text-gray-600 mb-1">
-                  Listings: {subscription.plan.listing_limit >= 9999 ? 'Unlimited' : subscription.plan.listing_limit}
+                <Text style={styles.planLimit}>
+                  Listings:{' '}
+                  {subscription.plan.listing_limit >= 9999
+                    ? 'Unlimited'
+                    : subscription.plan.listing_limit}
                 </Text>
               </>
             )}
 
-            <Text className="text-xs text-gray-400 mb-1">
+            <Text style={styles.planDate}>
               Started: {new Date(subscription.starts_at).toLocaleDateString()}
             </Text>
-            <Text className="text-xs text-gray-400 mb-4">
+            <Text style={[styles.planDate, styles.planDateBottom]}>
               Expires: {new Date(subscription.expires_at).toLocaleDateString()}
             </Text>
 
             {/* Benefits callout */}
-            <View className="bg-green-50 rounded-xl px-3 py-2 mb-4">
-              <Text className="text-xs text-green-700 font-medium">
+            <View style={styles.benefitsBanner}>
+              <Text style={styles.benefitsBannerText}>
                 Active subscription bypasses per-listing quota limits.
               </Text>
             </View>
 
             {hasActiveSubscription && (
               <TouchableOpacity
-                className={`border border-red-400 rounded-xl py-3 items-center ${
-                  cancelSub.isPending ? 'opacity-50' : ''
-                }`}
+                style={[styles.cancelBtn, cancelSub.isPending && styles.cancelBtnPending]}
                 onPress={handleCancel}
                 disabled={cancelSub.isPending}
                 accessibilityRole="button"
                 accessibilityLabel="Cancel subscription"
               >
                 {cancelSub.isPending ? (
-                  <ActivityIndicator size="small" color="#ef4444" />
+                  <ActivityIndicator size="small" color={colors.error} />
                 ) : (
-                  <Text className="text-red-600 font-semibold">Cancel Subscription</Text>
+                  <Text style={styles.cancelBtnText}>Cancel Subscription</Text>
                 )}
               </TouchableOpacity>
             )}
           </View>
         ) : (
-          <View className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3 mb-6">
-            <Text className="text-sm font-semibold text-yellow-800 mb-1">No Active Subscription</Text>
-            <Text className="text-xs text-yellow-700">
+          <View style={styles.noSubBanner}>
+            <Text style={styles.noSubTitle}>No Active Subscription</Text>
+            <Text style={styles.noSubBody}>
               Subscribe to a plan to unlock unlimited listings and remove quota restrictions.
             </Text>
           </View>
@@ -198,7 +200,7 @@ export default function SubscriptionScreen() {
         {/* Available plans */}
         {!hasActiveSubscription && (
           <>
-            <Text className="text-base font-bold text-gray-900 mb-3">Available Plans</Text>
+            <Text style={styles.plansHeading}>Available Plans</Text>
             {plans.map((plan) => (
               <PlanCard
                 key={plan.id}
@@ -211,8 +213,179 @@ export default function SubscriptionScreen() {
           </>
         )}
 
-        <View className="h-8" />
+        <View style={styles.scrollPadBottom} />
       </ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.background,
+    paddingHorizontal: 24,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyBody: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 24,
+    fontSize: 14,
+  },
+  emptyBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  emptyBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 12,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  scrollContent: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  currentPlanCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 20,
+    marginBottom: 24,
+    ...shadows.sm,
+  },
+  currentPlanRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  currentPlanHeading: {
+    fontSize: 16,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  planName: {
+    fontSize: 18,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 4,
+  },
+  planPrice: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
+  planLimit: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  planDate: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginBottom: 4,
+  },
+  planDateBottom: {
+    marginBottom: 16,
+  },
+  benefitsBanner: {
+    backgroundColor: colors.successBg,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 16,
+  },
+  benefitsBannerText: {
+    fontSize: 12,
+    color: colors.success,
+    fontWeight: fontWeight.medium,
+  },
+  cancelBtn: {
+    borderWidth: 1,
+    borderColor: '#f87171',
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  cancelBtnPending: {
+    opacity: 0.5,
+  },
+  cancelBtnText: {
+    color: colors.error,
+    fontWeight: fontWeight.semibold,
+  },
+  noSubBanner: {
+    backgroundColor: colors.warningBg,
+    borderWidth: 1,
+    borderColor: '#fde68a',
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 24,
+  },
+  noSubTitle: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: '#92400e',
+    marginBottom: 4,
+  },
+  noSubBody: {
+    fontSize: 12,
+    color: '#b45309',
+  },
+  plansHeading: {
+    fontSize: 16,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 12,
+  },
+  scrollPadBottom: {
+    height: 32,
+  },
+});

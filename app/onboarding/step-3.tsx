@@ -8,11 +8,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { Icon } from '@/components/ui/Icon';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { haptic } from '@/lib/utils/haptics';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface PresetRange {
   label: string;
@@ -45,7 +48,6 @@ export default function OnboardingStep3() {
   );
   const [activePreset, setActivePreset] = useState<number | null>(null);
 
-  // Simple country → currency mapping
   const currency = countryCode === 'MA' ? 'MAD' : countryCode === 'FR' ? 'EUR' : 'TND';
 
   function handlePreset(index: number) {
@@ -68,43 +70,41 @@ export default function OnboardingStep3() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
-        className="flex-1"
+        style={styles.flex1}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView
-          className="flex-1"
+          style={styles.flex1}
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="px-6 pt-6 flex-1">
-            <Text className="text-2xl font-bold text-gray-900 mb-2">
-              What is your budget?
-            </Text>
-            <Text className="text-base text-gray-500 mb-6">
+          <View style={styles.content}>
+            <Text style={styles.title}>What is your budget?</Text>
+            <Text style={styles.subtitle}>
               Set a price range to find matching properties.
             </Text>
 
             {/* Preset ranges */}
-            <View className="flex-row gap-x-2 mb-6">
+            <View style={styles.presetRow}>
               {PRESET_RANGES.map((preset, index) => (
                 <TouchableOpacity
                   key={preset.label}
                   onPress={() => handlePreset(index)}
-                  className={`flex-1 py-2.5 rounded-xl border items-center ${
-                    activePreset === index
-                      ? 'bg-primary-500 border-primary-500'
-                      : 'bg-gray-100 border-gray-200'
-                  }`}
+                  style={[
+                    styles.presetButton,
+                    activePreset === index ? styles.presetButtonActive : styles.presetButtonInactive,
+                  ]}
                   accessibilityRole="button"
                   accessibilityLabel={preset.label}
                   accessibilityState={{ selected: activePreset === index }}
                 >
                   <Text
-                    className={`text-sm font-semibold ${
-                      activePreset === index ? 'text-white' : 'text-gray-700'
-                    }`}
+                    style={[
+                      styles.presetLabel,
+                      activePreset === index ? styles.presetLabelActive : styles.presetLabelInactive,
+                    ]}
                   >
                     {preset.label}
                   </Text>
@@ -113,15 +113,13 @@ export default function OnboardingStep3() {
             </View>
 
             {/* Min / Max price inputs */}
-            <View className="gap-y-4">
+            <View style={styles.inputsContainer}>
               <View>
-                <Text className="text-sm font-medium text-gray-700 mb-1.5">
-                  Minimum price ({currency})
-                </Text>
+                <Text style={styles.inputLabel}>Minimum price ({currency})</Text>
                 <TextInput
-                  className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-base text-gray-900"
-                  placeholder={`e.g. 100,000`}
-                  placeholderTextColor="#9CA3AF"
+                  style={styles.textInput}
+                  placeholder="e.g. 100,000"
+                  placeholderTextColor={colors.textTertiary}
                   keyboardType="numeric"
                   value={minPrice}
                   onChangeText={(t) => {
@@ -132,20 +130,18 @@ export default function OnboardingStep3() {
                   accessibilityLabel="Minimum price"
                 />
                 {minPrice ? (
-                  <Text className="text-xs text-gray-400 mt-1">
+                  <Text style={styles.currencyHint}>
                     {formatCurrency(minPrice, currency)}
                   </Text>
                 ) : null}
               </View>
 
               <View>
-                <Text className="text-sm font-medium text-gray-700 mb-1.5">
-                  Maximum price ({currency})
-                </Text>
+                <Text style={styles.inputLabel}>Maximum price ({currency})</Text>
                 <TextInput
-                  className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-base text-gray-900"
-                  placeholder={`e.g. 500,000`}
-                  placeholderTextColor="#9CA3AF"
+                  style={styles.textInput}
+                  placeholder="e.g. 500,000"
+                  placeholderTextColor={colors.textTertiary}
                   keyboardType="numeric"
                   value={maxPrice}
                   onChangeText={(t) => {
@@ -156,7 +152,7 @@ export default function OnboardingStep3() {
                   accessibilityLabel="Maximum price"
                 />
                 {maxPrice ? (
-                  <Text className="text-xs text-gray-400 mt-1">
+                  <Text style={styles.currencyHint}>
                     {formatCurrency(maxPrice, currency)}
                   </Text>
                 ) : null}
@@ -166,33 +162,154 @@ export default function OnboardingStep3() {
         </ScrollView>
 
         {/* Footer: Back / Skip / Next */}
-        <View className="px-6 py-4 border-t border-gray-100 flex-row gap-x-3">
+        <View style={styles.footer}>
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-12 py-3.5 bg-gray-100 rounded-xl items-center"
+            style={styles.backButton}
             accessibilityRole="button"
             accessibilityLabel="Back"
           >
-            <Text className="text-base font-semibold text-gray-700">{'\u2190'}</Text>
+            <Icon name="chevron-left" size={20} color={colors.textSecondary} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleSkip}
-            className="flex-1 py-3.5 border border-gray-300 rounded-xl items-center"
+            style={styles.skipButton}
             accessibilityRole="button"
             accessibilityLabel="Skip this step"
           >
-            <Text className="text-base font-semibold text-gray-600">Skip</Text>
+            <Text style={styles.skipButtonText}>Skip</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleNext}
-            className="flex-1 py-3.5 bg-primary-500 rounded-xl items-center"
+            style={styles.nextButton}
             accessibilityRole="button"
             accessibilityLabel="Next step"
           >
-            <Text className="text-base font-semibold text-white">Next</Text>
+            <Text style={styles.nextButtonText}>Next</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  flex1: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    flex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    marginBottom: 24,
+  },
+  presetRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 24,
+  },
+  presetButton: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  presetButtonActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  presetButtonInactive: {
+    backgroundColor: colors.surfaceSunken,
+    borderColor: colors.border,
+  },
+  presetLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+  },
+  presetLabelActive: {
+    color: colors.textOnBrand,
+  },
+  presetLabelInactive: {
+    color: colors.textSecondary,
+  },
+  inputsContainer: {
+    gap: 16,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 6,
+  },
+  textInput: {
+    backgroundColor: colors.surfaceSunken,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+  currencyHint: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginTop: 4,
+  },
+  footer: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  backButton: {
+    width: 48,
+    paddingVertical: 14,
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  skipButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    alignItems: 'center',
+  },
+  skipButtonText: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+  nextButton: {
+    flex: 1,
+    paddingVertical: 14,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    alignItems: 'center',
+  },
+  nextButtonText: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textOnBrand,
+  },
+});

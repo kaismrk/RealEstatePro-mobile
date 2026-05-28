@@ -1,20 +1,22 @@
-import { View, Text, ScrollView, TouchableOpacity, Linking, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Linking, Alert, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import Constants from 'expo-constants';
 import { useQueryClient } from '@tanstack/react-query';
+import { Icon } from '@/components/ui/Icon';
 import { CountrySelector } from '@/components/shared/CountrySelector';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useLogout } from '@/hooks/useAuth';
 import { MenuRow } from '@/components/profile/MenuRow';
+import { colors, fontWeight } from '@/constants/theme';
 
 const APP_VERSION =
   (Constants.expoConfig?.version as string | undefined) ?? '1.0.0';
 
 function SettingsRow({ label, value }: { label: string; value: string }) {
   return (
-    <View className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
-      <Text className="text-base text-gray-800">{label}</Text>
-      <Text className="text-base text-gray-500">{value}</Text>
+    <View style={styles.settingsRow}>
+      <Text style={styles.settingsRowLabel}>{label}</Text>
+      <Text style={styles.settingsRowValue}>{value}</Text>
     </View>
   );
 }
@@ -42,23 +44,22 @@ export default function SettingsScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
+    <ScrollView style={styles.root}>
       {/* Header */}
-      <View className="flex-row items-center px-4 pt-14 pb-4 bg-white border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-primary-500 text-base">‹ Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Icon name="chevron-left" size={20} color={colors.primary} />
+          <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900 flex-1">App Settings</Text>
+        <Text style={styles.headerTitle}>App Settings</Text>
       </View>
 
       {/* Region */}
-      <View className="mt-6">
-        <Text className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-4 mb-1">
-          Region
-        </Text>
-        <View className="bg-white border-t border-gray-100">
-          <View className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
-            <Text className="text-base text-gray-800">Country</Text>
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>Region</Text>
+        <View style={styles.sectionBody}>
+          <View style={styles.countryRow}>
+            <Text style={styles.countryRowLabel}>Country</Text>
             <CountrySelector selectedCode={countryCode} onSelect={handleCountrySelect} />
           </View>
           <SettingsRow label="Language" value="English" />
@@ -67,11 +68,9 @@ export default function SettingsScreen() {
       </View>
 
       {/* About */}
-      <View className="mt-6">
-        <Text className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-4 mb-1">
-          About
-        </Text>
-        <View className="bg-white border-t border-gray-100">
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>About</Text>
+        <View style={styles.sectionBody}>
           <SettingsRow label="App Version" value={APP_VERSION} />
           <MenuRow
             icon="📄"
@@ -92,11 +91,9 @@ export default function SettingsScreen() {
       </View>
 
       {/* Sign out */}
-      <View className="mt-6 mb-8">
-        <Text className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-4 mb-1">
-          Account Actions
-        </Text>
-        <View className="bg-white border-t border-gray-100">
+      <View style={[styles.section, styles.sectionLast]}>
+        <Text style={styles.sectionLabel}>Account Actions</Text>
+        <View style={styles.sectionBody}>
           <MenuRow
             icon="🚪"
             label="Sign Out"
@@ -108,3 +105,86 @@ export default function SettingsScreen() {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  backText: {
+    color: colors.primary,
+    fontSize: 16,
+    marginLeft: 2,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  section: {
+    marginTop: 24,
+  },
+  sectionLast: {
+    marginBottom: 32,
+  },
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: fontWeight.semibold,
+    color: colors.textTertiary,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    paddingHorizontal: 16,
+    marginBottom: 4,
+  },
+  sectionBody: {
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  settingsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  settingsRowLabel: {
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+  settingsRowValue: {
+    fontSize: 16,
+    color: colors.textSecondary,
+  },
+  countryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  countryRowLabel: {
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+});

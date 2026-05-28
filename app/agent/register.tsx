@@ -5,11 +5,14 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useRegisterAgent } from '@/hooks/useAgentProfile';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 export default function AgentRegisterScreen() {
   const registerAgent = useRegisterAgent();
@@ -45,28 +48,27 @@ export default function AgentRegisterScreen() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.root}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 border-b border-gray-100 flex-row items-center">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-primary-500 text-base">Cancel</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBack}>
+          <Icon name="chevron-left" size={18} color={colors.primary} />
+          <Text style={styles.headerBackText}>Cancel</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900">Become an Agent</Text>
+        <Text style={styles.headerTitle}>Become an Agent</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
-        <View className="bg-primary-50 border border-primary-200 rounded-xl p-4 mb-5">
-          <Text className="text-sm font-semibold text-primary-900 mb-1">
-            Agent Benefits
-          </Text>
-          <Text className="text-sm text-primary-700">
+      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.benefitsBanner}>
+          <Text style={styles.benefitsTitle}>Agent Benefits</Text>
+          <Text style={styles.benefitsBody}>
             As an agent, you get access to a full dashboard, lead tracking, per-listing
             statistics, and the ability to link your profile to an agency.
           </Text>
         </View>
 
-        <Text className="text-sm font-medium text-gray-700 mb-1">Bio</Text>
-        <View className="mb-4">
+        <Text style={styles.fieldLabel}>Bio</Text>
+        <View style={styles.bioWrapper}>
           <Input
             value={bio}
             onChangeText={setBio}
@@ -85,15 +87,15 @@ export default function AgentRegisterScreen() {
           keyboardType="phone-pad"
         />
 
-        <Text className="text-xs text-gray-400 mt-2 mb-6">
+        <Text style={styles.footNote}>
           Agency affiliation can be set after registration from your agent profile.
         </Text>
 
-        <View className="h-24" />
+        <View style={styles.scrollPadBottom} />
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 pb-8 pt-3 border-t border-gray-100 bg-white">
+      <View style={styles.footer}>
         <Button onPress={handleSubmit} loading={registerAgent.isPending} size="lg">
           Register as Agent
         </Button>
@@ -101,3 +103,82 @@ export default function AgentRegisterScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  scrollContent: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  benefitsBanner: {
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: '#c8a9ff',
+    borderRadius: radius.md,
+    padding: 16,
+    marginBottom: 20,
+  },
+  benefitsTitle: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.primaryDark,
+    marginBottom: 4,
+  },
+  benefitsBody: {
+    fontSize: 14,
+    color: colors.primary,
+  },
+  fieldLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  bioWrapper: {
+    marginBottom: 16,
+  },
+  footNote: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  scrollPadBottom: {
+    height: 96,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+});

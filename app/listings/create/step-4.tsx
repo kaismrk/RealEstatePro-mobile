@@ -7,12 +7,15 @@ import {
   Image,
   Alert,
   FlatList,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 const MAX_IMAGES = 20;
 
@@ -64,24 +67,24 @@ export default function CreateStep4() {
 
   function renderItem({ item, index }: ListRenderItemInfo<string>) {
     return (
-      <View className="mr-3 mb-3 relative">
+      <View style={styles.photoWrap}>
         <Image
           source={{ uri: item }}
-          className="w-24 h-24 rounded-xl bg-gray-100"
+          style={styles.photo}
           resizeMode="cover"
           accessibilityLabel={`Photo ${index + 1}`}
         />
         <TouchableOpacity
           onPress={() => handleRemove(item)}
-          className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 items-center justify-center"
+          style={styles.removeBtn}
           accessibilityRole="button"
           accessibilityLabel={`Remove photo ${index + 1}`}
         >
-          <Text className="text-white text-xs font-bold">×</Text>
+          <Icon name="x" size={12} color={colors.textOnBrand} />
         </TouchableOpacity>
         {index === 0 && (
-          <View className="absolute bottom-1 left-1 bg-primary-500 rounded px-1 py-0.5">
-            <Text className="text-white text-xs">Cover</Text>
+          <View style={styles.coverBadge}>
+            <Text style={styles.coverBadgeText}>Cover</Text>
           </View>
         )}
       </View>
@@ -89,29 +92,29 @@ export default function CreateStep4() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-primary-500 text-sm">Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
+          <Text style={styles.linkText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-2xl font-bold text-gray-900">Photos</Text>
-        <Text className="text-sm text-gray-500 mt-1">
+        <Text style={styles.screenTitle}>Photos</Text>
+        <Text style={styles.stepSubtitle}>
           Step 4 of 5 — Photos ({imageUris.length}/{MAX_IMAGES})
         </Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Upload button */}
         <TouchableOpacity
           onPress={handlePickImages}
-          className="border-2 border-dashed border-gray-300 rounded-2xl py-10 items-center justify-center mb-5"
+          style={styles.uploadBtn}
           accessibilityRole="button"
           accessibilityLabel="Add photos"
         >
-          <Text className="text-4xl mb-2">📷</Text>
-          <Text className="text-base font-semibold text-gray-700">Add Photos</Text>
-          <Text className="text-sm text-gray-400 mt-1">
+          <Icon name="plus" size={40} color={colors.textTertiary} />
+          <Text style={styles.uploadTitle}>Add Photos</Text>
+          <Text style={styles.uploadSubtitle}>
             Up to {MAX_IMAGES} photos. Tap to select.
           </Text>
         </TouchableOpacity>
@@ -119,7 +122,7 @@ export default function CreateStep4() {
         {/* Photo grid */}
         {imageUris.length > 0 && (
           <>
-            <Text className="text-sm font-medium text-gray-700 mb-2">
+            <Text style={styles.selectedLabel}>
               Selected photos — first photo is the cover
             </Text>
             <FlatList<string>
@@ -128,16 +131,16 @@ export default function CreateStep4() {
               keyExtractor={(uri, i) => `${uri}-${i}`}
               numColumns={3}
               scrollEnabled={false}
-              columnWrapperStyle={{ gap: 8 }}
+              columnWrapperStyle={styles.photoColumnWrapper}
             />
           </>
         )}
 
-        <View className="h-32" />
+        <View style={styles.scrollBottom} />
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 pb-8 pt-3 border-t border-gray-100 bg-white">
+      <View style={styles.footer}>
         <Button onPress={handleNext} size="lg">
           Next: Review
         </Button>
@@ -145,3 +148,115 @@ export default function CreateStep4() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerBackBtn: {
+    marginBottom: 8,
+  },
+  linkText: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+  },
+  screenTitle: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  stepSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    marginTop: 4,
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  uploadBtn: {
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: colors.borderStrong,
+    borderRadius: radius.xl2,
+    paddingVertical: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  uploadTitle: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+    marginTop: 8,
+  },
+  uploadSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    marginTop: 4,
+  },
+  selectedLabel: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
+  photoColumnWrapper: {
+    gap: 8,
+  },
+  photoWrap: {
+    marginRight: 12,
+    marginBottom: 12,
+    position: 'relative',
+  },
+  photo: {
+    width: 96,
+    height: 96,
+    borderRadius: radius.md,
+    backgroundColor: colors.border,
+  },
+  removeBtn: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    width: 24,
+    height: 24,
+    borderRadius: radius.pill,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  coverBadge: {
+    position: 'absolute',
+    bottom: 4,
+    left: 4,
+    backgroundColor: colors.primary,
+    borderRadius: radius.xs,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+  },
+  coverBadgeText: {
+    color: colors.textOnBrand,
+    fontSize: fontSize.xs,
+  },
+  scrollBottom: {
+    height: 128,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+});

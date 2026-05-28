@@ -17,10 +17,13 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useAgencies, useUpdateAgency, useDeleteAgency } from '@/hooks/useAgencies';
 import { useCurrentUser } from '@/hooks/useUser';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 function Field({
   label,
@@ -40,19 +43,17 @@ function Field({
   required?: boolean;
 }) {
   return (
-    <View className="mb-4">
-      <Text className="text-sm font-medium text-gray-700 mb-1">
+    <View style={styles.fieldWrapper}>
+      <Text style={styles.fieldLabel}>
         {label}
-        {required && <Text className="text-red-500"> *</Text>}
+        {required && <Text style={styles.fieldRequired}> *</Text>}
       </Text>
       <TextInput
-        className={`bg-white border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 ${
-          multiline ? 'min-h-24' : ''
-        }`}
+        style={[styles.fieldInput, multiline && styles.fieldInputMultiline]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#9ca3af"
+        placeholderTextColor={colors.textTertiary}
         multiline={multiline}
         textAlignVertical={multiline ? 'top' : 'center'}
         keyboardType={keyboardType ?? 'default'}
@@ -161,26 +162,26 @@ export default function ManageAgencyScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (!ownedAgency) {
     return (
-      <View className="flex-1 items-center justify-center bg-gray-50 px-6">
-        <Text className="text-5xl mb-4">🏢</Text>
-        <Text className="text-lg font-bold text-gray-900 mb-2">No Agency Yet</Text>
-        <Text className="text-gray-500 text-center mb-6">
+      <View style={styles.emptyContainer}>
+        <Icon name="home" size={48} color={colors.textTertiary} />
+        <Text style={styles.emptyTitle}>No Agency Yet</Text>
+        <Text style={styles.emptyBody}>
           You don't own an agency. Create one to start listing properties under your brand.
         </Text>
         <TouchableOpacity
-          className="bg-primary-500 rounded-xl px-6 py-3"
+          style={styles.emptyBtn}
           onPress={() => router.push('/agency/create')}
           accessibilityRole="button"
         >
-          <Text className="text-white font-semibold">Create Agency</Text>
+          <Text style={styles.emptyBtnText}>Create Agency</Text>
         </TouchableOpacity>
       </View>
     );
@@ -188,30 +189,31 @@ export default function ManageAgencyScreen() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-gray-50"
+      style={styles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Header */}
-      <View className="px-4 pt-14 pb-3 bg-white border-b border-gray-100 flex-row items-center">
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          className="mr-3"
+          style={styles.headerBack}
         >
-          <Text className="text-primary-500 text-base">‹ Back</Text>
+          <Icon name="chevron-left" size={18} color={colors.primary} />
+          <Text style={styles.headerBackText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900 flex-1">Manage Agency</Text>
+        <Text style={styles.headerTitle}>Manage Agency</Text>
         <TouchableOpacity
           onPress={() => router.push(`/agency/${ownedAgency.id}`)}
           accessibilityRole="button"
           accessibilityLabel="View public profile"
         >
-          <Text className="text-primary-500 text-sm">View Profile</Text>
+          <Text style={styles.headerAction}>View Profile</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView style={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <Field label="Agency Name" value={name} onChangeText={setName} required />
         <Field
           label="Logo URL"
@@ -228,7 +230,7 @@ export default function ManageAgencyScreen() {
           multiline
         />
 
-        <Text className="text-sm font-semibold text-gray-700 mb-3 mt-2">Social Links</Text>
+        <Text style={styles.sectionLabel}>Social Links</Text>
         <Field
           label="Website"
           value={website}
@@ -260,60 +262,56 @@ export default function ManageAgencyScreen() {
 
         {/* Save button */}
         <TouchableOpacity
-          className={`rounded-xl py-4 items-center mt-4 ${
-            updateAgency.isPending ? 'bg-primary-300' : 'bg-primary-500'
-          }`}
+          style={[styles.saveBtn, updateAgency.isPending && styles.saveBtnPending]}
           onPress={handleSave}
           disabled={updateAgency.isPending}
           accessibilityRole="button"
           accessibilityLabel="Save agency changes"
         >
           {updateAgency.isPending ? (
-            <ActivityIndicator size="small" color="#ffffff" />
+            <ActivityIndicator size="small" color={colors.textOnBrand} />
           ) : (
-            <Text className="text-white font-semibold text-base">Save Changes</Text>
+            <Text style={styles.saveBtnText}>Save Changes</Text>
           )}
         </TouchableOpacity>
 
         {/* Subscription shortcut */}
         <TouchableOpacity
-          className="rounded-xl py-4 items-center mt-3 border border-primary-500"
+          style={styles.outlineBtnPrimary}
           onPress={() => router.push('/agency/subscription')}
           accessibilityRole="button"
           accessibilityLabel="Manage subscription"
         >
-          <Text className="text-primary-500 font-semibold text-base">Manage Subscription</Text>
+          <Text style={styles.outlineBtnPrimaryText}>Manage Subscription</Text>
         </TouchableOpacity>
 
         {/* Agent roster shortcut */}
         <TouchableOpacity
-          className="rounded-xl py-4 items-center mt-3 border border-gray-300"
+          style={styles.outlineBtnNeutral}
           onPress={() => router.push('/agency/roster')}
           accessibilityRole="button"
           accessibilityLabel="View agent roster"
         >
-          <Text className="text-gray-700 font-semibold text-base">Agent Roster</Text>
+          <Text style={styles.outlineBtnNeutralText}>Agent Roster</Text>
         </TouchableOpacity>
 
         {/* Danger zone */}
-        <View className="mt-6 mb-10 border border-red-200 rounded-xl p-4 bg-red-50">
-          <Text className="text-sm font-semibold text-red-700 mb-2">Danger Zone</Text>
-          <Text className="text-xs text-red-500 mb-3">
+        <View style={styles.dangerZone}>
+          <Text style={styles.dangerTitle}>Danger Zone</Text>
+          <Text style={styles.dangerBody}>
             Deleting your agency is permanent and cannot be undone.
           </Text>
           <TouchableOpacity
-            className={`rounded-xl py-3 items-center ${
-              deleteAgency.isPending ? 'bg-red-300' : 'bg-red-600'
-            }`}
+            style={[styles.deleteBtn, deleteAgency.isPending && styles.deleteBtnPending]}
             onPress={handleDelete}
             disabled={deleteAgency.isPending}
             accessibilityRole="button"
             accessibilityLabel="Delete agency"
           >
             {deleteAgency.isPending ? (
-              <ActivityIndicator size="small" color="#ffffff" />
+              <ActivityIndicator size="small" color={colors.textOnBrand} />
             ) : (
-              <Text className="text-white font-semibold">Delete Agency</Text>
+              <Text style={styles.deleteBtnText}>Delete Agency</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -321,3 +319,187 @@ export default function ManageAgencyScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.background,
+    paddingHorizontal: 24,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyBody: {
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 24,
+    fontSize: 14,
+  },
+  emptyBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  emptyBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 12,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  headerAction: {
+    color: colors.primary,
+    fontSize: 14,
+  },
+  scrollContent: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  fieldWrapper: {
+    marginBottom: 16,
+  },
+  fieldLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  fieldRequired: {
+    color: colors.error,
+  },
+  fieldInput: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 14,
+    color: colors.textPrimary,
+  },
+  fieldInputMultiline: {
+    minHeight: 96,
+    textAlignVertical: 'top',
+  },
+  sectionLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  saveBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  saveBtnPending: {
+    opacity: 0.6,
+  },
+  saveBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+  outlineBtnPrimary: {
+    borderRadius: radius.md,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
+  outlineBtnPrimaryText: {
+    color: colors.primary,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+  outlineBtnNeutral: {
+    borderRadius: radius.md,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+  },
+  outlineBtnNeutralText: {
+    color: colors.textSecondary,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+  dangerZone: {
+    marginTop: 24,
+    marginBottom: 40,
+    borderWidth: 1,
+    borderColor: '#fecaca',
+    borderRadius: radius.md,
+    padding: 16,
+    backgroundColor: colors.errorBg,
+  },
+  dangerTitle: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: '#b91c1c',
+    marginBottom: 8,
+  },
+  dangerBody: {
+    fontSize: 12,
+    color: colors.error,
+    marginBottom: 12,
+  },
+  deleteBtn: {
+    backgroundColor: '#dc2626',
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  deleteBtnPending: {
+    opacity: 0.6,
+  },
+  deleteBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+});

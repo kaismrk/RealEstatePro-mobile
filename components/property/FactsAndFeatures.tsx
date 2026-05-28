@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import type { PropertySchema } from '@/lib/types/property';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface FactsAndFeaturesProps {
   property: PropertySchema;
@@ -29,29 +30,26 @@ function CollapsibleSection({ section }: { section: Section }) {
   if (visibleItems.length === 0) return null;
 
   return (
-    <View className="mb-4 border border-gray-200 rounded-xl overflow-hidden">
+    <View style={styles.sectionContainer}>
       <TouchableOpacity
         onPress={() => setExpanded((v) => !v)}
-        className="flex-row items-center justify-between px-4 py-3 bg-gray-50"
+        style={styles.sectionHeader}
         accessibilityRole="button"
         accessibilityLabel={`${section.title}, ${expanded ? 'collapse' : 'expand'}`}
       >
-        <Text className="font-semibold text-gray-900">{section.title}</Text>
-        <Text className="text-gray-400 text-lg">{expanded ? '−' : '+'}</Text>
+        <Text style={styles.sectionTitle}>{section.title}</Text>
+        <Text style={styles.toggleIcon}>{expanded ? '−' : '+'}</Text>
       </TouchableOpacity>
 
       {expanded && (
-        <View className="px-4 py-2">
+        <View style={styles.sectionBody}>
           {visibleItems.map((item) => {
             const displayValue = formatValue(item.value);
             if (!displayValue) return null;
             return (
-              <View
-                key={item.label}
-                className="flex-row justify-between items-center py-2 border-b border-gray-100"
-              >
-                <Text className="text-sm text-gray-600">{item.label}</Text>
-                <Text className="text-sm font-medium text-gray-900">{displayValue}</Text>
+              <View key={item.label} style={styles.row}>
+                <Text style={styles.rowLabel}>{item.label}</Text>
+                <Text style={styles.rowValue}>{displayValue}</Text>
               </View>
             );
           })}
@@ -70,7 +68,7 @@ export function FactsAndFeatures({ property }: FactsAndFeaturesProps) {
         { label: 'Bathrooms', value: property.bathrooms != null ? String(property.bathrooms) : null },
         { label: 'Kitchen Type', value: property.kitchen ?? null },
         { label: 'Furnished', value: property.furnished },
-        { label: 'Rooms', value: null }, // number_of_rooms not in schema
+        { label: 'Rooms', value: null },
       ],
     },
     {
@@ -79,7 +77,6 @@ export function FactsAndFeatures({ property }: FactsAndFeaturesProps) {
         { label: 'Heating System', value: property.heating_system ?? null },
         { label: 'Air Conditioner', value: property.air_conditioner ?? null },
         { label: 'Energy Rating', value: property.energy_rating ?? null },
-        // principal_exposure not in PropertySchema — omitted
       ],
     },
     {
@@ -106,11 +103,67 @@ export function FactsAndFeatures({ property }: FactsAndFeaturesProps) {
   if (sectionsWithData.length === 0) return null;
 
   return (
-    <View className="mb-6">
-      <Text className="text-lg font-bold text-gray-900 mb-3">Facts & Features</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Facts & Features</Text>
       {sections.map((section) => (
         <CollapsibleSection key={section.title} section={section} />
       ))}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 24,
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 12,
+  },
+  sectionContainer: {
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    overflow: 'hidden',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: colors.surfaceSunken,
+  },
+  sectionTitle: {
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  toggleIcon: {
+    color: colors.textTertiary,
+    fontSize: 18,
+  },
+  sectionBody: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.surfaceSunken,
+  },
+  rowLabel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  rowValue: {
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+    color: colors.textPrimary,
+  },
+});

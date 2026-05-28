@@ -1,4 +1,6 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { colors, radius, fontWeight } from '@/constants/theme';
+import { Icon } from '@/components/ui/Icon';
 
 interface NetworkErrorProps {
   onRetry?: () => void;
@@ -7,24 +9,57 @@ interface NetworkErrorProps {
 
 export function NetworkError({ onRetry, message }: NetworkErrorProps) {
   return (
-    <View className="flex-1 items-center justify-center px-8 py-12">
-      <Text className="text-4xl mb-4">{'\uD83D\uDCF5'}</Text>
-      <Text className="text-lg font-semibold text-gray-800 text-center mb-2">
-        Connection error
-      </Text>
-      <Text className="text-sm text-gray-500 text-center mb-6">
+    <View style={styles.container}>
+      <Icon name="x" size={40} color={colors.textTertiary} />
+      <Text style={styles.title}>Connection error</Text>
+      <Text style={styles.message}>
         {message ?? 'Unable to load data. Check your connection and try again.'}
       </Text>
       {onRetry ? (
         <TouchableOpacity
           onPress={onRetry}
-          className="bg-primary-500 px-6 py-3 rounded-xl"
+          style={styles.retryButton}
           accessibilityRole="button"
           accessibilityLabel="Retry"
         >
-          <Text className="text-white font-semibold text-base">Retry</Text>
+          <Text style={styles.retryText}>Retry</Text>
         </TouchableOpacity>
       ) : null}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 48,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  message: {
+    fontSize: 14,
+    color: colors.textTertiary,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  retryButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+  },
+  retryText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+});

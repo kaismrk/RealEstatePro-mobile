@@ -6,11 +6,13 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useCountries, type CountryPublicResponse } from '@/hooks/useCountries';
+import { colors, fontWeight, radius } from '@/constants/theme';
 
 function countryCodeToFlag(code: string): string {
   return code
@@ -65,34 +67,34 @@ export default function CountrySelectScreen() {
     const flag = countryCodeToFlag(item.country_code);
     return (
       <TouchableOpacity
-        className="flex-row items-center px-4 py-4 border-b border-gray-100"
+        style={styles.countryRow}
         onPress={() => void handleSelect(item.country_code)}
         accessibilityLabel={`Select ${item.name}`}
       >
-        <Text className="text-2xl mr-4">{flag}</Text>
-        <View className="flex-1">
-          <Text className="text-base font-semibold text-gray-900">{item.name}</Text>
-          <Text className="text-sm text-gray-500">{item.currency}</Text>
+        <Text style={styles.flag}>{flag}</Text>
+        <View style={styles.countryInfo}>
+          <Text style={styles.countryName}>{item.name}</Text>
+          <Text style={styles.currency}>{item.currency}</Text>
         </View>
-        <Text className="text-sm text-gray-400 font-mono">{item.country_code}</Text>
+        <Text style={styles.countryCode}>{item.country_code}</Text>
       </TouchableOpacity>
     );
   }
 
   if (isLoading || detecting) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#5f09fe" />
-        <Text className="text-base text-gray-500 mt-4">Detecting your country...</Text>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={styles.loadingText}>Detecting your country...</Text>
       </View>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="px-4 py-4 border-b border-gray-200">
-        <Text className="text-xl font-bold text-gray-900">Select your country</Text>
-        <Text className="text-sm text-gray-500 mt-1">
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.titleSection}>
+        <Text style={styles.title}>Select your country</Text>
+        <Text style={styles.subtitle}>
           Choose the market you want to browse
         </Text>
       </View>
@@ -101,8 +103,74 @@ export default function CountrySelectScreen() {
         data={countries ?? []}
         keyExtractor={(item) => item.country_code}
         renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        contentContainerStyle={styles.listContent}
       />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    marginTop: 16,
+  },
+  titleSection: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: 4,
+  },
+  listContent: {
+    paddingBottom: 24,
+  },
+  countryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  flag: {
+    fontSize: 24,
+    marginRight: 16,
+  },
+  countryInfo: {
+    flex: 1,
+  },
+  countryName: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  currency: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  countryCode: {
+    fontSize: 14,
+    color: colors.textTertiary,
+    fontVariant: ['tabular-nums'],
+  },
+});

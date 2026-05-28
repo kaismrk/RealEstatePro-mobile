@@ -9,7 +9,10 @@ import {
   Platform,
   Modal,
   SafeAreaView,
+  StyleSheet,
 } from 'react-native';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 import { useSavedSearches } from '@/hooks/useSavedSearches';
 import { useSearchStore } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
@@ -37,7 +40,6 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
     const trimmedName = name.trim();
     if (!trimmedName) return;
 
-    // Build filters matching SavedSearchFilters schema
     const payload = {
       name: trimmedName,
       filters: {
@@ -67,11 +69,12 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
 
   function handleClose() {
     onClose();
-    // Reset name for next time
     setName(buildDefaultName(filters.q ?? undefined));
   }
 
   if (!visible) return null;
+
+  const saveDisabled = create.isPending || !name.trim();
 
   return (
     <Modal
@@ -80,78 +83,65 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
       presentationStyle="pageSheet"
       onRequestClose={handleClose}
     >
-      <SafeAreaView className="flex-1 bg-white">
+      <SafeAreaView style={styles.safe}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          className="flex-1"
+          style={styles.flex}
         >
-          {/* Handle bar */}
-          <View className="items-center pt-3 pb-2">
-            <View className="w-10 h-1 rounded-full bg-gray-300" />
+          <View style={styles.handleWrap}>
+            <View style={styles.handle} />
           </View>
 
-          {/* Title row */}
-          <View className="flex-row items-center px-4 pt-2 pb-4 border-b border-gray-100">
-            <Text className="text-xl font-bold text-gray-900 flex-1">
-              Save Search
-            </Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>Save Search</Text>
             <TouchableOpacity
               onPress={handleClose}
-              className="w-8 h-8 items-center justify-center rounded-full bg-gray-100"
+              style={styles.closeBtn}
               accessibilityRole="button"
               accessibilityLabel="Close"
             >
-              <Text className="text-gray-600">{'\u2715'}</Text>
+              <Icon name="x" size={16} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
 
-          <View className="px-4 pt-6 gap-6">
-            {/* Search name input */}
+          <View style={styles.body}>
             <View>
-              <Text className="text-sm font-semibold text-gray-700 mb-2">
-                Search Name
-              </Text>
+              <Text style={styles.fieldLabel}>Search Name</Text>
               <TextInput
                 value={name}
                 onChangeText={setName}
                 placeholder="e.g. Search in Tunis"
-                placeholderTextColor="#9CA3AF"
-                className="border border-gray-200 rounded-xl px-4 py-3 text-base text-gray-900 bg-gray-50"
+                placeholderTextColor={colors.textTertiary}
+                style={styles.input}
                 maxLength={120}
                 returnKeyType="done"
                 accessibilityLabel="Search name input"
               />
             </View>
 
-            {/* Email notifications toggle */}
-            <View className="flex-row items-center justify-between py-3 border-t border-gray-100">
-              <View className="flex-1 mr-4">
-                <Text className="text-base font-medium text-gray-900">
-                  Email Notifications
-                </Text>
-                <Text className="text-sm text-gray-500 mt-0.5">
+            <View style={styles.toggleRow}>
+              <View style={styles.toggleInfo}>
+                <Text style={styles.toggleTitle}>Email Notifications</Text>
+                <Text style={styles.toggleSub}>
                   Get notified when new homes match this search
                 </Text>
               </View>
               <Switch
                 value={emailNotifications}
                 onValueChange={setEmailNotifications}
-                trackColor={{ false: '#D1D5DB', true: '#93C5FD' }}
-                thumbColor={emailNotifications ? '#2563EB' : '#F3F4F6'}
+                trackColor={{ false: colors.borderStrong, true: colors.borderBrand }}
+                thumbColor={emailNotifications ? colors.primary : '#f5f5f7'}
                 accessibilityLabel="Email notifications toggle"
               />
             </View>
 
-            {/* Active filter summary */}
             {Object.keys(filters).length > 0 && (
-              <View className="bg-primary-50 rounded-xl p-3">
-                <Text className="text-xs font-semibold text-primary-700 mb-1">
-                  Current Filters
-                </Text>
+              <View style={styles.filterCard}>
+                <Text style={styles.filterCardTitle}>Current Filters</Text>
                 {Object.entries(filters)
                   .filter(([, v]) => v != null && v !== '')
                   .map(([key, value]) => (
-                    <Text key={key} className="text-xs text-primary-500">
+                    <Text key={key} style={styles.filterCardRow}>
                       {key}: {String(value)}
                     </Text>
                   ))}
@@ -159,35 +149,22 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
             )}
           </View>
 
-          {/* Save button */}
-          <View className="px-4 mt-auto pb-6">
+          <View style={styles.footer}>
             <TouchableOpacity
               onPress={handleSave}
-              disabled={create.isPending || !name.trim()}
-              className={`py-4 rounded-xl items-center ${
-                create.isPending || !name.trim()
-                  ? 'bg-gray-300'
-                  : 'bg-primary-500'
-              }`}
+              disabled={saveDisabled}
+              style={[styles.saveBtn, saveDisabled && styles.saveBtnDisabled]}
               accessibilityRole="button"
               accessibilityLabel="Save search"
-              accessibilityState={{ disabled: create.isPending || !name.trim() }}
+              accessibilityState={{ disabled: saveDisabled }}
             >
-              <Text
-                className={`text-base font-semibold ${
-                  create.isPending || !name.trim()
-                    ? 'text-gray-500'
-                    : 'text-white'
-                }`}
-              >
+              <Text style={[styles.saveBtnText, saveDisabled && styles.saveBtnTextDisabled]}>
                 {create.isPending ? 'Saving...' : 'Save Search'}
               </Text>
             </TouchableOpacity>
 
             {create.isError && (
-              <Text className="text-red-500 text-sm text-center mt-2">
-                Failed to save. Please try again.
-              </Text>
+              <Text style={styles.errorText}>Failed to save. Please try again.</Text>
             )}
           </View>
         </KeyboardAvoidingView>
@@ -195,3 +172,60 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.surface },
+  flex: { flex: 1 },
+  handleWrap: { alignItems: 'center', paddingTop: 12, paddingBottom: 8 },
+  handle: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.borderStrong },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  title: { fontSize: 20, fontWeight: fontWeight.bold, color: colors.textPrimary, flex: 1 },
+  closeBtn: {
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 16,
+    backgroundColor: colors.surfaceSunken,
+  },
+  body: { paddingHorizontal: 16, paddingTop: 24, gap: 24 },
+  fieldLabel: { fontSize: 13, fontWeight: fontWeight.semibold, color: colors.textPrimary, marginBottom: 8 },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: colors.textPrimary,
+    backgroundColor: colors.surfaceSunken,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  toggleInfo: { flex: 1, marginRight: 16 },
+  toggleTitle: { fontSize: 15, fontWeight: fontWeight.medium, color: colors.textPrimary },
+  toggleSub: { fontSize: 13, color: colors.textSecondary, marginTop: 2 },
+  filterCard: { backgroundColor: colors.primaryLight, borderRadius: radius.md, padding: 12 },
+  filterCardTitle: { fontSize: 11, fontWeight: fontWeight.semibold, color: colors.primaryDark, marginBottom: 4 },
+  filterCardRow: { fontSize: 12, color: colors.primary },
+  footer: { paddingHorizontal: 16, marginTop: 'auto', paddingBottom: 24 },
+  saveBtn: { paddingVertical: 16, borderRadius: radius.md, alignItems: 'center', backgroundColor: colors.primary },
+  saveBtnDisabled: { backgroundColor: colors.borderStrong },
+  saveBtnText: { fontSize: 15, fontWeight: fontWeight.semibold, color: colors.textOnBrand },
+  saveBtnTextDisabled: { color: colors.textSecondary },
+  errorText: { color: colors.error, fontSize: 13, textAlign: 'center', marginTop: 8 },
+});

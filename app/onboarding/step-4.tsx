@@ -5,14 +5,17 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { Icon } from '@/components/ui/Icon';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { haptic } from '@/lib/utils/haptics';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface BedroomOption {
   label: string;
-  value: number | null; // null = Studio
+  value: number | null;
 }
 
 const BEDROOM_OPTIONS: BedroomOption[] = [
@@ -38,7 +41,6 @@ export default function OnboardingStep4() {
   function handleMinSelect(value: number | null) {
     void haptic.light();
     setMinBeds(value);
-    // Reset max if less than min
     if (maxBeds != null && value != null && maxBeds < value) {
       setMaxBeds(null);
     }
@@ -73,9 +75,9 @@ export default function OnboardingStep4() {
     minValue?: number | null;
   }) {
     return (
-      <View className="mb-6">
-        <Text className="text-sm font-semibold text-gray-700 mb-3">{label}</Text>
-        <View className="flex-row flex-wrap gap-2">
+      <View style={styles.gridSection}>
+        <Text style={styles.gridLabel}>{label}</Text>
+        <View style={styles.gridRow}>
           {BEDROOM_OPTIONS.map((opt) => {
             const isDisabled =
               minValue != null && opt.value != null && opt.value < minValue;
@@ -84,22 +86,21 @@ export default function OnboardingStep4() {
               <TouchableOpacity
                 key={opt.label}
                 onPress={() => !isDisabled && onSelect(isSelected ? null : opt.value)}
-                className={`px-5 py-3 rounded-xl border ${
-                  isSelected
-                    ? 'bg-primary-500 border-primary-500'
-                    : isDisabled
-                    ? 'bg-gray-100 border-gray-100 opacity-40'
-                    : 'bg-gray-50 border-gray-200'
-                }`}
+                style={[
+                  styles.chipButton,
+                  isSelected && styles.chipButtonSelected,
+                  isDisabled && styles.chipButtonDisabled,
+                ]}
                 disabled={isDisabled}
                 accessibilityRole="button"
                 accessibilityLabel={`${opt.label} bedroom${opt.value !== 1 ? 's' : ''}`}
                 accessibilityState={{ selected: isSelected, disabled: isDisabled }}
               >
                 <Text
-                  className={`text-base font-semibold ${
-                    isSelected ? 'text-white' : 'text-gray-800'
-                  }`}
+                  style={[
+                    styles.chipLabel,
+                    isSelected && styles.chipLabelSelected,
+                  ]}
                 >
                   {opt.label}
                 </Text>
@@ -112,17 +113,15 @@ export default function OnboardingStep4() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView
-        className="flex-1"
+        style={styles.flex1}
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="px-6 pt-6 flex-1">
-          <Text className="text-2xl font-bold text-gray-900 mb-2">
-            How many bedrooms?
-          </Text>
-          <Text className="text-base text-gray-500 mb-7">
+        <View style={styles.content}>
+          <Text style={styles.title}>How many bedrooms?</Text>
+          <Text style={styles.subtitle}>
             Select a minimum and maximum bedroom count.
           </Text>
 
@@ -142,32 +141,136 @@ export default function OnboardingStep4() {
       </ScrollView>
 
       {/* Footer: Back / Skip / Next */}
-      <View className="px-6 py-4 border-t border-gray-100 flex-row gap-x-3">
+      <View style={styles.footer}>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="w-12 py-3.5 bg-gray-100 rounded-xl items-center"
+          style={styles.backButton}
           accessibilityRole="button"
           accessibilityLabel="Back"
         >
-          <Text className="text-base font-semibold text-gray-700">{'\u2190'}</Text>
+          <Icon name="chevron-left" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleSkip}
-          className="flex-1 py-3.5 border border-gray-300 rounded-xl items-center"
+          style={styles.skipButton}
           accessibilityRole="button"
           accessibilityLabel="Skip this step"
         >
-          <Text className="text-base font-semibold text-gray-600">Skip</Text>
+          <Text style={styles.skipButtonText}>Skip</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleNext}
-          className="flex-1 py-3.5 bg-primary-500 rounded-xl items-center"
+          style={styles.nextButton}
           accessibilityRole="button"
           accessibilityLabel="Next step"
         >
-          <Text className="text-base font-semibold text-white">Next</Text>
+          <Text style={styles.nextButtonText}>Next</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  flex1: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    flex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    marginBottom: 28,
+  },
+  gridSection: {
+    marginBottom: 24,
+  },
+  gridLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+    marginBottom: 12,
+  },
+  gridRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  chipButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    backgroundColor: colors.surfaceSunken,
+    borderColor: colors.border,
+  },
+  chipButtonSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  chipButtonDisabled: {
+    opacity: 0.4,
+  },
+  chipLabel: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  chipLabelSelected: {
+    color: colors.textOnBrand,
+  },
+  footer: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  backButton: {
+    width: 48,
+    paddingVertical: 14,
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  skipButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    alignItems: 'center',
+  },
+  skipButtonText: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+  nextButton: {
+    flex: 1,
+    paddingVertical: 14,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    alignItems: 'center',
+  },
+  nextButtonText: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textOnBrand,
+  },
+});

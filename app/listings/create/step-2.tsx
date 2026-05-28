@@ -7,6 +7,7 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
@@ -15,6 +16,8 @@ import { useAuthStore } from '@/lib/stores/auth.store';
 import { Button } from '@/components/ui/Button';
 import { RegionPicker } from '@/components/geo/RegionPicker';
 import { RegionBreadcrumb } from '@/components/geo/RegionBreadcrumb';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 import type { Region } from '@/hooks/useRegions';
 
 const DISCLOSURE_LEVELS = [
@@ -88,19 +91,19 @@ export default function CreateStep2() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-primary-500 text-sm">Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
+          <Text style={styles.linkText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-2xl font-bold text-gray-900">Location</Text>
-        <Text className="text-sm text-gray-500 mt-1">Step 2 of 5 — Location</Text>
+        <Text style={styles.screenTitle}>Location</Text>
+        <Text style={styles.stepSubtitle}>Step 2 of 5 — Location</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Region picker — cascading geo hierarchy */}
-        <View className="mb-5">
+        <View style={styles.regionPickerWrap}>
           <RegionPicker
             countryCode={countryCode}
             value={regionId}
@@ -117,7 +120,7 @@ export default function CreateStep2() {
             }}
           />
           {locationPath.length > 0 && (
-            <RegionBreadcrumb path={locationPath} className="mt-2" />
+            <RegionBreadcrumb path={locationPath} style={styles.breadcrumb} />
           )}
         </View>
 
@@ -125,105 +128,101 @@ export default function CreateStep2() {
         <TouchableOpacity
           onPress={handleUseLocation}
           disabled={locating}
-          className="flex-row items-center justify-center border border-primary-500 rounded-xl py-3 mb-5"
+          style={styles.locationBtn}
           accessibilityRole="button"
         >
           {locating ? (
-            <ActivityIndicator size="small" color="#2563eb" />
+            <ActivityIndicator size="small" color={colors.primary} />
           ) : (
             <>
-              <Text className="text-base mr-2">📍</Text>
-              <Text className="text-primary-500 font-medium">Use my current location</Text>
+              <Icon name="map-pin" size={18} color={colors.primary} style={styles.locationIcon} />
+              <Text style={styles.locationBtnText}>Use my current location</Text>
             </>
           )}
         </TouchableOpacity>
 
-        {/* City — auto-filled from RegionPicker but editable for street-level precision */}
-        <Text className="text-base font-semibold text-gray-800 mb-1">
-          City <Text className="text-red-500">*</Text>
+        {/* City */}
+        <Text style={styles.fieldLabel}>
+          City <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           value={city}
           onChangeText={setCity}
           placeholder="e.g. Tunis"
-          placeholderTextColor="#9CA3AF"
-          className={`border rounded-xl px-4 py-3 text-base text-gray-900 bg-white mb-1 ${
-            errors.city ? 'border-red-500' : 'border-gray-300'
-          }`}
+          placeholderTextColor={colors.textTertiary}
+          style={[styles.input, errors.city ? styles.inputError : styles.inputNormal]}
           accessibilityLabel="City"
         />
         {errors.city ? (
-          <Text className="text-red-500 text-xs mb-4">{errors.city}</Text>
+          <Text style={styles.errorText}>{errors.city}</Text>
         ) : (
-          <View className="mb-4" />
+          <View style={styles.spacerMb4} />
         )}
 
         {/* Address */}
-        <Text className="text-base font-semibold text-gray-800 mb-1">
-          Address <Text className="text-red-500">*</Text>
+        <Text style={styles.fieldLabel}>
+          Address <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           value={address}
           onChangeText={setAddress}
           placeholder="e.g. 12 Rue de la Paix"
-          placeholderTextColor="#9CA3AF"
-          className={`border rounded-xl px-4 py-3 text-base text-gray-900 bg-white mb-1 ${
-            errors.address ? 'border-red-500' : 'border-gray-300'
-          }`}
+          placeholderTextColor={colors.textTertiary}
+          style={[styles.input, errors.address ? styles.inputError : styles.inputNormal]}
           accessibilityLabel="Address"
         />
         {errors.address ? (
-          <Text className="text-red-500 text-xs mb-4">{errors.address}</Text>
+          <Text style={styles.errorText}>{errors.address}</Text>
         ) : (
-          <View className="mb-4" />
+          <View style={styles.spacerMb4} />
         )}
 
         {/* Zip Code */}
-        <Text className="text-base font-semibold text-gray-800 mb-1">Zip Code</Text>
+        <Text style={styles.fieldLabel}>Zip Code</Text>
         <TextInput
           value={zipCode}
           onChangeText={setZipCode}
           placeholder="e.g. 1000"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={colors.textTertiary}
           keyboardType="numeric"
-          className="border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 bg-white mb-5"
+          style={[styles.input, styles.inputNormal, styles.mb5]}
           accessibilityLabel="Zip code"
         />
 
         {/* Address Disclosure Level */}
-        <Text className="text-base font-semibold text-gray-800 mb-2">
-          Address Visibility
-        </Text>
+        <Text style={styles.fieldLabel}>Address Visibility</Text>
         {DISCLOSURE_LEVELS.map((dl) => (
           <TouchableOpacity
             key={dl.value}
             onPress={() => setDisclosureLevel(dl.value)}
-            className={`flex-row items-center px-4 py-3 rounded-xl border mb-2 ${
+            style={[
+              styles.disclosureRow,
               disclosureLevel === dl.value
-                ? 'border-primary-500 bg-primary-50'
-                : 'border-gray-200 bg-white'
-            }`}
+                ? styles.disclosureRowActive
+                : styles.disclosureRowInactive,
+            ]}
             accessibilityRole="radio"
             accessibilityState={{ checked: disclosureLevel === dl.value }}
           >
             <View
-              className={`w-5 h-5 rounded-full border-2 mr-3 items-center justify-center ${
-                disclosureLevel === dl.value ? 'border-primary-500' : 'border-gray-400'
-              }`}
+              style={[
+                styles.radioOuter,
+                disclosureLevel === dl.value
+                  ? styles.radioOuterActive
+                  : styles.radioOuterInactive,
+              ]}
             >
-              {disclosureLevel === dl.value && (
-                <View className="w-2.5 h-2.5 rounded-full bg-primary-500" />
-              )}
+              {disclosureLevel === dl.value && <View style={styles.radioInner} />}
             </View>
-            <Text className="text-sm text-gray-800 flex-1">{dl.label}</Text>
+            <Text style={styles.disclosureLabel}>{dl.label}</Text>
           </TouchableOpacity>
         ))}
 
-        <View className="h-32" />
+        <View style={styles.scrollBottom} />
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 pb-8 pt-3 border-t border-gray-100 bg-white">
+      <View style={styles.footer}>
         <Button onPress={handleNext} size="lg">
           Next: Property Details
         </Button>
@@ -231,3 +230,153 @@ export default function CreateStep2() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerBackBtn: {
+    marginBottom: 8,
+  },
+  linkText: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+  },
+  screenTitle: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  stepSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    marginTop: 4,
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  regionPickerWrap: {
+    marginBottom: 20,
+  },
+  breadcrumb: {
+    marginTop: 8,
+  },
+  locationBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    marginBottom: 20,
+  },
+  locationIcon: {
+    marginRight: 8,
+  },
+  locationBtnText: {
+    color: colors.primary,
+    fontWeight: fontWeight.medium,
+    fontSize: fontSize.base,
+  },
+  fieldLabel: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 4,
+  },
+  required: {
+    color: colors.error,
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: fontSize.base,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface,
+    marginBottom: 4,
+  },
+  inputNormal: {
+    borderColor: colors.borderStrong,
+  },
+  inputError: {
+    borderColor: colors.error,
+  },
+  mb5: {
+    marginBottom: 20,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: fontSize.xs,
+    marginBottom: 12,
+  },
+  spacerMb4: {
+    marginBottom: 16,
+  },
+  disclosureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginBottom: 8,
+  },
+  disclosureRowActive: {
+    borderColor: colors.primary,
+    backgroundColor: colors.primaryLight,
+  },
+  disclosureRowInactive: {
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  radioOuter: {
+    width: 20,
+    height: 20,
+    borderRadius: radius.pill,
+    borderWidth: 2,
+    marginRight: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radioOuterActive: {
+    borderColor: colors.primary,
+  },
+  radioOuterInactive: {
+    borderColor: colors.textTertiary,
+  },
+  radioInner: {
+    width: 10,
+    height: 10,
+    borderRadius: radius.pill,
+    backgroundColor: colors.primary,
+  },
+  disclosureLabel: {
+    fontSize: fontSize.sm,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  scrollBottom: {
+    height: 128,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+});

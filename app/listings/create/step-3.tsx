@@ -5,10 +5,12 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { Button } from '@/components/ui/Button';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 type TabKey = 'specs' | 'amenities' | 'description';
 
@@ -50,20 +52,40 @@ function NumberInput({
   onChange: (v: string) => void;
 }) {
   return (
-    <View className="mb-4">
-      <Text className="text-sm font-medium text-gray-700 mb-1">{label}</Text>
+    <View style={niStyles.wrap}>
+      <Text style={niStyles.label}>{label}</Text>
       <TextInput
         value={value}
         onChangeText={onChange}
         placeholder="–"
-        placeholderTextColor="#9CA3AF"
+        placeholderTextColor={colors.textTertiary}
         keyboardType="numeric"
-        className="border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 bg-white"
+        style={niStyles.input}
         accessibilityLabel={label}
       />
     </View>
   );
 }
+
+const niStyles = StyleSheet.create({
+  wrap: { marginBottom: 16 },
+  label: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: fontSize.base,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface,
+  },
+});
 
 function ToggleRow({
   label,
@@ -76,24 +98,50 @@ function ToggleRow({
 }) {
   return (
     <TouchableOpacity
-      className="flex-row items-center justify-between py-3 border-b border-gray-100"
+      style={trStyles.row}
       onPress={onToggle}
       accessibilityRole="switch"
       accessibilityState={{ checked: value }}
     >
-      <Text className="text-base text-gray-800">{label}</Text>
-      <View
-        className={`w-12 h-6 rounded-full ${value ? 'bg-primary-500' : 'bg-gray-300'} items-center justify-center`}
-      >
-        <View
-          className={`w-5 h-5 rounded-full bg-white shadow ${
-            value ? 'translate-x-3' : '-translate-x-3'
-          }`}
-        />
+      <Text style={trStyles.label}>{label}</Text>
+      <View style={[trStyles.track, value ? trStyles.trackOn : trStyles.trackOff]}>
+        <View style={[trStyles.thumb, value ? trStyles.thumbOn : trStyles.thumbOff]} />
       </View>
     </TouchableOpacity>
   );
 }
+
+const trStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  label: {
+    fontSize: fontSize.base,
+    color: colors.textPrimary,
+  },
+  track: {
+    width: 48,
+    height: 24,
+    borderRadius: radius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  trackOn: { backgroundColor: colors.primary },
+  trackOff: { backgroundColor: colors.borderStrong },
+  thumb: {
+    width: 20,
+    height: 20,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surface,
+  },
+  thumbOn: { transform: [{ translateX: 12 }] },
+  thumbOff: { transform: [{ translateX: -12 }] },
+});
 
 function SelectRow({
   label,
@@ -107,24 +155,26 @@ function SelectRow({
   onChange: (v: string) => void;
 }) {
   return (
-    <View className="mb-4">
-      <Text className="text-sm font-medium text-gray-700 mb-2">{label}</Text>
+    <View style={srStyles.wrap}>
+      <Text style={srStyles.label}>{label}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View className="flex-row gap-2">
+        <View style={srStyles.row}>
           {options.map((opt) => (
             <TouchableOpacity
               key={opt.value}
               onPress={() => onChange(opt.value)}
-              className={`px-3 py-1.5 rounded-full border ${
-                value === opt.value
-                  ? 'bg-primary-500 border-primary-500'
-                  : 'bg-white border-gray-300'
-              }`}
+              style={[
+                srStyles.chip,
+                value === opt.value ? srStyles.chipActive : srStyles.chipInactive,
+              ]}
               accessibilityRole="radio"
               accessibilityState={{ checked: value === opt.value }}
             >
               <Text
-                className={`text-sm ${value === opt.value ? 'text-white' : 'text-gray-700'}`}
+                style={[
+                  srStyles.chipText,
+                  value === opt.value ? srStyles.chipTextActive : srStyles.chipTextInactive,
+                ]}
               >
                 {opt.label}
               </Text>
@@ -135,6 +185,28 @@ function SelectRow({
     </View>
   );
 }
+
+const srStyles = StyleSheet.create({
+  wrap: { marginBottom: 16 },
+  label: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
+  row: { flexDirection: 'row', gap: 8 },
+  chip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+  },
+  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  chipInactive: { backgroundColor: colors.surface, borderColor: colors.borderStrong },
+  chipText: { fontSize: fontSize.sm },
+  chipTextActive: { color: colors.textOnBrand },
+  chipTextInactive: { color: colors.textSecondary },
+});
 
 export default function CreateStep3() {
   const draft = useUIStore((s) => s.createListingDraft);
@@ -228,38 +300,32 @@ export default function CreateStep3() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-primary-500 text-sm">Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
+          <Text style={styles.linkText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-2xl font-bold text-gray-900">Property Details</Text>
-        <Text className="text-sm text-gray-500 mt-1">Step 3 of 5 — Specs &amp; Amenities</Text>
+        <Text style={styles.screenTitle}>Property Details</Text>
+        <Text style={styles.stepSubtitle}>Step 3 of 5 — Specs &amp; Amenities</Text>
       </View>
 
       {/* Tabs */}
-      <View className="flex-row px-4 pt-3 border-b border-gray-100">
+      <View style={styles.tabBar}>
         {(['specs', 'amenities', 'description'] as TabKey[]).map((tab) => (
           <TouchableOpacity
             key={tab}
             onPress={() => setActiveTab(tab)}
-            className={`mr-5 pb-2 ${
-              activeTab === tab ? 'border-b-2 border-primary-500' : ''
-            }`}
+            style={[styles.tab, activeTab === tab && styles.tabActive]}
           >
-            <Text
-              className={`text-sm font-medium capitalize ${
-                activeTab === tab ? 'text-primary-500' : 'text-gray-500'
-              }`}
-            >
+            <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
               {tab === 'specs' ? 'Specs' : tab === 'amenities' ? 'Amenities' : 'Description'}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {activeTab === 'specs' && (
           <>
             <NumberInput label="Area (m²)" value={areaSqm} onChange={setAreaSqm} />
@@ -280,7 +346,7 @@ export default function CreateStep3() {
             <ToggleRow label="Garden" value={garden} onToggle={() => setGarden((v) => !v)} />
             <ToggleRow label="Balcony" value={balcony} onToggle={() => setBalcony((v) => !v)} />
             <ToggleRow label="Elevator" value={lift} onToggle={() => setLift((v) => !v)} />
-            <View className="mt-2">
+            <View style={styles.amenityInputsWrap}>
               <NumberInput label="Garage Spots" value={garageSpots} onChange={setGarageSpots} />
               <NumberInput label="Parking Spots" value={parkingSpots} onChange={setParkingSpots} />
             </View>
@@ -289,21 +355,25 @@ export default function CreateStep3() {
             <SelectRow label="Kitchen Type" options={KITCHEN_OPTIONS} value={kitchenType} onChange={setKitchenType} />
 
             {/* Energy Rating */}
-            <Text className="text-sm font-medium text-gray-700 mb-2">Energy Rating</Text>
-            <View className="flex-row gap-2 mb-4">
+            <Text style={styles.energyLabel}>Energy Rating</Text>
+            <View style={styles.energyRow}>
               {ENERGY_RATINGS.map((r) => (
                 <TouchableOpacity
                   key={r}
                   onPress={() => setEnergyRating(energyRating === r ? '' : r)}
-                  className={`w-10 h-10 rounded-full border items-center justify-center ${
-                    energyRating === r
-                      ? 'bg-primary-500 border-primary-500'
-                      : 'bg-white border-gray-300'
-                  }`}
+                  style={[
+                    styles.energyChip,
+                    energyRating === r ? styles.energyChipActive : styles.energyChipInactive,
+                  ]}
                   accessibilityRole="radio"
                   accessibilityState={{ checked: energyRating === r }}
                 >
-                  <Text className={`font-bold ${energyRating === r ? 'text-white' : 'text-gray-700'}`}>
+                  <Text
+                    style={[
+                      styles.energyChipText,
+                      energyRating === r ? styles.energyChipTextActive : styles.energyChipTextInactive,
+                    ]}
+                  >
                     {r}
                   </Text>
                 </TouchableOpacity>
@@ -314,28 +384,27 @@ export default function CreateStep3() {
 
         {activeTab === 'description' && (
           <>
-            <Text className="text-sm font-medium text-gray-700 mb-1">
+            <Text style={styles.descLabel}>
               Description ({description.length}/5000)
             </Text>
             <TextInput
               value={description}
               onChangeText={(v) => v.length <= 5000 && setDescription(v)}
               placeholder="Describe the property..."
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={colors.textTertiary}
               multiline
               numberOfLines={10}
-              className="border border-gray-300 rounded-xl px-4 py-3 text-base text-gray-900 bg-white"
-              style={{ minHeight: 160, textAlignVertical: 'top' }}
+              style={styles.descInput}
               accessibilityLabel="Description"
             />
           </>
         )}
 
-        <View className="h-32" />
+        <View style={styles.scrollBottom} />
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 pb-8 pt-3 border-t border-gray-100 bg-white">
+      <View style={styles.footer}>
         <Button onPress={handleNext} size="lg">
           Next: Photos
         </Button>
@@ -343,3 +412,132 @@ export default function CreateStep3() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerBackBtn: {
+    marginBottom: 8,
+  },
+  linkText: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+  },
+  screenTitle: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  stepSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    marginTop: 4,
+  },
+  tabBar: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  tab: {
+    marginRight: 20,
+    paddingBottom: 8,
+  },
+  tabActive: {
+    borderBottomWidth: 2,
+    borderBottomColor: colors.primary,
+  },
+  tabText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    color: colors.textTertiary,
+    textTransform: 'capitalize',
+  },
+  tabTextActive: {
+    color: colors.primary,
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  amenityInputsWrap: {
+    marginTop: 8,
+  },
+  energyLabel: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 8,
+  },
+  energyRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+  energyChip: {
+    width: 40,
+    height: 40,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  energyChipActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  energyChipInactive: {
+    backgroundColor: colors.surface,
+    borderColor: colors.borderStrong,
+  },
+  energyChipText: {
+    fontWeight: fontWeight.bold,
+    fontSize: fontSize.sm,
+  },
+  energyChipTextActive: {
+    color: colors.textOnBrand,
+  },
+  energyChipTextInactive: {
+    color: colors.textSecondary,
+  },
+  descLabel: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  descInput: {
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: fontSize.base,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface,
+    minHeight: 160,
+    textAlignVertical: 'top',
+  },
+  scrollBottom: {
+    height: 128,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+});

@@ -1,7 +1,8 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { InboxList } from '@/components/messaging/InboxList';
 import { useInbox } from '@/hooks/useMessages';
+import { colors, fontWeight, fontSize } from '@/constants/theme';
 
 function InboxContent() {
   const { data, isLoading, isRefetching, refetch } = useInbox();
@@ -10,13 +11,13 @@ function InboxContent() {
   const unreadCount = messages.filter((m) => !m.is_read).length;
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="flex-row items-center px-4 pt-14 pb-3 border-b border-gray-100">
-        <Text className="text-xl font-bold text-gray-900 flex-1">Messages</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Messages</Text>
         {unreadCount > 0 && (
-          <View className="bg-primary-500 rounded-full px-2 py-0.5 min-w-5 items-center">
-            <Text className="text-white text-xs font-semibold">{unreadCount}</Text>
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{unreadCount}</Text>
           </View>
         )}
       </View>
@@ -38,3 +39,38 @@ export default function InboxScreen() {
     </AuthGate>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  title: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  badge: {
+    backgroundColor: colors.primary,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    minWidth: 20,
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: colors.textOnBrand,
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.semibold,
+  },
+});

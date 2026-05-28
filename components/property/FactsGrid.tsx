@@ -1,5 +1,6 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import type { PropertySchema } from '@/lib/types/property';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface FactsGridProps {
   property: PropertySchema;
@@ -63,14 +64,14 @@ export function FactsGrid({ property }: FactsGridProps) {
   if (visibleItems.length === 0) return null;
 
   return (
-    <View className="mb-6">
-      <Text className="text-lg font-bold text-gray-900 mb-3">Quick Facts</Text>
-      <View className="flex-row flex-wrap">
+    <View style={styles.container}>
+      <Text style={styles.heading}>Quick Facts</Text>
+      <View style={styles.grid}>
         {visibleItems.map((item) => (
-          <View key={item.label} className="w-1/2 mb-3 pr-2">
-            <View className="bg-gray-50 rounded-xl p-3">
-              <Text className="text-xs text-gray-500 mb-0.5">{item.label}</Text>
-              <Text className="text-sm font-semibold text-gray-900">{item.value}</Text>
+          <View key={item.label} style={styles.cell}>
+            <View style={styles.cellInner}>
+              <Text style={styles.cellLabel}>{item.label}</Text>
+              <Text style={styles.cellValue}>{item.value}</Text>
             </View>
           </View>
         ))}
@@ -78,3 +79,39 @@ export function FactsGrid({ property }: FactsGridProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 24,
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 12,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  cell: {
+    width: '50%',
+    marginBottom: 12,
+    paddingRight: 8,
+  },
+  cellInner: {
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    padding: 12,
+  },
+  cellLabel: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginBottom: 2,
+  },
+  cellValue: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+});

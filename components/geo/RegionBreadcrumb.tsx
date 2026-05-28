@@ -2,33 +2,30 @@
  * Phase F10 — Region breadcrumb display.
  * Shows the selected region path as "Region > Department > City".
  */
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import type { Region } from '@/hooks/useRegions';
+import { colors, fontWeight } from '@/constants/theme';
 
 interface RegionBreadcrumbProps {
   path: Region[];
-  className?: string;
+  style?: object;
 }
 
-export function RegionBreadcrumb({ path, className }: RegionBreadcrumbProps) {
+export function RegionBreadcrumb({ path, style }: RegionBreadcrumbProps) {
   if (path.length === 0) return null;
 
   return (
     <View
-      className={`flex-row items-center flex-wrap ${className ?? ''}`}
+      style={[styles.container, style]}
       accessibilityLabel={`Selected location: ${path.map((r) => r.name).join(', ')}`}
     >
       {path.map((region, index) => (
-        <View key={region.id} className="flex-row items-center">
+        <View key={region.id} style={styles.segment}>
           {index > 0 && (
-            <Text className="text-gray-400 mx-1 text-sm">{'\u203A'}</Text>
+            <Text style={styles.separator}>{'›'}</Text>
           )}
           <Text
-            className={`text-sm ${
-              index === path.length - 1
-                ? 'text-primary-500 font-semibold'
-                : 'text-gray-500'
-            }`}
+            style={index === path.length - 1 ? styles.activeText : styles.inactiveText}
           >
             {region.name}
           </Text>
@@ -37,3 +34,29 @@ export function RegionBreadcrumb({ path, className }: RegionBreadcrumbProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  segment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  separator: {
+    color: colors.textTertiary,
+    marginHorizontal: 4,
+    fontSize: 14,
+  },
+  activeText: {
+    fontSize: 14,
+    color: colors.primary,
+    fontWeight: fontWeight.semibold,
+  },
+  inactiveText: {
+    fontSize: 14,
+    color: colors.textTertiary,
+  },
+});

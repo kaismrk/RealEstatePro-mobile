@@ -1,5 +1,6 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import type { MessageResponse } from '@/lib/types/message';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 interface MessageCardProps {
   message: MessageResponse;
@@ -40,36 +41,36 @@ export function MessageCard({ message, onPress }: MessageCardProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`flex-row items-center px-4 py-3 border-b border-gray-100 ${isUnread ? 'bg-primary-50' : 'bg-white'}`}
+      style={[styles.row, isUnread ? styles.rowUnread : styles.rowRead]}
       activeOpacity={0.8}
       accessibilityRole="button"
       accessibilityLabel={`Message from ${message.sender_name ?? 'Unknown sender'}`}
     >
       {/* Sender avatar */}
-      <View className="w-11 h-11 rounded-full bg-primary-500 items-center justify-center mr-3 shrink-0">
-        <Text className="text-white text-sm font-semibold">{initials}</Text>
+      <View style={styles.avatar}>
+        <Text style={styles.avatarText}>{initials}</Text>
       </View>
 
       {/* Content */}
-      <View className="flex-1 min-w-0">
-        <View className="flex-row items-center justify-between mb-0.5">
+      <View style={styles.content}>
+        <View style={styles.topRow}>
           <Text
-            className={`text-sm mr-2 ${isUnread ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'}`}
+            style={[styles.senderName, isUnread ? styles.senderNameUnread : styles.senderNameRead]}
             numberOfLines={1}
           >
             {message.sender_name ?? message.sender_email ?? 'Unknown sender'}
           </Text>
-          <Text className="text-xs text-gray-400 shrink-0">{timeAgo(message.created_at)}</Text>
+          <Text style={styles.time}>{timeAgo(message.created_at)}</Text>
         </View>
 
         {message.property?.title && (
-          <Text className="text-xs text-primary-500 mb-0.5" numberOfLines={1}>
+          <Text style={styles.propertyTitle} numberOfLines={1}>
             {message.property.title}
           </Text>
         )}
 
         <Text
-          className={`text-sm ${isUnread ? 'text-gray-700' : 'text-gray-500'}`}
+          style={[styles.preview, isUnread ? styles.previewUnread : styles.previewRead]}
           numberOfLines={2}
         >
           {preview}
@@ -78,11 +79,89 @@ export function MessageCard({ message, onPress }: MessageCardProps) {
 
       {/* Unread dot */}
       {isUnread && (
-        <View
-          className="w-2.5 h-2.5 rounded-full bg-primary-500 ml-3 shrink-0"
-          accessibilityLabel="Unread"
-        />
+        <View style={styles.unreadDot} accessibilityLabel="Unread" />
       )}
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  rowUnread: {
+    backgroundColor: colors.primaryLight,
+  },
+  rowRead: {
+    backgroundColor: colors.surface,
+  },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: radius.pill,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+    flexShrink: 0,
+  },
+  avatarText: {
+    color: colors.textOnBrand,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+  },
+  content: {
+    flex: 1,
+    minWidth: 0,
+  },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
+  senderName: {
+    fontSize: fontSize.sm,
+    marginRight: 8,
+  },
+  senderNameUnread: {
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  senderNameRead: {
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+  },
+  time: {
+    fontSize: fontSize.xs,
+    color: colors.textTertiary,
+    flexShrink: 0,
+  },
+  propertyTitle: {
+    fontSize: fontSize.xs,
+    color: colors.primary,
+    marginBottom: 2,
+  },
+  preview: {
+    fontSize: fontSize.sm,
+  },
+  previewUnread: {
+    color: colors.textSecondary,
+  },
+  previewRead: {
+    color: colors.textTertiary,
+  },
+  unreadDot: {
+    width: 10,
+    height: 10,
+    borderRadius: radius.pill,
+    backgroundColor: colors.primary,
+    marginLeft: 12,
+    flexShrink: 0,
+  },
+});

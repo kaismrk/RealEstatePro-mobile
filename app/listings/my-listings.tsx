@@ -9,6 +9,7 @@ import {
   Modal,
   ActivityIndicator,
   RefreshControl,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -20,6 +21,8 @@ import { haptic } from '@/lib/utils/haptics';
 import { PublishStatusBadge } from '@/components/property/PublishStatusBadge';
 import { CurrencyText } from '@/components/ui/CurrencyText';
 import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, fontSize, shadows } from '@/constants/theme';
 import type { PropertySchema, PublishStatus } from '@/lib/types/property';
 
 function QuotaExhaustedModal({
@@ -31,10 +34,10 @@ function QuotaExhaustedModal({
 }) {
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <View className="flex-1 bg-black/50 items-center justify-center px-6">
-        <View className="bg-white rounded-2xl p-6 w-full">
-          <Text className="text-xl font-bold text-gray-900 mb-2">Quota Exhausted</Text>
-          <Text className="text-base text-gray-600 mb-5">
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalCard}>
+          <Text style={styles.modalTitle}>Quota Exhausted</Text>
+          <Text style={styles.modalBody}>
             You have no remaining listing slots. Purchase a pack to create more listings.
           </Text>
           <Button
@@ -46,8 +49,8 @@ function QuotaExhaustedModal({
           >
             Purchase a Pack
           </Button>
-          <TouchableOpacity className="mt-3 items-center py-2" onPress={onClose}>
-            <Text className="text-gray-500">Cancel</Text>
+          <TouchableOpacity style={styles.modalCancel} onPress={onClose}>
+            <Text style={styles.modalCancelText}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -66,12 +69,10 @@ function RejectionModal({
 }) {
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View className="flex-1 bg-black/50 justify-end">
-        <View className="bg-white rounded-t-2xl p-6">
-          <Text className="text-lg font-bold text-gray-900 mb-3">Rejection Reason</Text>
-          <Text className="text-base text-gray-700 mb-5">
-            {reason ?? 'No reason provided.'}
-          </Text>
+      <View style={styles.sheetOverlay}>
+        <View style={styles.sheetCard}>
+          <Text style={styles.sheetTitle}>Rejection Reason</Text>
+          <Text style={styles.sheetBody}>{reason ?? 'No reason provided.'}</Text>
           <Button onPress={onClose} variant="secondary">
             Close
           </Button>
@@ -100,30 +101,30 @@ function ListingCard({
 
   return (
     <TouchableOpacity
-      className="bg-white border border-gray-200 rounded-2xl mb-3 overflow-hidden"
+      style={styles.card}
       onPress={() => router.push(`/property/${item.id}`)}
       accessibilityRole="button"
       accessibilityLabel={item.title}
     >
       {/* Cover image */}
-      <View className="h-36 bg-gray-200">
+      <View style={styles.cardImage}>
         {coverImage ? (
           <Image
             source={{ uri: coverImage }}
-            className="w-full h-full"
+            style={styles.cardImageFill}
             resizeMode="cover"
             accessibilityLabel="Property photo"
           />
         ) : (
-          <View className="flex-1 items-center justify-center">
-            <Text className="text-4xl">🏠</Text>
+          <View style={styles.cardImagePlaceholder}>
+            <Icon name="home" size={40} color={colors.textTertiary} />
           </View>
         )}
       </View>
 
-      <View className="p-3">
+      <View style={styles.cardBody}>
         {/* Status badge row */}
-        <View className="flex-row items-center justify-between mb-2">
+        <View style={styles.cardBadgeRow}>
           {item.publish_status ? (
             <TouchableOpacity
               onPress={item.publish_status === 'rejected' ? onViewRejection : undefined}
@@ -134,48 +135,48 @@ function ListingCard({
             </TouchableOpacity>
           ) : null}
           {item.is_boosted && (
-            <View className="bg-yellow-100 rounded-full px-2 py-0.5">
-              <Text className="text-xs text-yellow-700 font-semibold">Boosted</Text>
+            <View style={styles.boostedBadge}>
+              <Text style={styles.boostedBadgeText}>Boosted</Text>
             </View>
           )}
         </View>
 
-        <Text className="text-sm font-semibold text-gray-900 mb-1" numberOfLines={1}>
+        <Text style={styles.cardTitle} numberOfLines={1}>
           {item.title}
         </Text>
 
         <CurrencyText
           amount={item.price}
           currency={currency}
-          className="text-base font-bold text-primary-500 mb-2"
+          style={styles.cardPrice}
         />
 
         {/* Action row */}
-        <View className="flex-row gap-2 mt-1">
+        <View style={styles.actionRow}>
           <TouchableOpacity
-            className="flex-1 border border-gray-300 rounded-xl py-2 items-center"
+            style={styles.actionBtnNeutral}
             onPress={onEdit}
             accessibilityRole="button"
             accessibilityLabel="Edit listing"
           >
-            <Text className="text-xs text-gray-700 font-medium">Edit</Text>
+            <Text style={styles.actionBtnNeutralText}>Edit</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex-1 border border-red-300 rounded-xl py-2 items-center"
+            style={styles.actionBtnDanger}
             onPress={onDelete}
             accessibilityRole="button"
             accessibilityLabel="Delete listing"
           >
-            <Text className="text-xs text-red-600 font-medium">Delete</Text>
+            <Text style={styles.actionBtnDangerText}>Delete</Text>
           </TouchableOpacity>
           {item.publish_status === 'published' && (
             <TouchableOpacity
-              className="flex-1 border border-primary-500 rounded-xl py-2 items-center"
+              style={styles.actionBtnBrand}
               onPress={onBoost}
               accessibilityRole="button"
               accessibilityLabel="Boost listing"
             >
-              <Text className="text-xs text-primary-500 font-medium">Boost</Text>
+              <Text style={styles.actionBtnBrandText}>Boost</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -202,8 +203,8 @@ export default function MyListingsScreen() {
 
   if (!accessToken) {
     return (
-      <View className="flex-1 bg-gray-50 items-center justify-center px-6">
-        <Text className="text-2xl font-bold text-gray-900 mb-2">Sign in required</Text>
+      <View style={styles.gateContainer}>
+        <Text style={styles.gateTitle}>Sign in required</Text>
         <Button onPress={() => router.push('/(auth)/welcome')} size="lg">
           Sign In
         </Button>
@@ -252,36 +253,36 @@ export default function MyListingsScreen() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 bg-white border-b border-gray-100 flex-row items-center justify-between">
+      <View style={styles.pageHeader}>
         <View>
-          <Text className="text-xl font-bold text-gray-900">My Listings</Text>
+          <Text style={styles.pageTitle}>My Listings</Text>
           {quota && (
-            <Text className="text-xs text-gray-500 mt-0.5">
+            <Text style={styles.quotaSubtitle}>
               {quota.free_remaining} free + {quota.paid_remaining} paid slots remaining
             </Text>
           )}
         </View>
         <TouchableOpacity
           onPress={handleCreate}
-          className="bg-primary-500 rounded-xl px-4 py-2"
+          style={styles.newBtn}
           accessibilityRole="button"
           accessibilityLabel="Create new listing"
         >
-          <Text className="text-white text-sm font-semibold">+ New</Text>
+          <Text style={styles.newBtnText}>+ New</Text>
         </TouchableOpacity>
       </View>
 
       {isLoading && (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#2563eb" />
+        <View style={styles.centeredFill}>
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       )}
 
       {isError && (
-        <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-gray-500 mb-4 text-center">Failed to load your listings.</Text>
+        <View style={styles.centeredFillPadded}>
+          <Text style={styles.errorMsg}>Failed to load your listings.</Text>
           <Button onPress={() => refetch()} variant="secondary">
             Try Again
           </Button>
@@ -293,7 +294,7 @@ export default function MyListingsScreen() {
           data={data?.items ?? []}
           renderItem={renderItem}
           keyExtractor={(item) => String(item.id)}
-          contentContainerStyle={{ padding: 16 }}
+          contentContainerStyle={styles.listContent}
           refreshControl={
             <RefreshControl
               refreshing={isRefetching && !isLoading}
@@ -301,10 +302,10 @@ export default function MyListingsScreen() {
             />
           }
           ListEmptyComponent={
-            <View className="items-center justify-center pt-16">
-              <Text className="text-5xl mb-4">🏠</Text>
-              <Text className="text-lg font-semibold text-gray-900 mb-2">No listings yet</Text>
-              <Text className="text-gray-500 text-center mb-6">
+            <View style={styles.emptyState}>
+              <Icon name="home" size={48} color={colors.textTertiary} />
+              <Text style={styles.emptyTitle}>No listings yet</Text>
+              <Text style={styles.emptySubtitle}>
                 Create your first listing to start selling or renting.
               </Text>
               <Button onPress={handleCreate} size="lg">
@@ -329,3 +330,248 @@ export default function MyListingsScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  gateContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  gateTitle: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  pageHeader: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  pageTitle: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  quotaSubtitle: {
+    fontSize: fontSize.xs,
+    color: colors.textTertiary,
+    marginTop: 2,
+  },
+  newBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  newBtnText: {
+    color: colors.textOnBrand,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+  },
+  centeredFill: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  centeredFillPadded: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  errorMsg: {
+    color: colors.textTertiary,
+    marginBottom: 16,
+    textAlign: 'center',
+    fontSize: fontSize.base,
+  },
+  listContent: {
+    padding: 16,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 64,
+  },
+  emptyTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+    marginTop: 16,
+  },
+  emptySubtitle: {
+    color: colors.textTertiary,
+    textAlign: 'center',
+    marginBottom: 24,
+    fontSize: fontSize.base,
+  },
+  // Card
+  card: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.xl2,
+    marginBottom: 12,
+    overflow: 'hidden',
+    ...shadows.sm,
+  },
+  cardImage: {
+    height: 144,
+    backgroundColor: colors.border,
+  },
+  cardImageFill: {
+    width: '100%',
+    height: '100%',
+  },
+  cardImagePlaceholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardBody: {
+    padding: 12,
+  },
+  cardBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  boostedBadge: {
+    backgroundColor: '#FEF9C3',
+    borderRadius: radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  boostedBadgeText: {
+    fontSize: fontSize.xs,
+    color: '#A16207',
+    fontWeight: fontWeight.semibold,
+  },
+  cardTitle: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 4,
+  },
+  cardPrice: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.bold,
+    color: colors.primary,
+    marginBottom: 8,
+  },
+  actionRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 4,
+  },
+  actionBtnNeutral: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  actionBtnNeutralText: {
+    fontSize: fontSize.xs,
+    color: colors.textSecondary,
+    fontWeight: fontWeight.medium,
+  },
+  actionBtnDanger: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#FCA5A5',
+    borderRadius: radius.md,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  actionBtnDangerText: {
+    fontSize: fontSize.xs,
+    color: colors.error,
+    fontWeight: fontWeight.medium,
+  },
+  actionBtnBrand: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  actionBtnBrandText: {
+    fontSize: fontSize.xs,
+    color: colors.primary,
+    fontWeight: fontWeight.medium,
+  },
+  // Modals
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  modalCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl2,
+    padding: 24,
+    width: '100%',
+  },
+  modalTitle: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  modalBody: {
+    fontSize: fontSize.base,
+    color: colors.textSecondary,
+    marginBottom: 20,
+  },
+  modalCancel: {
+    marginTop: 12,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  modalCancelText: {
+    color: colors.textTertiary,
+    fontSize: fontSize.base,
+  },
+  sheetOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  sheetCard: {
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: radius.xl2,
+    borderTopRightRadius: radius.xl2,
+    padding: 24,
+  },
+  sheetTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 12,
+  },
+  sheetBody: {
+    fontSize: fontSize.base,
+    color: colors.textSecondary,
+    marginBottom: 20,
+  },
+});

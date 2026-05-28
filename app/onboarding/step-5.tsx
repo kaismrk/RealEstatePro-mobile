@@ -7,14 +7,17 @@ import {
   ScrollView,
   Switch,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
+import { Icon } from '@/components/ui/Icon';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { useSearchStore } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useSavedSearches } from '@/hooks/useSavedSearches';
 import { haptic } from '@/lib/utils/haptics';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 const INTENT_LABELS: Record<string, string> = {
   buy: 'Buy',
@@ -23,20 +26,13 @@ const INTENT_LABELS: Record<string, string> = {
   browse: 'Just browse',
 };
 
-const INTENT_ICONS: Record<string, string> = {
-  buy: '\uD83C\uDFE0',
-  rent: '\uD83D\uDD11',
-  sell: '\uD83D\uDCB0',
-  browse: '\uD83D\uDC40',
-};
-
-function SummaryRow({ icon, label, value }: { icon: string; label: string; value: string }) {
+function SummaryRow({ label, value, iconName }: { label: string; value: string; iconName: React.ComponentProps<typeof Icon>['name'] }) {
   return (
-    <View className="flex-row items-center py-3.5 border-b border-gray-100">
-      <Text className="text-xl mr-3">{icon}</Text>
-      <View className="flex-1">
-        <Text className="text-xs font-medium text-gray-500 mb-0.5">{label}</Text>
-        <Text className="text-base font-semibold text-gray-900">{value}</Text>
+    <View style={styles.summaryRow}>
+      <Icon name={iconName} size={20} color={colors.textSecondary} style={styles.summaryIcon} />
+      <View style={styles.flex1}>
+        <Text style={styles.summaryLabel}>{label}</Text>
+        <Text style={styles.summaryValue}>{value}</Text>
       </View>
     </View>
   );
@@ -82,7 +78,6 @@ export default function OnboardingStep5() {
   }
 
   async function handleFinish() {
-    // Apply filters to search store
     const filters: Parameters<typeof setFilters>[0] = {};
     if (intent && intent !== 'browse' && intent !== 'sell') {
       filters.listing_type = intent;
@@ -129,64 +124,58 @@ export default function OnboardingStep5() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView
-        className="flex-1"
+        style={styles.flex1}
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="px-6 pt-6 flex-1">
-          <Text className="text-2xl font-bold text-gray-900 mb-2">
-            Your search preferences
-          </Text>
-          <Text className="text-base text-gray-500 mb-7">
+        <View style={styles.content}>
+          <Text style={styles.title}>Your search preferences</Text>
+          <Text style={styles.subtitle}>
             Here is a summary of what you are looking for.
           </Text>
 
           {/* Summary cards */}
-          <View className="bg-gray-50 rounded-2xl px-4 mb-6 overflow-hidden">
+          <View style={styles.summaryCard}>
             <SummaryRow
-              icon={intent ? INTENT_ICONS[intent] ?? '\uD83C\uDFE0' : '\uD83C\uDFE0'}
+              iconName="home"
               label="Intent"
               value={intent ? INTENT_LABELS[intent] ?? 'Browse' : 'Not set'}
             />
             <SummaryRow
-              icon="\uD83D\uDCCD"
+              iconName="map-pin"
               label="Location"
               value={region_label ?? 'Anywhere'}
             />
             <SummaryRow
-              icon="\uD83D\uDCB0"
+              iconName="credit-card"
               label="Budget"
               value={buildPriceLabel()}
             />
-            <View className="flex-row items-center py-3.5">
-              <Text className="text-xl mr-3">{'\uD83D\uDECF\uFE0F'}</Text>
-              <View className="flex-1">
-                <Text className="text-xs font-medium text-gray-500 mb-0.5">Bedrooms</Text>
-                <Text className="text-base font-semibold text-gray-900">
-                  {buildBedroomLabel()}
-                </Text>
+            <View style={styles.summaryRow}>
+              <Icon name="bed" size={20} color={colors.textSecondary} style={styles.summaryIcon} />
+              <View style={styles.flex1}>
+                <Text style={styles.summaryLabel}>Bedrooms</Text>
+                <Text style={styles.summaryValue}>{buildBedroomLabel()}</Text>
               </View>
             </View>
           </View>
 
-          {/* Save search toggle (only for authenticated users) */}
+          {/* Save search toggle */}
           {accessToken ? (
-            <View className="flex-row items-center justify-between bg-primary-50 rounded-2xl px-4 py-4 mb-6">
-              <View className="flex-1 mr-3">
-                <Text className="text-base font-semibold text-gray-900 mb-0.5">
-                  Save my search
-                </Text>
-                <Text className="text-sm text-gray-500">
+            <View style={styles.saveToggleCard}>
+              <View style={styles.saveToggleText}>
+                <Text style={styles.saveToggleTitle}>Save my search</Text>
+                <Text style={styles.saveToggleSubtitle}>
                   Get notified when new homes match
                 </Text>
               </View>
               <Switch
                 value={saveSearch}
                 onValueChange={setSaveSearch}
-                trackColor={{ false: '#D1D5DB', true: '#5f09fe' }}
-                thumbColor="#FFFFFF"
+                trackColor={{ false: colors.border, true: colors.primary }}
+                thumbColor={colors.surface}
                 accessibilityLabel="Save search toggle"
               />
             </View>
@@ -195,27 +184,27 @@ export default function OnboardingStep5() {
       </ScrollView>
 
       {/* Footer: Back / Finish */}
-      <View className="px-6 py-4 border-t border-gray-100 flex-row gap-x-3">
+      <View style={styles.footer}>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="w-12 py-3.5 bg-gray-100 rounded-xl items-center"
+          style={styles.backButton}
           accessibilityRole="button"
           accessibilityLabel="Back"
           disabled={isSaving}
         >
-          <Text className="text-base font-semibold text-gray-700">{'\u2190'}</Text>
+          <Icon name="chevron-left" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => void handleFinish()}
-          className={`flex-1 py-3.5 bg-primary-500 rounded-xl flex-row items-center justify-center gap-x-2 ${isSaving ? 'opacity-60' : ''}`}
+          style={[styles.finishButton, isSaving && styles.finishButtonDisabled]}
           disabled={isSaving}
           accessibilityRole="button"
           accessibilityLabel="Finish onboarding"
         >
           {isSaving ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
+            <ActivityIndicator size="small" color={colors.textOnBrand} style={styles.finishSpinner} />
           ) : null}
-          <Text className="text-base font-semibold text-white">
+          <Text style={styles.finishButtonText}>
             {isSaving ? 'Saving…' : 'Find Homes'}
           </Text>
         </TouchableOpacity>
@@ -223,3 +212,118 @@ export default function OnboardingStep5() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  flex1: {
+    flex: 1,
+  },
+  content: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    flex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    marginBottom: 28,
+  },
+  summaryCard: {
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.xl2,
+    paddingHorizontal: 16,
+    marginBottom: 24,
+    overflow: 'hidden',
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  summaryIcon: {
+    marginRight: 12,
+  },
+  summaryLabel: {
+    fontSize: 12,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 2,
+  },
+  summaryValue: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  saveToggleCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.primaryLight,
+    borderRadius: radius.xl2,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    marginBottom: 24,
+  },
+  saveToggleText: {
+    flex: 1,
+    marginRight: 12,
+  },
+  saveToggleTitle: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 2,
+  },
+  saveToggleSubtitle: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  footer: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  backButton: {
+    width: 48,
+    paddingVertical: 14,
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  finishButton: {
+    flex: 1,
+    paddingVertical: 14,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  finishButtonDisabled: {
+    opacity: 0.6,
+  },
+  finishSpinner: {
+    marginRight: 4,
+  },
+  finishButtonText: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textOnBrand,
+  },
+});

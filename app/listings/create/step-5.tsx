@@ -6,22 +6,43 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { useCreateProperty } from '@/hooks/useCreateProperty';
 import { Button } from '@/components/ui/Button';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 import type { PropertyCreatePayload } from '@/hooks/useCreateProperty';
 
 function ReviewRow({ label, value }: { label: string; value: string | number | null | undefined }) {
   if (value == null || value === '') return null;
   return (
-    <View className="flex-row py-2 border-b border-gray-50">
-      <Text className="text-sm text-gray-500 w-36">{label}</Text>
-      <Text className="text-sm text-gray-900 flex-1">{String(value)}</Text>
+    <View style={rrStyles.row}>
+      <Text style={rrStyles.label}>{label}</Text>
+      <Text style={rrStyles.value}>{String(value)}</Text>
     </View>
   );
 }
+
+const rrStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.surfaceSunken,
+  },
+  label: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    width: 144,
+  },
+  value: {
+    fontSize: fontSize.sm,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+});
 
 function ReviewSection({
   title,
@@ -33,20 +54,45 @@ function ReviewSection({
   children: React.ReactNode;
 }) {
   return (
-    <View className="mb-5">
-      <View className="flex-row items-center justify-between mb-2">
-        <Text className="text-base font-bold text-gray-900">{title}</Text>
+    <View style={rsStyles.wrap}>
+      <View style={rsStyles.header}>
+        <Text style={rsStyles.title}>{title}</Text>
         <TouchableOpacity
           onPress={() => router.push(`/listings/create/step-${stepIndex}` as never)}
           accessibilityRole="button"
         >
-          <Text className="text-primary-500 text-sm">Edit</Text>
+          <Text style={rsStyles.editLink}>Edit</Text>
         </TouchableOpacity>
       </View>
-      <View className="bg-gray-50 rounded-xl px-4 py-1">{children}</View>
+      <View style={rsStyles.body}>{children}</View>
     </View>
   );
 }
+
+const rsStyles = StyleSheet.create({
+  wrap: { marginBottom: 20 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  editLink: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+  },
+  body: {
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+  },
+});
 
 export default function CreateStep5() {
   const draft = useUIStore((s) => s.createListingDraft);
@@ -131,23 +177,25 @@ export default function CreateStep5() {
   const imageCount = Array.isArray(d.image_urls) ? (d.image_urls as string[]).length : 0;
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-primary-500 text-sm">Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
+          <Text style={styles.linkText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-2xl font-bold text-gray-900">Review</Text>
-        <Text className="text-sm text-gray-500 mt-1">Step 5 of 5 — Review &amp; Submit</Text>
+        <Text style={styles.screenTitle}>Review</Text>
+        <Text style={styles.stepSubtitle}>Step 5 of 5 — Review &amp; Submit</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Validation errors from 422 */}
         {fieldErrors.length > 0 && (
-          <View className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4">
-            <Text className="text-red-700 font-semibold mb-1">Please fix these issues:</Text>
+          <View style={styles.errorBox}>
+            <Text style={styles.errorBoxTitle}>Please fix these issues:</Text>
             {fieldErrors.map((e, i) => (
-              <Text key={i} className="text-red-600 text-sm">• {e}</Text>
+              <Text key={i} style={styles.errorBoxItem}>
+                {'•'} {e}
+              </Text>
             ))}
           </View>
         )}
@@ -179,18 +227,20 @@ export default function CreateStep5() {
         </ReviewSection>
 
         <ReviewSection title="Photos" stepIndex={4}>
-          <View className="py-2">
-            <Text className="text-sm text-gray-900">
-              {imageCount > 0 ? `${imageCount} photo${imageCount !== 1 ? 's' : ''} selected` : 'No photos added'}
+          <View style={styles.photoCountWrap}>
+            <Text style={styles.photoCountText}>
+              {imageCount > 0
+                ? `${imageCount} photo${imageCount !== 1 ? 's' : ''} selected`
+                : 'No photos added'}
             </Text>
           </View>
         </ReviewSection>
 
-        <View className="h-32" />
+        <View style={styles.scrollBottom} />
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 pb-8 pt-3 border-t border-gray-100 bg-white">
+      <View style={styles.footer}>
         <Button
           onPress={handleSubmit}
           loading={createProperty.isPending}
@@ -207,10 +257,10 @@ export default function CreateStep5() {
         animationType="fade"
         onRequestClose={() => setShowQuotaModal(false)}
       >
-        <View className="flex-1 bg-black/50 items-center justify-center px-6">
-          <View className="bg-white rounded-2xl p-6 w-full">
-            <Text className="text-xl font-bold text-gray-900 mb-2">Listing Quota Exhausted</Text>
-            <Text className="text-base text-gray-600 mb-5">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Listing Quota Exhausted</Text>
+            <Text style={styles.modalBody}>
               You have used all your free and paid listing slots. Purchase a pack to continue posting.
             </Text>
             <Button
@@ -223,10 +273,10 @@ export default function CreateStep5() {
               Purchase a Pack
             </Button>
             <TouchableOpacity
-              className="mt-3 items-center py-2"
+              style={styles.modalCancel}
               onPress={() => setShowQuotaModal(false)}
             >
-              <Text className="text-gray-500">Cancel</Text>
+              <Text style={styles.modalCancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -234,3 +284,108 @@ export default function CreateStep5() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerBackBtn: {
+    marginBottom: 8,
+  },
+  linkText: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+  },
+  screenTitle: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  stepSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    marginTop: 4,
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  errorBox: {
+    backgroundColor: colors.errorBg,
+    borderWidth: 1,
+    borderColor: '#FECACA',
+    borderRadius: radius.md,
+    padding: 12,
+    marginBottom: 16,
+  },
+  errorBoxTitle: {
+    color: '#B91C1C',
+    fontWeight: fontWeight.semibold,
+    marginBottom: 4,
+    fontSize: fontSize.sm,
+  },
+  errorBoxItem: {
+    color: colors.error,
+    fontSize: fontSize.sm,
+  },
+  photoCountWrap: {
+    paddingVertical: 8,
+  },
+  photoCountText: {
+    fontSize: fontSize.sm,
+    color: colors.textPrimary,
+  },
+  scrollBottom: {
+    height: 128,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  modalCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl2,
+    padding: 24,
+    width: '100%',
+  },
+  modalTitle: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  modalBody: {
+    fontSize: fontSize.base,
+    color: colors.textSecondary,
+    marginBottom: 20,
+  },
+  modalCancel: {
+    marginTop: 12,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  modalCancelText: {
+    color: colors.textTertiary,
+    fontSize: fontSize.base,
+  },
+});

@@ -9,10 +9,13 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useCreateAgency } from '@/hooks/useAgencies';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 function Field({
   label,
@@ -32,19 +35,17 @@ function Field({
   keyboardType?: 'default' | 'url';
 }) {
   return (
-    <View className="mb-4">
-      <Text className="text-sm font-medium text-gray-700 mb-1">
+    <View style={styles.fieldWrapper}>
+      <Text style={styles.fieldLabel}>
         {label}
-        {required && <Text className="text-red-500"> *</Text>}
+        {required && <Text style={styles.fieldRequired}> *</Text>}
       </Text>
       <TextInput
-        className={`bg-white border border-gray-200 rounded-xl px-3 py-3 text-sm text-gray-900 ${
-          multiline ? 'min-h-24' : ''
-        }`}
+        style={[styles.fieldInput, multiline && styles.fieldInputMultiline]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#9ca3af"
+        placeholderTextColor={colors.textTertiary}
         multiline={multiline}
         textAlignVertical={multiline ? 'top' : 'center'}
         keyboardType={keyboardType ?? 'default'}
@@ -102,23 +103,24 @@ export default function CreateAgencyScreen() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-gray-50"
+      style={styles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {/* Header */}
-      <View className="px-4 pt-14 pb-3 bg-white border-b border-gray-100 flex-row items-center">
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          className="mr-3"
+          style={styles.headerBack}
         >
-          <Text className="text-primary-500 text-base">‹ Back</Text>
+          <Icon name="chevron-left" size={18} color={colors.primary} />
+          <Text style={styles.headerBackText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900 flex-1">Create Agency</Text>
+        <Text style={styles.headerTitle}>Create Agency</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" keyboardShouldPersistTaps="handled">
+      <ScrollView style={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <Field
           label="Agency Name"
           value={name}
@@ -141,7 +143,7 @@ export default function CreateAgencyScreen() {
           multiline
         />
 
-        <Text className="text-sm font-semibold text-gray-700 mb-3 mt-2">Social Links</Text>
+        <Text style={styles.sectionLabel}>Social Links</Text>
         <Field
           label="Website"
           value={website}
@@ -173,21 +175,105 @@ export default function CreateAgencyScreen() {
 
         {/* Submit */}
         <TouchableOpacity
-          className={`rounded-xl py-4 items-center mt-4 mb-8 ${
-            create.isPending ? 'bg-primary-300' : 'bg-primary-500'
-          }`}
+          style={[styles.submitBtn, create.isPending && styles.submitBtnPending]}
           onPress={handleSubmit}
           disabled={create.isPending}
           accessibilityRole="button"
           accessibilityLabel="Create agency"
         >
           {create.isPending ? (
-            <ActivityIndicator size="small" color="#ffffff" />
+            <ActivityIndicator size="small" color={colors.textOnBrand} />
           ) : (
-            <Text className="text-white font-semibold text-base">Create Agency</Text>
+            <Text style={styles.submitBtnText}>Create Agency</Text>
           )}
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 12,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerBackText: {
+    color: colors.primary,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  scrollContent: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  fieldWrapper: {
+    marginBottom: 16,
+  },
+  fieldLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  fieldRequired: {
+    color: colors.error,
+  },
+  fieldInput: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 14,
+    color: colors.textPrimary,
+  },
+  fieldInputMultiline: {
+    minHeight: 96,
+    textAlignVertical: 'top',
+  },
+  sectionLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  submitBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 32,
+  },
+  submitBtnPending: {
+    opacity: 0.6,
+  },
+  submitBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+});

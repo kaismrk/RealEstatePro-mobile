@@ -1,5 +1,7 @@
-import { View, Text, Image, Linking, TouchableOpacity } from 'react-native';
+import { View, Text, Image, Linking, TouchableOpacity, StyleSheet } from 'react-native';
 import type { AgencyResponse } from '@/hooks/useAgencies';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface AgencyHeaderProps {
   agency: AgencyResponse;
@@ -17,29 +19,25 @@ export function AgencyHeader({ agency }: AgencyHeaderProps) {
   }
 
   return (
-    <View className="items-center px-4 pt-6 pb-4 bg-white">
+    <View style={styles.container}>
       {agency.logo_url ? (
         <Image
           source={{ uri: agency.logo_url }}
-          className="w-24 h-24 rounded-2xl mb-3"
+          style={styles.logo}
           resizeMode="cover"
           accessibilityLabel={`${agency.name} logo`}
         />
       ) : (
-        <View className="w-24 h-24 rounded-2xl bg-primary-100 items-center justify-center mb-3">
-          <Text className="text-5xl">🏢</Text>
+        <View style={styles.logoPlaceholder}>
+          <Icon name="home" size={48} color={colors.primary} />
         </View>
       )}
 
-      <Text className="text-2xl font-bold text-gray-900 text-center mb-1">{agency.name}</Text>
-      <Text className="text-sm text-gray-400 uppercase tracking-widest mb-3">
-        {agency.country_code}
-      </Text>
+      <Text style={styles.name}>{agency.name}</Text>
+      <Text style={styles.countryCode}>{agency.country_code}</Text>
 
       {agency.description ? (
-        <Text className="text-sm text-gray-600 text-center leading-5 mb-3">
-          {agency.description}
-        </Text>
+        <Text style={styles.description}>{agency.description}</Text>
       ) : null}
 
       {website ? (
@@ -48,20 +46,20 @@ export function AgencyHeader({ agency }: AgencyHeaderProps) {
           accessibilityRole="link"
           accessibilityLabel="Open agency website"
         >
-          <Text className="text-primary-500 text-sm underline">{website}</Text>
+          <Text style={styles.websiteLink}>{website}</Text>
         </TouchableOpacity>
       ) : null}
 
       {/* Social links row */}
       {agency.social_links && (
-        <View className="flex-row gap-3 mt-2">
+        <View style={styles.socialRow}>
           {agency.social_links.facebook ? (
             <TouchableOpacity
               onPress={() => Linking.openURL(agency.social_links!.facebook!).catch(() => {})}
               accessibilityRole="link"
               accessibilityLabel="Facebook"
             >
-              <Text className="text-primary-700 text-sm font-medium">Facebook</Text>
+              <Text style={styles.socialLinkPrimary}>Facebook</Text>
             </TouchableOpacity>
           ) : null}
           {agency.social_links.instagram ? (
@@ -70,7 +68,7 @@ export function AgencyHeader({ agency }: AgencyHeaderProps) {
               accessibilityRole="link"
               accessibilityLabel="Instagram"
             >
-              <Text className="text-pink-500 text-sm font-medium">Instagram</Text>
+              <Text style={styles.socialLinkInstagram}>Instagram</Text>
             </TouchableOpacity>
           ) : null}
           {agency.social_links.twitter ? (
@@ -79,7 +77,7 @@ export function AgencyHeader({ agency }: AgencyHeaderProps) {
               accessibilityRole="link"
               accessibilityLabel="Twitter / X"
             >
-              <Text className="text-gray-700 text-sm font-medium">X / Twitter</Text>
+              <Text style={styles.socialLinkTwitter}>X / Twitter</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -87,3 +85,74 @@ export function AgencyHeader({ agency }: AgencyHeaderProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 24,
+    paddingBottom: 16,
+    backgroundColor: colors.surface,
+  },
+  logo: {
+    width: 96,
+    height: 96,
+    borderRadius: radius.xl2,
+    marginBottom: 12,
+  },
+  logoPlaceholder: {
+    width: 96,
+    height: 96,
+    borderRadius: radius.xl2,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  countryCode: {
+    fontSize: 14,
+    color: colors.textTertiary,
+    textTransform: 'uppercase',
+    letterSpacing: 3,
+    marginBottom: 12,
+  },
+  description: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 12,
+  },
+  websiteLink: {
+    color: colors.primary,
+    fontSize: 14,
+    textDecorationLine: 'underline',
+  },
+  socialRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 8,
+  },
+  socialLinkPrimary: {
+    color: colors.primaryDark,
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+  },
+  socialLinkInstagram: {
+    color: '#ec4899',
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+  },
+  socialLinkTwitter: {
+    color: colors.textSecondary,
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+  },
+});

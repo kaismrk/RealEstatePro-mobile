@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import { useState } from 'react';
+import { colors, radius, fontWeight } from '@/constants/theme';
+import { Icon } from '@/components/ui/Icon';
 
 interface AuthGateProps {
   children: ReactNode;
@@ -15,12 +17,10 @@ interface AuthGateProps {
 function SignInModal({ onClose }: { onClose: () => void }) {
   return (
     <BottomSheet visible onClose={onClose} snapPoints={['35%']}>
-      <View className="px-6 pt-4 pb-8 items-center">
-        <Text className="text-2xl mb-3">{'\uD83D\uDD12'}</Text>
-        <Text className="text-xl font-bold text-gray-900 text-center mb-2">
-          Sign in to continue
-        </Text>
-        <Text className="text-sm text-gray-500 text-center mb-6">
+      <View style={styles.modalContent}>
+        <Icon name="key" size={32} color={colors.primary} />
+        <Text style={styles.modalTitle}>Sign in to continue</Text>
+        <Text style={styles.modalSubtitle}>
           Create a free account or sign in to access this feature.
         </Text>
         <TouchableOpacity
@@ -28,18 +28,18 @@ function SignInModal({ onClose }: { onClose: () => void }) {
             onClose();
             router.push('/(auth)/welcome');
           }}
-          className="w-full bg-primary-500 py-4 rounded-xl items-center mb-3"
+          style={styles.signInButton}
           accessibilityRole="button"
           accessibilityLabel="Sign in"
         >
-          <Text className="text-white font-semibold text-base">Sign In</Text>
+          <Text style={styles.signInButtonText}>Sign In</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onClose}
           accessibilityRole="button"
           accessibilityLabel="Cancel"
         >
-          <Text className="text-gray-500 font-medium">Maybe later</Text>
+          <Text style={styles.cancelText}>Maybe later</Text>
         </TouchableOpacity>
       </View>
     </BottomSheet>
@@ -68,3 +68,43 @@ export function AuthGate({ children, fallback, trigger = 'redirect' }: AuthGateP
 
   return children;
 }
+
+const styles = StyleSheet.create({
+  modalContent: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 32,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    textAlign: 'center',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: colors.textTertiary,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  signInButton: {
+    width: '100%',
+    backgroundColor: colors.primary,
+    paddingVertical: 16,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  signInButtonText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+  cancelText: {
+    color: colors.textTertiary,
+    fontWeight: fontWeight.medium,
+  },
+});

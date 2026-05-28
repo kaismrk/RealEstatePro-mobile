@@ -1,6 +1,7 @@
 import { Stack, usePathname, router } from 'expo-router';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
 import { useUIStore } from '@/lib/stores/ui.store';
+import { colors, fontWeight, radius } from '@/constants/theme';
 
 const STEPS = [
   '/onboarding/step-1',
@@ -24,19 +25,18 @@ function OnboardingHeader() {
   }
 
   return (
-    <SafeAreaView className="bg-white border-b border-gray-100">
-      <View className="flex-row items-center px-4 pt-2 pb-3">
+    <SafeAreaView style={styles.headerSafeArea}>
+      <View style={styles.headerRow}>
         {/* Progress bar */}
-        <View className="flex-1 mr-4">
-          <View className="flex-row items-center mb-1.5">
-            <Text className="text-xs text-gray-500 font-medium">
+        <View style={styles.progressContainer}>
+          <View style={styles.stepLabelRow}>
+            <Text style={styles.stepLabel}>
               Step {stepNumber} of {totalSteps}
             </Text>
           </View>
-          <View className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <View style={styles.progressTrack}>
             <View
-              className="h-full bg-primary-500 rounded-full"
-              style={{ width: `${(stepNumber / totalSteps) * 100}%` }}
+              style={[styles.progressFill, { width: `${(stepNumber / totalSteps) * 100}%` }]}
             />
           </View>
         </View>
@@ -48,7 +48,7 @@ function OnboardingHeader() {
           accessibilityLabel="Skip onboarding"
           hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
         >
-          <Text className="text-sm font-semibold text-gray-500">Skip all</Text>
+          <Text style={styles.skipText}>Skip all</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -57,9 +57,58 @@ function OnboardingHeader() {
 
 export default function OnboardingLayout() {
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.root}>
       <OnboardingHeader />
       <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  headerSafeArea: {
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 12,
+  },
+  progressContainer: {
+    flex: 1,
+    marginRight: 16,
+  },
+  stepLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  stepLabel: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    fontWeight: fontWeight.medium,
+  },
+  progressTrack: {
+    height: 6,
+    backgroundColor: colors.border,
+    borderRadius: radius.pill,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: radius.pill,
+  },
+  skipText: {
+    fontSize: 14,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+});

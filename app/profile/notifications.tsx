@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, Switch, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Switch, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { Icon } from '@/components/ui/Icon';
 import { AuthGate } from '@/components/auth/AuthGate';
+import { colors, fontWeight, radius } from '@/constants/theme';
 
 interface NotificationToggleProps {
   label: string;
@@ -17,18 +19,18 @@ function NotificationToggle({
   onValueChange,
 }: NotificationToggleProps) {
   return (
-    <View className="flex-row items-center px-4 py-4 border-b border-gray-100">
-      <View className="flex-1 mr-3">
-        <Text className="text-base text-gray-800">{label}</Text>
+    <View style={styles.toggleRow}>
+      <View style={styles.toggleText}>
+        <Text style={styles.toggleLabel}>{label}</Text>
         {description ? (
-          <Text className="text-xs text-gray-400 mt-0.5">{description}</Text>
+          <Text style={styles.toggleDescription}>{description}</Text>
         ) : null}
       </View>
       <Switch
         value={value}
         onValueChange={onValueChange}
-        trackColor={{ false: '#D1D5DB', true: '#2563EB' }}
-        thumbColor="#FFFFFF"
+        trackColor={{ false: colors.border, true: colors.info }}
+        thumbColor={colors.surface}
       />
     </View>
   );
@@ -41,29 +43,28 @@ function NotificationsContent() {
   const [appNews, setAppNews] = useState(false);
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
+    <ScrollView style={styles.root}>
       {/* Header */}
-      <View className="flex-row items-center px-4 pt-14 pb-4 bg-white border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-primary-500 text-base">‹ Back</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Icon name="chevron-left" size={20} color={colors.primary} />
+          <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900 flex-1">Notifications</Text>
+        <Text style={styles.headerTitle}>Notifications</Text>
       </View>
 
       {/* Coming soon banner */}
-      <View className="mx-4 mt-4 bg-primary-50 border border-primary-200 rounded-xl px-4 py-3">
-        <Text className="text-sm text-primary-700 font-medium">Coming soon</Text>
-        <Text className="text-xs text-primary-500 mt-0.5">
+      <View style={styles.banner}>
+        <Text style={styles.bannerTitle}>Coming soon</Text>
+        <Text style={styles.bannerSubtitle}>
           Push notification preferences will be available in a future update.
         </Text>
       </View>
 
-      {/* Toggles (UI-only, no backend) */}
-      <View className="mt-6">
-        <Text className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-4 mb-1">
-          Push Notifications
-        </Text>
-        <View className="bg-white border-t border-gray-100">
+      {/* Toggles */}
+      <View style={styles.section}>
+        <Text style={styles.sectionLabel}>Push Notifications</Text>
+        <View style={styles.sectionBody}>
           <NotificationToggle
             label="New matching listings"
             description="Alerts when new listings match your saved searches"
@@ -92,8 +93,8 @@ function NotificationsContent() {
       </View>
 
       {/* Static email note */}
-      <View className="mx-4 mt-4 mb-8">
-        <Text className="text-xs text-gray-400 text-center">
+      <View style={styles.emailNote}>
+        <Text style={styles.emailNoteText}>
           Email notifications for saved search alerts are already active.
         </Text>
       </View>
@@ -108,3 +109,104 @@ export default function NotificationsScreen() {
     </AuthGate>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  backText: {
+    color: colors.primary,
+    fontSize: 16,
+    marginLeft: 2,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  banner: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: '#c8a9ff',
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  bannerTitle: {
+    fontSize: 14,
+    color: colors.primaryDark,
+    fontWeight: fontWeight.medium,
+  },
+  bannerSubtitle: {
+    fontSize: 12,
+    color: colors.primary,
+    marginTop: 2,
+  },
+  section: {
+    marginTop: 24,
+  },
+  sectionLabel: {
+    fontSize: 12,
+    fontWeight: fontWeight.semibold,
+    color: colors.textTertiary,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    paddingHorizontal: 16,
+    marginBottom: 4,
+  },
+  sectionBody: {
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  toggleText: {
+    flex: 1,
+    marginRight: 12,
+  },
+  toggleLabel: {
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+  toggleDescription: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginTop: 2,
+  },
+  emailNote: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 32,
+  },
+  emailNoteText: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    textAlign: 'center',
+  },
+});

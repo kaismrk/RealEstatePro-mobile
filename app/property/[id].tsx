@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Share,
+  StyleSheet,
   type NativeSyntheticEvent,
   type NativeScrollEvent,
   type ListRenderItemInfo,
@@ -24,8 +25,12 @@ import { FactsAndFeatures } from '@/components/property/FactsAndFeatures';
 import { MortgageCalculator } from '@/components/property/MortgageCalculator';
 import { AgentCard } from '@/components/property/AgentCard';
 import { NearbyHomesRow } from '@/components/property/NearbyHomesRow';
+import { Icon } from '@/components/ui/Icon';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useCountries } from '@/hooks/useCountries';
+import { colors, radius, fontWeight, fontSize, shadows } from '@/constants/theme';
+
+const IMAGE_HEIGHT = 288;
 
 export default function PropertyDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -49,7 +54,7 @@ export default function PropertyDetailScreen() {
     return (
       <Image
         source={{ uri: item }}
-        className="h-72 w-full"
+        style={styles.carouselImage}
         resizeMode="cover"
         accessibilityLabel="Property photo"
       />
@@ -79,25 +84,22 @@ export default function PropertyDetailScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator size="large" color="#2563eb" />
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (isError || !property) {
     return (
-      <View className="flex-1 items-center justify-center bg-white px-6">
-        <Text className="text-4xl mb-4">🏠</Text>
-        <Text className="text-lg font-semibold text-gray-900 mb-2">Property not found</Text>
-        <Text className="text-gray-500 text-center mb-6">
+      <View style={[styles.centered, styles.centeredPadded]}>
+        <Icon name="home" size={48} color={colors.textTertiary} />
+        <Text style={styles.notFoundTitle}>Property not found</Text>
+        <Text style={styles.notFoundSubtitle}>
           This listing may no longer be available.
         </Text>
-        <TouchableOpacity
-          className="bg-primary-500 rounded-xl px-6 py-3"
-          onPress={() => router.back()}
-        >
-          <Text className="text-white font-semibold">Go Back</Text>
+        <TouchableOpacity style={styles.goBackBtn} onPress={() => router.back()}>
+          <Text style={styles.goBackBtnText}>Go Back</Text>
         </TouchableOpacity>
       </View>
     );
@@ -116,11 +118,11 @@ export default function PropertyDetailScreen() {
     : descriptionText;
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.flex1}>
       <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
         {/* 1. Photo Carousel */}
         <TouchableOpacity activeOpacity={0.95} onPress={handleOpenGallery}>
-          <View className="relative h-72 bg-gray-200">
+          <View style={styles.carouselContainer}>
             {hasImages ? (
               <>
                 <FlatList<string>
@@ -133,112 +135,113 @@ export default function PropertyDetailScreen() {
                   showsHorizontalScrollIndicator={false}
                   onScroll={handleScroll}
                   scrollEventThrottle={16}
-                  style={{ flex: 1 }}
+                  style={styles.flex1}
                 />
                 {images.length > 1 && (
-                  <View className="absolute bottom-3 left-0 right-0 flex-row justify-center gap-1">
+                  <View style={styles.dotsContainer}>
                     {images.map((_, i) => (
                       <View
                         key={i}
-                        className={`rounded-full ${i === activeImageIndex ? 'w-2 h-2 bg-white' : 'w-1.5 h-1.5 bg-white/60'}`}
+                        style={[
+                          styles.dot,
+                          i === activeImageIndex ? styles.dotActive : styles.dotInactive,
+                        ]}
                       />
                     ))}
                   </View>
                 )}
                 {images.length > 1 && (
-                  <View className="absolute bottom-3 right-3 bg-black/50 rounded-full px-2 py-0.5">
-                    <Text className="text-white text-xs">
+                  <View style={styles.imageCounter}>
+                    <Text style={styles.imageCounterText}>
                       {activeImageIndex + 1}/{images.length}
                     </Text>
                   </View>
                 )}
               </>
             ) : (
-              <View className="h-72 items-center justify-center bg-gray-200">
-                <Text className="text-6xl">🏠</Text>
+              <View style={styles.imagePlaceholder}>
+                <Icon name="home" size={64} color={colors.textTertiary} />
               </View>
             )}
 
             {/* Back button */}
             <TouchableOpacity
-              className="absolute top-12 left-4 w-9 h-9 rounded-full bg-black/40 items-center justify-center"
+              style={styles.backBtn}
               onPress={() => router.back()}
               accessibilityRole="button"
               accessibilityLabel="Go back"
             >
-              <Text className="text-white text-base">‹</Text>
+              <Icon name="chevron-left" size={20} color={colors.surface} />
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
 
         {/* Content */}
-        <View className="px-4 pt-4">
+        <View style={styles.contentPadding}>
           {/* 2. Publish Status Badge */}
           {showStatusBadge && property.publish_status && (
-            <View className="mb-3">
+            <View style={styles.statusBadgeWrapper}>
               <PublishStatusBadge status={property.publish_status} />
             </View>
           )}
 
           {/* 3. Price Header */}
-          <View className="flex-row items-center justify-between mb-1">
+          <View style={styles.priceRow}>
             <CurrencyText
               amount={property.price}
               currency={currency}
-              className="text-2xl font-bold text-gray-900"
+              style={styles.priceText}
             />
-            {property.is_boosted && (
-              <BoostBadge />
-            )}
+            {property.is_boosted && <BoostBadge />}
           </View>
 
           {/* 4. Key Stats Row */}
-          <View className="flex-row items-center gap-4 mb-2">
+          <View style={styles.statsRow}>
             {property.bedrooms != null && (
-              <View className="flex-row items-center gap-1">
-                <Text className="text-base">🛏</Text>
-                <Text className="text-sm text-gray-700">
+              <View style={styles.statItem}>
+                <Icon name="bed" size={16} color={colors.textSecondary} />
+                <Text style={styles.statText}>
                   {property.bedrooms} bed{property.bedrooms !== 1 ? 's' : ''}
                 </Text>
               </View>
             )}
             {property.bathrooms != null && (
-              <View className="flex-row items-center gap-1">
-                <Text className="text-base">🛁</Text>
-                <Text className="text-sm text-gray-700">
+              <View style={styles.statItem}>
+                <Icon name="bath" size={16} color={colors.textSecondary} />
+                <Text style={styles.statText}>
                   {property.bathrooms} bath{property.bathrooms !== 1 ? 's' : ''}
                 </Text>
               </View>
             )}
             {property.area_sqm != null && (
-              <View className="flex-row items-center gap-1">
-                <Text className="text-base">📐</Text>
-                <Text className="text-sm text-gray-700">{property.area_sqm} m²</Text>
+              <View style={styles.statItem}>
+                <Icon name="ruler" size={16} color={colors.textSecondary} />
+                <Text style={styles.statText}>{property.area_sqm} m²</Text>
               </View>
             )}
           </View>
 
           {/* 5. Address */}
           {(property.address || property.city) && (
-            <View className="flex-row items-center gap-1 mb-3">
-              <Text className="text-base">📍</Text>
-              <Text className="text-sm text-gray-600" numberOfLines={1}>
+            <View style={styles.addressRow}>
+              <Icon name="map-pin" size={14} color={colors.textTertiary} />
+              <Text style={styles.addressText} numberOfLines={1}>
                 {[property.address, property.city].filter(Boolean).join(', ')}
               </Text>
             </View>
           )}
 
-          {/* 6. Heart + Share Row */}
-          <View className="flex-row items-center justify-between border-y border-gray-100 py-3 mb-4">
-            <Text className="text-base font-semibold text-gray-900">{property.title}</Text>
-            <View className="flex-row items-center gap-3">
+          {/* 6. Title + Heart + Share Row */}
+          <View style={styles.titleRow}>
+            <Text style={styles.propertyTitle}>{property.title}</Text>
+            <View style={styles.titleActions}>
               <HeartButton propertyId={property.id} />
               <TouchableOpacity
                 onPress={handleShare}
                 accessibilityRole="button"
                 accessibilityLabel="Share property"
               >
-                <Text className="text-xl">📤</Text>
+                <Icon name="share" size={20} color={colors.textSecondary} />
               </TouchableOpacity>
             </View>
           </View>
@@ -248,15 +251,15 @@ export default function PropertyDetailScreen() {
 
           {/* 8. Description */}
           {descriptionText.length > 0 && (
-            <View className="mb-6">
-              <Text className="text-lg font-bold text-gray-900 mb-2">Description</Text>
-              <Text className="text-sm text-gray-700 leading-6">{descriptionDisplay}</Text>
+            <View style={styles.descriptionSection}>
+              <Text style={styles.descriptionTitle}>Description</Text>
+              <Text style={styles.descriptionText}>{descriptionDisplay}</Text>
               {descriptionLong && (
                 <TouchableOpacity
                   onPress={() => setDescriptionExpanded((v) => !v)}
                   accessibilityRole="button"
                 >
-                  <Text className="text-primary-500 text-sm mt-1 font-medium">
+                  <Text style={styles.readMoreText}>
                     {descriptionExpanded ? 'Show less' : 'Read more'}
                   </Text>
                 </TouchableOpacity>
@@ -292,29 +295,254 @@ export default function PropertyDetailScreen() {
           )}
 
           {/* Bottom spacing for sticky bar */}
-          <View className="h-24" />
+          <View style={styles.stickyBarSpacer} />
         </View>
       </ScrollView>
 
       {/* 14. Sticky Bottom Bar */}
-      <View className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex-row gap-3">
+      <View style={styles.stickyBar}>
         <TouchableOpacity
-          className="flex-1 border border-primary-500 rounded-xl py-3.5 items-center"
+          style={styles.contactBtn}
           onPress={handleContact}
           accessibilityRole="button"
           accessibilityLabel="Contact agent"
         >
-          <Text className="text-primary-500 font-semibold">Contact</Text>
+          <Text style={styles.contactBtnText}>Contact</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="flex-1 bg-primary-500 rounded-xl py-3.5 items-center"
+          style={styles.tourBtn}
           onPress={handleRequestTour}
           accessibilityRole="button"
           accessibilityLabel="Request a tour"
         >
-          <Text className="text-white font-semibold">Request Tour</Text>
+          <Text style={styles.tourBtnText}>Request Tour</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  flex1: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  centeredPadded: {
+    paddingHorizontal: 24,
+  },
+  notFoundTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  notFoundSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  goBackBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+  goBackBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+  carouselContainer: {
+    position: 'relative',
+    height: IMAGE_HEIGHT,
+    backgroundColor: colors.borderStrong,
+  },
+  carouselImage: {
+    height: IMAGE_HEIGHT,
+    width: '100%',
+  },
+  dotsContainer: {
+    position: 'absolute',
+    bottom: 12,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 4,
+  },
+  dot: {
+    borderRadius: radius.pill,
+  },
+  dotActive: {
+    width: 8,
+    height: 8,
+    backgroundColor: colors.surface,
+  },
+  dotInactive: {
+    width: 6,
+    height: 6,
+    backgroundColor: 'rgba(255,255,255,0.6)',
+  },
+  imageCounter: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  imageCounterText: {
+    color: colors.surface,
+    fontSize: fontSize.xs,
+  },
+  imagePlaceholder: {
+    height: IMAGE_HEIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.borderStrong,
+  },
+  backBtn: {
+    position: 'absolute',
+    top: 48,
+    left: 16,
+    width: 36,
+    height: 36,
+    borderRadius: radius.pill,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  contentPadding: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  statusBadgeWrapper: {
+    marginBottom: 12,
+  },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  priceText: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 8,
+  },
+  statItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  statText: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+  },
+  addressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginBottom: 12,
+  },
+  addressText: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    flex: 1,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  propertyTitle: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    flex: 1,
+    marginRight: 8,
+  },
+  titleActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  descriptionSection: {
+    marginBottom: 24,
+  },
+  descriptionTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  descriptionText: {
+    fontSize: fontSize.sm,
+    color: colors.textSecondary,
+    lineHeight: 24,
+  },
+  readMoreText: {
+    fontSize: fontSize.sm,
+    color: colors.primary,
+    fontWeight: fontWeight.medium,
+    marginTop: 4,
+  },
+  stickyBarSpacer: {
+    height: 96,
+  },
+  stickyBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    gap: 12,
+  },
+  contactBtn: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  contactBtnText: {
+    color: colors.primary,
+    fontWeight: fontWeight.semibold,
+  },
+  tourBtn: {
+    flex: 1,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  tourBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+});

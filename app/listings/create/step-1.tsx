@@ -5,11 +5,13 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { Button } from '@/components/ui/Button';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 import type { ListingType, PropertyType } from '@/lib/types/property';
 
 const LISTING_TYPES: { value: ListingType; label: string }[] = [
@@ -77,38 +79,38 @@ export default function CreateStep1() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="mb-2">
-          <Text className="text-primary-500 text-sm">Cancel</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
+          <Text style={styles.linkText}>Cancel</Text>
         </TouchableOpacity>
-        <Text className="text-2xl font-bold text-gray-900">Create Listing</Text>
-        <Text className="text-sm text-gray-500 mt-1">Step 1 of 5 — Basic Info</Text>
+        <Text style={styles.screenTitle}>Create Listing</Text>
+        <Text style={styles.stepSubtitle}>Step 1 of 5 — Basic Info</Text>
       </View>
 
-      <ScrollView className="flex-1 px-4 pt-4" showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Listing Type */}
-        <Text className="text-base font-semibold text-gray-800 mb-2">
-          Listing Type <Text className="text-red-500">*</Text>
+        <Text style={styles.sectionLabel}>
+          Listing Type <Text style={styles.required}>*</Text>
         </Text>
-        <View className="flex-row gap-2 mb-5 flex-wrap">
+        <View style={styles.chipRow}>
           {LISTING_TYPES.map((lt) => (
             <TouchableOpacity
               key={lt.value}
               onPress={() => setListingType(lt.value)}
-              className={`px-4 py-2 rounded-full border ${
-                listingType === lt.value
-                  ? 'bg-primary-500 border-primary-500'
-                  : 'bg-white border-gray-300'
-              }`}
+              style={[
+                styles.chip,
+                listingType === lt.value ? styles.chipActive : styles.chipInactive,
+              ]}
               accessibilityRole="radio"
               accessibilityState={{ checked: listingType === lt.value }}
             >
               <Text
-                className={`text-sm font-medium ${
-                  listingType === lt.value ? 'text-white' : 'text-gray-700'
-                }`}
+                style={[
+                  styles.chipText,
+                  listingType === lt.value ? styles.chipTextActive : styles.chipTextInactive,
+                ]}
               >
                 {lt.label}
               </Text>
@@ -117,26 +119,26 @@ export default function CreateStep1() {
         </View>
 
         {/* Property Type */}
-        <Text className="text-base font-semibold text-gray-800 mb-2">
-          Property Type <Text className="text-red-500">*</Text>
+        <Text style={styles.sectionLabel}>
+          Property Type <Text style={styles.required}>*</Text>
         </Text>
-        <View className="flex-row flex-wrap gap-2 mb-1">
+        <View style={styles.chipRow}>
           {PROPERTY_TYPES.map((pt) => (
             <TouchableOpacity
               key={pt.value}
               onPress={() => setPropertyType(pt.value)}
-              className={`px-3 py-1.5 rounded-full border ${
-                propertyType === pt.value
-                  ? 'bg-primary-500 border-primary-500'
-                  : 'bg-white border-gray-300'
-              }`}
+              style={[
+                styles.chipSm,
+                propertyType === pt.value ? styles.chipActive : styles.chipInactive,
+              ]}
               accessibilityRole="checkbox"
               accessibilityState={{ checked: propertyType === pt.value }}
             >
               <Text
-                className={`text-sm ${
-                  propertyType === pt.value ? 'text-white' : 'text-gray-700'
-                }`}
+                style={[
+                  styles.chipText,
+                  propertyType === pt.value ? styles.chipTextActive : styles.chipTextInactive,
+                ]}
               >
                 {pt.label}
               </Text>
@@ -144,57 +146,53 @@ export default function CreateStep1() {
           ))}
         </View>
         {errors.property_type ? (
-          <Text className="text-red-500 text-xs mb-3">{errors.property_type}</Text>
+          <Text style={styles.errorText}>{errors.property_type}</Text>
         ) : (
-          <View className="mb-5" />
+          <View style={styles.spacerMb5} />
         )}
 
         {/* Title */}
-        <Text className="text-base font-semibold text-gray-800 mb-1">
-          Title <Text className="text-red-500">*</Text>
+        <Text style={styles.fieldLabel}>
+          Title <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           value={title}
           onChangeText={setTitle}
           placeholder="e.g. Spacious 3-bedroom apartment in city center"
-          placeholderTextColor="#9CA3AF"
-          className={`border rounded-xl px-4 py-3 text-base text-gray-900 bg-white mb-1 ${
-            errors.title ? 'border-red-500' : 'border-gray-300'
-          }`}
+          placeholderTextColor={colors.textTertiary}
+          style={[styles.input, errors.title ? styles.inputError : styles.inputNormal]}
           accessibilityLabel="Listing title"
         />
         {errors.title ? (
-          <Text className="text-red-500 text-xs mb-4">{errors.title}</Text>
+          <Text style={styles.errorText}>{errors.title}</Text>
         ) : (
-          <View className="mb-4" />
+          <View style={styles.spacerMb4} />
         )}
 
         {/* Price */}
-        <Text className="text-base font-semibold text-gray-800 mb-1">
-          Price <Text className="text-red-500">*</Text>
+        <Text style={styles.fieldLabel}>
+          Price <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           value={price}
           onChangeText={setPrice}
           placeholder="0"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={colors.textTertiary}
           keyboardType="numeric"
-          className={`border rounded-xl px-4 py-3 text-base text-gray-900 bg-white mb-1 ${
-            errors.price ? 'border-red-500' : 'border-gray-300'
-          }`}
+          style={[styles.input, errors.price ? styles.inputError : styles.inputNormal]}
           accessibilityLabel="Price"
         />
         {errors.price ? (
-          <Text className="text-red-500 text-xs mb-4">{errors.price}</Text>
+          <Text style={styles.errorText}>{errors.price}</Text>
         ) : (
-          <View className="mb-4" />
+          <View style={styles.spacerMb4} />
         )}
 
-        <View className="h-32" />
+        <View style={styles.scrollBottom} />
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 pb-8 pt-3 border-t border-gray-100 bg-white">
+      <View style={styles.footer}>
         <Button onPress={handleNext} size="lg">
           Next: Location
         </Button>
@@ -202,3 +200,128 @@ export default function CreateStep1() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  header: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerBackBtn: {
+    marginBottom: 8,
+  },
+  linkText: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+  },
+  screenTitle: {
+    fontSize: fontSize['2xl'],
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  stepSubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    marginTop: 4,
+  },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  sectionLabel: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  fieldLabel: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    marginBottom: 4,
+  },
+  required: {
+    color: colors.error,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 20,
+  },
+  chip: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+  },
+  chipSm: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+  },
+  chipActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  chipInactive: {
+    backgroundColor: colors.surface,
+    borderColor: colors.borderStrong,
+  },
+  chipText: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
+  },
+  chipTextActive: {
+    color: colors.textOnBrand,
+  },
+  chipTextInactive: {
+    color: colors.textSecondary,
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: fontSize.base,
+    color: colors.textPrimary,
+    backgroundColor: colors.surface,
+    marginBottom: 4,
+  },
+  inputNormal: {
+    borderColor: colors.borderStrong,
+  },
+  inputError: {
+    borderColor: colors.error,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: fontSize.xs,
+    marginBottom: 12,
+  },
+  spacerMb4: {
+    marginBottom: 16,
+  },
+  spacerMb5: {
+    marginBottom: 20,
+  },
+  scrollBottom: {
+    height: 128,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+});

@@ -7,12 +7,15 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { Icon } from '@/components/ui/Icon';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useCurrentUser, useUpdateProfile } from '@/hooks/useUser';
+import { colors, fontWeight, radius } from '@/constants/theme';
 
 function EditProfileContent() {
   const { data: user, isLoading } = useCurrentUser();
@@ -23,7 +26,6 @@ function EditProfileContent() {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<{ email?: string }>({});
 
-  // Populate form when user data arrives
   useEffect(() => {
     if (user) {
       setFirstName(user.first_name ?? '');
@@ -68,27 +70,28 @@ function EditProfileContent() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 bg-white items-center justify-center">
-        <Text className="text-gray-500">Loading...</Text>
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading...</Text>
       </View>
     );
   }
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white"
+      style={styles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
+      <ScrollView style={styles.scroll} keyboardShouldPersistTaps="handled">
         {/* Header */}
-        <View className="flex-row items-center px-4 pt-14 pb-4 border-b border-gray-100">
-          <TouchableOpacity onPress={() => router.back()} className="mr-3">
-            <Text className="text-primary-500 text-base">‹ Back</Text>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <Icon name="chevron-left" size={20} color={colors.primary} />
+            <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
-          <Text className="text-xl font-bold text-gray-900 flex-1">Edit Profile</Text>
+          <Text style={styles.headerTitle}>Edit Profile</Text>
         </View>
 
-        <View className="px-4 pt-6">
+        <View style={styles.form}>
           <Input
             label="First Name"
             value={firstName}
@@ -121,12 +124,12 @@ function EditProfileContent() {
 
           {/* Country read-only (FINDING-011: not editable) */}
           {user?.country_code ? (
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-gray-700 mb-1">Country</Text>
-              <View className="border border-gray-200 rounded-xl px-4 py-3 bg-gray-50">
-                <Text className="text-base text-gray-500">{user.country_code}</Text>
+            <View style={styles.countryField}>
+              <Text style={styles.countryLabel}>Country</Text>
+              <View style={styles.countryValue}>
+                <Text style={styles.countryText}>{user.country_code}</Text>
               </View>
-              <Text className="text-xs text-gray-400 mt-1">
+              <Text style={styles.countryHint}>
                 Country can only be changed in App Settings.
               </Text>
             </View>
@@ -136,7 +139,7 @@ function EditProfileContent() {
             onPress={handleSave}
             loading={updateProfile.isPending}
             size="lg"
-            className="mt-2"
+            style={styles.submitButton}
           >
             Save Changes
           </Button>
@@ -153,3 +156,80 @@ export default function EditProfileScreen() {
     </AuthGate>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    color: colors.textSecondary,
+  },
+  scroll: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  backText: {
+    color: colors.primary,
+    fontSize: 16,
+    marginLeft: 2,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  form: {
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  countryField: {
+    marginBottom: 16,
+  },
+  countryLabel: {
+    fontSize: 14,
+    fontWeight: fontWeight.medium,
+    color: colors.textSecondary,
+    marginBottom: 4,
+  },
+  countryValue: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: colors.surfaceSunken,
+  },
+  countryText: {
+    fontSize: 16,
+    color: colors.textSecondary,
+  },
+  countryHint: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginTop: 4,
+  },
+  submitButton: {
+    marginTop: 8,
+  },
+});

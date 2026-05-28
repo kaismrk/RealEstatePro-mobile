@@ -5,10 +5,13 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  StyleSheet,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useFavorites } from '@/hooks/useFavorites';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 import type { PropertySchema } from '@/lib/types/property';
 
 interface CompareField {
@@ -41,7 +44,7 @@ const COMPARE_FIELDS: CompareField[] = [
       p.bathrooms != null ? String(p.bathrooms) : '—',
   },
   {
-    label: 'Area (m\u00B2)',
+    label: 'Area (m²)',
     getValue: (p) =>
       p.area_sqm != null ? String(p.area_sqm) : '—',
   },
@@ -103,7 +106,7 @@ export default function CompareScreen() {
 
   if (list.isLoading) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-white">
+      <SafeAreaView style={styles.centeredContainer}>
         <LoadingSpinner />
       </SafeAreaView>
     );
@@ -111,72 +114,57 @@ export default function CompareScreen() {
 
   if (selectedProperties.length < 2) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-white px-6">
-        <Text className="text-xl font-bold text-gray-900 mb-2">
-          Select at least 2 homes
-        </Text>
-        <Text className="text-sm text-gray-500 text-center mb-6">
+      <SafeAreaView style={styles.emptyContainer}>
+        <Text style={styles.emptyTitle}>Select at least 2 homes</Text>
+        <Text style={styles.emptySubtitle}>
           Go back and select 2–5 homes to compare them.
         </Text>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="bg-primary-500 px-6 py-3 rounded-xl"
+          style={styles.goBackBtn}
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Text className="text-white font-semibold">Go Back</Text>
+          <Text style={styles.goBackBtnText}>Go Back</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View className="flex-row items-center px-4 pt-4 pb-3 border-b border-gray-100">
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
-          className="mr-3 w-9 h-9 items-center justify-center rounded-full bg-gray-100"
+          style={styles.closeBtn}
           accessibilityRole="button"
           accessibilityLabel="Close"
         >
-          <Text className="text-base">{'\u2715'}</Text>
+          <Icon name="x" size={18} color={colors.textPrimary} />
         </TouchableOpacity>
-        <Text className="text-lg font-bold text-gray-900">
+        <Text style={styles.headerTitle}>
           Compare {selectedProperties.length} Homes
         </Text>
       </View>
 
       {/* Comparison table — horizontally scrollable */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator
-        className="flex-1"
-      >
+      <ScrollView horizontal showsHorizontalScrollIndicator>
         <View>
           {/* Property title row */}
-          <View className="flex-row border-b border-gray-200 bg-gray-50">
-            <View
-              style={{ width: LABEL_WIDTH }}
-              className="px-3 py-3 justify-center"
-            >
-              <Text className="text-xs font-semibold text-gray-400 uppercase">
-                Property
-              </Text>
+          <View style={styles.titleRow}>
+            <View style={[styles.labelCell, { width: LABEL_WIDTH }]}>
+              <Text style={styles.propertyColumnHeader}>Property</Text>
             </View>
             {selectedProperties.map((p) => (
               <View
                 key={p.id}
-                style={{ width: COLUMN_WIDTH }}
-                className="px-3 py-3 border-l border-gray-100"
+                style={[styles.dataCell, { width: COLUMN_WIDTH }, styles.dataCellBorderLeft]}
               >
-                <Text
-                  className="text-sm font-semibold text-gray-900"
-                  numberOfLines={2}
-                >
+                <Text style={styles.propertyTitle} numberOfLines={2}>
                   {p.title}
                 </Text>
-                <Text className="text-xs text-gray-500 mt-0.5" numberOfLines={1}>
+                <Text style={styles.propertyCity} numberOfLines={1}>
                   {p.city}
                 </Text>
               </View>
@@ -187,30 +175,23 @@ export default function CompareScreen() {
           {COMPARE_FIELDS.map((field, rowIndex) => (
             <View
               key={field.label}
-              className={`flex-row border-b border-gray-100 ${
-                rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
-              }`}
+              style={[
+                styles.dataRow,
+                rowIndex % 2 === 0 ? styles.dataRowEven : styles.dataRowOdd,
+              ]}
             >
               {/* Row label */}
-              <View
-                style={{ width: LABEL_WIDTH }}
-                className="px-3 py-3 justify-center"
-              >
-                <Text className="text-xs font-medium text-gray-500">
-                  {field.label}
-                </Text>
+              <View style={[styles.labelCell, { width: LABEL_WIDTH }]}>
+                <Text style={styles.rowLabel}>{field.label}</Text>
               </View>
 
               {/* Property values */}
               {selectedProperties.map((p) => (
                 <View
                   key={p.id}
-                  style={{ width: COLUMN_WIDTH }}
-                  className="px-3 py-3 justify-center border-l border-gray-100"
+                  style={[styles.dataCell, { width: COLUMN_WIDTH }, styles.dataCellBorderLeft]}
                 >
-                  <Text className="text-sm text-gray-800">
-                    {field.getValue(p)}
-                  </Text>
+                  <Text style={styles.cellValue}>{field.getValue(p)}</Text>
                 </View>
               ))}
             </View>
@@ -220,3 +201,124 @@ export default function CompareScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  centeredContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
+    paddingHorizontal: 24,
+  },
+  emptyTitle: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  goBackBtn: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+  },
+  goBackBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  closeBtn: {
+    marginRight: 12,
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceMuted,
+  },
+  headerTitle: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.borderStrong,
+    backgroundColor: colors.surfaceMuted,
+  },
+  labelCell: {
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    justifyContent: 'center',
+  },
+  dataCell: {
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    justifyContent: 'center',
+  },
+  dataCellBorderLeft: {
+    borderLeftWidth: 1,
+    borderLeftColor: colors.border,
+  },
+  propertyColumnHeader: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.semibold,
+    color: colors.textTertiary,
+    textTransform: 'uppercase',
+  },
+  propertyTitle: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+  },
+  propertyCity: {
+    fontSize: fontSize.xs,
+    color: colors.textTertiary,
+    marginTop: 2,
+  },
+  dataRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  dataRowEven: {
+    backgroundColor: colors.surface,
+  },
+  dataRowOdd: {
+    backgroundColor: colors.surfaceMuted,
+  },
+  rowLabel: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.medium,
+    color: colors.textTertiary,
+  },
+  cellValue: {
+    fontSize: fontSize.sm,
+    color: colors.textPrimary,
+  },
+});

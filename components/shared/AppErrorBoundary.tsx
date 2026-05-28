@@ -1,5 +1,6 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface Props {
   children: ReactNode;
@@ -31,26 +32,24 @@ export class AppErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <SafeAreaView className="flex-1 bg-white items-center justify-center px-8">
-          <Text className="text-5xl mb-4">{'\uD83D\uDE1F'}</Text>
-          <Text className="text-xl font-bold text-gray-900 text-center mb-2">
-            Something went wrong
-          </Text>
-          <Text className="text-sm text-gray-500 text-center mb-8">
+        <SafeAreaView style={styles.safeArea}>
+          <Text style={styles.iconText}>:(</Text>
+          <Text style={styles.title}>Something went wrong</Text>
+          <Text style={styles.subtitle}>
             An unexpected error occurred. Please try again.
           </Text>
           {__DEV__ && this.state.error ? (
-            <Text className="text-xs text-red-400 text-center mb-6 font-mono">
+            <Text style={styles.devError}>
               {this.state.error.message}
             </Text>
           ) : null}
           <TouchableOpacity
             onPress={this.handleRetry}
-            className="bg-primary-500 px-8 py-4 rounded-xl"
+            style={styles.retryButton}
             accessibilityRole="button"
             accessibilityLabel="Try again"
           >
-            <Text className="text-white font-semibold text-base">Try Again</Text>
+            <Text style={styles.retryText}>Try Again</Text>
           </TouchableOpacity>
         </SafeAreaView>
       );
@@ -59,3 +58,49 @@ export class AppErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+  },
+  iconText: {
+    fontSize: 48,
+    marginBottom: 16,
+    color: colors.textTertiary,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: colors.textTertiary,
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  devError: {
+    fontSize: 12,
+    color: colors.error,
+    textAlign: 'center',
+    marginBottom: 24,
+    fontFamily: 'monospace',
+  },
+  retryButton: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: radius.md,
+  },
+  retryText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+    fontSize: 16,
+  },
+});

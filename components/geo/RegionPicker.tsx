@@ -22,8 +22,10 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import { useTopLevelRegions, useChildRegions, type Region } from '@/hooks/useRegions';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 export interface RegionPickerProps {
   /** ISO country code e.g. "TN" */
@@ -47,10 +49,8 @@ interface SelectorRowProps {
 
 function SelectorRow({ label, placeholder, selectedName, disabled, onPress, testID }: SelectorRowProps) {
   return (
-    <View className="mb-3">
-      <Text className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-        {label}
-      </Text>
+    <View style={selectorStyles.container}>
+      <Text style={selectorStyles.label}>{label}</Text>
       <TouchableOpacity
         onPress={onPress}
         disabled={disabled}
@@ -58,33 +58,92 @@ function SelectorRow({ label, placeholder, selectedName, disabled, onPress, test
         accessibilityRole="button"
         accessibilityLabel={`Select ${label}`}
         accessibilityState={{ disabled }}
-        className={`flex-row items-center justify-between border rounded-xl px-4 py-3 ${
+        style={[
+          selectorStyles.button,
           disabled
-            ? 'bg-gray-50 border-gray-200'
+            ? selectorStyles.buttonDisabled
             : selectedName
-            ? 'bg-white border-primary-500'
-            : 'bg-white border-gray-300'
-        }`}
+            ? selectorStyles.buttonSelected
+            : selectorStyles.buttonDefault,
+        ]}
       >
         <Text
-          className={`text-base flex-1 ${
+          style={[
+            selectorStyles.buttonText,
             disabled
-              ? 'text-gray-300'
+              ? selectorStyles.textDisabled
               : selectedName
-              ? 'text-gray-900 font-medium'
-              : 'text-gray-400'
-          }`}
+              ? selectorStyles.textSelected
+              : selectorStyles.textPlaceholder,
+          ]}
           numberOfLines={1}
         >
           {selectedName ?? placeholder}
         </Text>
-        <Text className={`ml-2 text-lg ${disabled ? 'text-gray-200' : 'text-gray-500'}`}>
-          {'\u25BE'}
+        <Text style={[selectorStyles.chevron, disabled && selectorStyles.chevronDisabled]}>
+          {'▾'}
         </Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+const selectorStyles = StyleSheet.create({
+  container: {
+    marginBottom: 12,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: fontWeight.semibold,
+    color: colors.textTertiary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  buttonDefault: {
+    backgroundColor: colors.surface,
+    borderColor: colors.borderStrong,
+  },
+  buttonSelected: {
+    backgroundColor: colors.surface,
+    borderColor: colors.primary,
+  },
+  buttonDisabled: {
+    backgroundColor: colors.surfaceSunken,
+    borderColor: colors.border,
+  },
+  buttonText: {
+    fontSize: 16,
+    flex: 1,
+  },
+  textPlaceholder: {
+    color: colors.textTertiary,
+  },
+  textSelected: {
+    color: colors.textPrimary,
+    fontWeight: fontWeight.medium,
+  },
+  textDisabled: {
+    color: colors.border,
+  },
+  chevron: {
+    marginLeft: 8,
+    fontSize: 18,
+    color: colors.textTertiary,
+  },
+  chevronDisabled: {
+    color: colors.border,
+  },
+});
 
 interface RegionSheetProps {
   visible: boolean;
@@ -116,32 +175,32 @@ function RegionSheet({ visible, title, items, isLoading, onSelect, onClose }: Re
       presentationStyle="pageSheet"
       onRequestClose={handleClose}
     >
-      <SafeAreaView className="flex-1 bg-white">
+      <SafeAreaView style={sheetStyles.safeArea}>
         <KeyboardAvoidingView
-          className="flex-1"
+          style={sheetStyles.flex}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           {/* Header */}
-          <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
-            <Text className="text-lg font-bold text-gray-900">{title}</Text>
+          <View style={sheetStyles.header}>
+            <Text style={sheetStyles.headerTitle}>{title}</Text>
             <TouchableOpacity
               onPress={handleClose}
               accessibilityRole="button"
               accessibilityLabel="Close"
-              className="px-3 py-1"
+              style={sheetStyles.doneButton}
             >
-              <Text className="text-primary-500 font-medium">Done</Text>
+              <Text style={sheetStyles.doneText}>Done</Text>
             </TouchableOpacity>
           </View>
 
           {/* Search */}
-          <View className="px-4 py-3 border-b border-gray-100">
+          <View style={sheetStyles.searchContainer}>
             <TextInput
               value={query}
               onChangeText={setQuery}
               placeholder={`Search ${title.toLowerCase()}…`}
-              placeholderTextColor="#9CA3AF"
-              className="bg-gray-100 rounded-xl px-4 py-2 text-base text-gray-900"
+              placeholderTextColor={colors.textTertiary}
+              style={sheetStyles.searchInput}
               accessibilityLabel={`Search ${title}`}
               autoFocus
               clearButtonMode="while-editing"
@@ -150,12 +209,12 @@ function RegionSheet({ visible, title, items, isLoading, onSelect, onClose }: Re
 
           {/* List */}
           {isLoading ? (
-            <View className="flex-1 items-center justify-center" testID="region-loading">
-              <ActivityIndicator size="large" color="#2563eb" />
+            <View style={sheetStyles.centered} testID="region-loading">
+              <ActivityIndicator size="large" color={colors.primary} />
             </View>
           ) : filtered.length === 0 ? (
-            <View className="flex-1 items-center justify-center px-8">
-              <Text className="text-gray-400 text-base text-center">
+            <View style={sheetStyles.emptyContainer}>
+              <Text style={sheetStyles.emptyText}>
                 {items.length === 0
                   ? 'No regions available for this country yet.'
                   : 'No results match your search.'}
@@ -165,7 +224,7 @@ function RegionSheet({ visible, title, items, isLoading, onSelect, onClose }: Re
             <FlatList
               data={filtered}
               keyExtractor={(item) => String(item.id)}
-              contentContainerStyle={{ paddingVertical: 4 }}
+              contentContainerStyle={sheetStyles.listContent}
               keyboardShouldPersistTaps="handled"
               renderItem={({ item }) => (
                 <TouchableOpacity
@@ -175,11 +234,11 @@ function RegionSheet({ visible, title, items, isLoading, onSelect, onClose }: Re
                   }}
                   accessibilityRole="button"
                   accessibilityLabel={item.name}
-                  className="flex-row items-center px-4 py-4 border-b border-gray-50"
+                  style={sheetStyles.listItem}
                 >
-                  <Text className="text-base text-gray-900 flex-1">{item.name}</Text>
+                  <Text style={sheetStyles.listItemText}>{item.name}</Text>
                   {item.code ? (
-                    <Text className="text-xs text-gray-400 ml-2">{item.code}</Text>
+                    <Text style={sheetStyles.listItemCode}>{item.code}</Text>
                   ) : null}
                 </TouchableOpacity>
               )}
@@ -190,6 +249,89 @@ function RegionSheet({ visible, title, items, isLoading, onSelect, onClose }: Re
     </Modal>
   );
 }
+
+const sheetStyles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.surface,
+  },
+  flex: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.surfaceSunken,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  doneButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  doneText: {
+    color: colors.primary,
+    fontWeight: fontWeight.medium,
+  },
+  searchContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.surfaceSunken,
+  },
+  searchInput: {
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+  },
+  emptyText: {
+    color: colors.textTertiary,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  listContent: {
+    paddingVertical: 4,
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.surfaceSunken,
+  },
+  listItemText: {
+    fontSize: 16,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  listItemCode: {
+    fontSize: 12,
+    color: colors.textTertiary,
+    marginLeft: 8,
+  },
+});
 
 export function RegionPicker({ countryCode, value: _value, onChange }: RegionPickerProps) {
   const [selectedRegion, setSelectedRegion] = useState<Region | null>(null);
@@ -208,7 +350,6 @@ export function RegionPicker({ countryCode, value: _value, onChange }: RegionPic
     setSelectedDepartment(null);
     setSelectedCity(null);
     setOpenSheet(null);
-    // Reset parent onChange since selection is not complete
     onChange(null, []);
   }
 
@@ -239,15 +380,15 @@ export function RegionPicker({ countryCode, value: _value, onChange }: RegionPic
 
   return (
     <View>
-      <View className="flex-row items-center justify-between mb-2">
-        <Text className="text-base font-semibold text-gray-800">Location</Text>
+      <View style={pickerStyles.headerRow}>
+        <Text style={pickerStyles.locationLabel}>Location</Text>
         {hasAnySelection && (
           <TouchableOpacity
             onPress={handleClear}
             accessibilityRole="button"
             accessibilityLabel="Clear location selection"
           >
-            <Text className="text-sm text-primary-500 font-medium">Clear</Text>
+            <Text style={pickerStyles.clearText}>Clear</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -311,3 +452,22 @@ export function RegionPicker({ countryCode, value: _value, onChange }: RegionPic
     </View>
   );
 }
+
+const pickerStyles = StyleSheet.create({
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  locationLabel: {
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+  clearText: {
+    fontSize: 14,
+    color: colors.primary,
+    fontWeight: fontWeight.medium,
+  },
+});

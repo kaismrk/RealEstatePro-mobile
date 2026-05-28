@@ -1,4 +1,5 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { colors, radius, fontWeight } from '@/constants/theme';
 import type { MessageResponse } from '@/lib/types/message';
 
 interface MessageThreadProps {
@@ -27,53 +28,91 @@ export function MessageThread({ message }: MessageThreadProps) {
   const initials = getInitials(message.sender_name);
 
   return (
-    <ScrollView className="flex-1 bg-white">
-      {/* Sender info */}
-      <View className="flex-row items-center px-4 py-4 border-b border-gray-100">
-        <View className="w-12 h-12 rounded-full bg-primary-500 items-center justify-center mr-3">
-          <Text className="text-white text-base font-semibold">{initials}</Text>
+    <ScrollView style={styles.scroll}>
+      <View style={styles.senderRow}>
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>{initials}</Text>
         </View>
-        <View className="flex-1">
-          <Text className="text-base font-semibold text-gray-900">
+        <View style={styles.senderInfo}>
+          <Text style={styles.senderName}>
             {message.sender_name ?? message.sender_email ?? 'Unknown sender'}
           </Text>
           {message.sender_email && message.sender_name && (
-            <Text className="text-sm text-gray-500">{message.sender_email}</Text>
+            <Text style={styles.senderEmail}>{message.sender_email}</Text>
           )}
-          <Text className="text-xs text-gray-400 mt-0.5">
-            {formatDate(message.created_at)}
-          </Text>
+          <Text style={styles.timestamp}>{formatDate(message.created_at)}</Text>
         </View>
       </View>
 
-      {/* Property context */}
       {message.property && (
-        <View className="mx-4 mt-4 bg-gray-50 rounded-xl p-3">
-          <Text className="text-xs text-gray-500 mb-0.5 uppercase tracking-wide">About property</Text>
-          <Text className="text-sm font-medium text-gray-900" numberOfLines={2}>
+        <View style={styles.propertyCard}>
+          <Text style={styles.propertyLabel}>About property</Text>
+          <Text style={styles.propertyTitle} numberOfLines={2}>
             {message.property.title}
           </Text>
           {message.property.price > 0 && (
-            <Text className="text-sm text-primary-500 mt-0.5">
+            <Text style={styles.propertyPrice}>
               {message.property.price.toLocaleString()}
             </Text>
           )}
         </View>
       )}
 
-      {/* Message body */}
-      <View className="px-4 py-4">
-        <Text className="text-base text-gray-800 leading-6">{message.body}</Text>
+      <View style={styles.bodyWrap}>
+        <Text style={styles.body}>{message.body}</Text>
       </View>
 
-      {/* Read status */}
       {message.read_at && (
-        <View className="px-4 pb-4">
-          <Text className="text-xs text-gray-400">
-            Read {formatDate(message.read_at)}
-          </Text>
+        <View style={styles.readWrap}>
+          <Text style={styles.readText}>Read {formatDate(message.read_at)}</Text>
         </View>
       )}
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  scroll: { flex: 1, backgroundColor: colors.surface },
+  senderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  avatarText: { color: colors.textOnBrand, fontSize: 16, fontWeight: fontWeight.semibold },
+  senderInfo: { flex: 1 },
+  senderName: { fontSize: 16, fontWeight: fontWeight.semibold, color: colors.textPrimary },
+  senderEmail: { fontSize: 14, color: colors.textSecondary },
+  timestamp: { fontSize: 12, color: colors.textTertiary, marginTop: 2 },
+  propertyCard: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.lg,
+    padding: 12,
+  },
+  propertyLabel: {
+    fontSize: 11,
+    color: colors.textTertiary,
+    marginBottom: 2,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  propertyTitle: { fontSize: 14, fontWeight: fontWeight.medium, color: colors.textPrimary },
+  propertyPrice: { fontSize: 14, color: colors.primary, marginTop: 2 },
+  bodyWrap: { paddingHorizontal: 16, paddingVertical: 16 },
+  body: { fontSize: 16, color: colors.textPrimary, lineHeight: 24 },
+  readWrap: { paddingHorizontal: 16, paddingBottom: 16 },
+  readText: { fontSize: 12, color: colors.textTertiary },
+});

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -12,6 +13,7 @@ import { useListingPacks, type ListingPackResponse } from '@/hooks/useListingPac
 import { usePurchasePack } from '@/hooks/usePurchasePack';
 import { useListingQuota } from '@/hooks/useUser';
 import { Button } from '@/components/ui/Button';
+import { colors, radius, fontWeight, fontSize, shadows } from '@/constants/theme';
 
 export default function PacksScreen() {
   const { data, isLoading, isError, refetch } = useListingPacks();
@@ -47,26 +49,24 @@ export default function PacksScreen() {
 
   function renderItem({ item }: ListRenderItemInfo<ListingPackResponse>) {
     return (
-      <View className="bg-white border border-gray-200 rounded-2xl p-4 mb-3">
-        <View className="flex-row items-start justify-between mb-2">
-          <View className="flex-1">
-            <Text className="text-base font-bold text-gray-900">{item.name}</Text>
-            <Text className="text-sm text-gray-500 mt-0.5">
+      <View style={styles.packCard}>
+        <View style={styles.packHeader}>
+          <View style={styles.packInfo}>
+            <Text style={styles.packName}>{item.name}</Text>
+            <Text style={styles.packSlots}>
               {item.listing_count} listing slot{item.listing_count !== 1 ? 's' : ''}
             </Text>
           </View>
-          <Text className="text-lg font-bold text-primary-500 ml-3">
-            {item.price.toFixed(2)} TND
-          </Text>
+          <Text style={styles.packPrice}>{item.price.toFixed(2)} TND</Text>
         </View>
         <TouchableOpacity
           onPress={() => handlePurchase(item)}
           disabled={purchasePack.isPending}
-          className="bg-primary-500 rounded-xl py-3 items-center mt-2"
+          style={styles.purchaseBtn}
           accessibilityRole="button"
           accessibilityLabel={`Purchase ${item.name}`}
         >
-          <Text className="text-white font-semibold">
+          <Text style={styles.purchaseBtnText}>
             {purchasePack.isPending ? 'Processing...' : 'Purchase'}
           </Text>
         </TouchableOpacity>
@@ -75,20 +75,20 @@ export default function PacksScreen() {
   }
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View style={styles.container}>
       {/* Header */}
-      <View className="px-4 pt-14 pb-4 bg-white border-b border-gray-100 flex-row items-center">
-        <TouchableOpacity onPress={() => router.back()} className="mr-3">
-          <Text className="text-primary-500 text-base">Back</Text>
+      <View style={styles.pageHeader}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+          <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
-        <Text className="text-xl font-bold text-gray-900">Listing Packs</Text>
+        <Text style={styles.pageTitle}>Listing Packs</Text>
       </View>
 
       {/* Current quota */}
       {quota && (
-        <View className="mx-4 mt-4 bg-primary-50 border border-primary-200 rounded-xl p-3">
-          <Text className="text-sm font-semibold text-primary-900">Current Quota</Text>
-          <Text className="text-sm text-primary-700 mt-0.5">
+        <View style={styles.quotaBanner}>
+          <Text style={styles.quotaBannerTitle}>Current Quota</Text>
+          <Text style={styles.quotaBannerBody}>
             {quota.free_remaining} free slot{quota.free_remaining !== 1 ? 's' : ''} +{' '}
             {quota.paid_remaining} paid slot{quota.paid_remaining !== 1 ? 's' : ''} remaining
           </Text>
@@ -96,14 +96,14 @@ export default function PacksScreen() {
       )}
 
       {isLoading && (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#2563eb" />
+        <View style={styles.centeredFill}>
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       )}
 
       {isError && (
-        <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-gray-500 mb-4 text-center">Failed to load listing packs.</Text>
+        <View style={styles.centeredFillPadded}>
+          <Text style={styles.errorMsg}>Failed to load listing packs.</Text>
           <Button onPress={() => refetch()} variant="secondary">
             Try Again
           </Button>
@@ -115,10 +115,10 @@ export default function PacksScreen() {
           data={data?.items ?? []}
           renderItem={renderItem}
           keyExtractor={(item) => String(item.id)}
-          contentContainerStyle={{ padding: 16 }}
+          contentContainerStyle={styles.listContent}
           ListEmptyComponent={
-            <View className="items-center justify-center pt-12">
-              <Text className="text-lg font-semibold text-gray-600">
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>
                 No packs available in your country
               </Text>
             </View>
@@ -129,3 +129,127 @@ export default function PacksScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  pageHeader: {
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 16,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backBtn: {
+    marginRight: 12,
+  },
+  backText: {
+    color: colors.primary,
+    fontSize: fontSize.base,
+  },
+  pageTitle: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  quotaBanner: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: '#C4B5FD',
+    borderRadius: radius.md,
+    padding: 12,
+  },
+  quotaBannerTitle: {
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    color: colors.primaryDark,
+  },
+  quotaBannerBody: {
+    fontSize: fontSize.sm,
+    color: colors.primary,
+    marginTop: 2,
+  },
+  centeredFill: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  centeredFillPadded: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  errorMsg: {
+    color: colors.textTertiary,
+    marginBottom: 16,
+    textAlign: 'center',
+    fontSize: fontSize.base,
+  },
+  listContent: {
+    padding: 16,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 48,
+  },
+  emptyText: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    color: colors.textSecondary,
+  },
+  packCard: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.xl2,
+    padding: 16,
+    marginBottom: 12,
+    ...shadows.sm,
+  },
+  packHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  packInfo: {
+    flex: 1,
+  },
+  packName: {
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.bold,
+    color: colors.textPrimary,
+  },
+  packSlots: {
+    fontSize: fontSize.sm,
+    color: colors.textTertiary,
+    marginTop: 2,
+  },
+  packPrice: {
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.bold,
+    color: colors.primary,
+    marginLeft: 12,
+  },
+  purchaseBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  purchaseBtnText: {
+    color: colors.textOnBrand,
+    fontWeight: fontWeight.semibold,
+    fontSize: fontSize.base,
+  },
+});
