@@ -1,4 +1,6 @@
-import { TouchableOpacity, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface FilterChipProps {
   label: string;
@@ -7,16 +9,38 @@ interface FilterChipProps {
 
 export function FilterChip({ label, onDismiss }: FilterChipProps) {
   return (
-    <View className="flex-row items-center bg-primary-50 border border-primary-200 rounded-full px-3 py-1 mr-2">
-      <Text className="text-sm text-primary-700 font-medium mr-1">{label}</Text>
+    <View style={styles.chip}>
+      <Text style={styles.label}>{label}</Text>
       <TouchableOpacity
         onPress={onDismiss}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         accessibilityLabel={`Remove filter: ${label}`}
-        accessibilityRole="button"
+        style={styles.dismiss}
       >
-        <Text className="text-sm text-primary-500 font-bold">✕</Text>
+        <Icon name="x" size={12} color={colors.primary} strokeWidth={2.5} />
       </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: colors.borderBrand,
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    marginRight: 8,
+    marginBottom: 4,
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: fontWeight.medium,
+    color: colors.primaryDark,
+    marginRight: 4,
+  },
+  dismiss: { padding: 1 },
+});

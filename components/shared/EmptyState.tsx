@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface EmptyStateAction {
   label: string;
@@ -14,28 +15,51 @@ interface EmptyStateProps {
 
 export function EmptyState({ title, subtitle, icon, action }: EmptyStateProps) {
   return (
-    <View className="flex-1 items-center justify-center px-8">
-      {icon ? (
-        <Text className="text-5xl mb-4">{icon}</Text>
-      ) : null}
-      <Text className="text-xl font-semibold text-gray-800 text-center mb-2">
-        {title}
-      </Text>
-      {subtitle ? (
-        <Text className="text-base text-gray-500 text-center mb-6">
-          {subtitle}
-        </Text>
-      ) : null}
+    <View style={styles.container}>
+      {icon ? <Text style={styles.icon}>{icon}</Text> : null}
+      <Text style={styles.title}>{title}</Text>
+      {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       {action ? (
-        <TouchableOpacity
-          onPress={action.onPress}
-          className="bg-primary-500 px-6 py-3 rounded-xl"
-        >
-          <Text className="text-white font-semibold text-base">
-            {action.label}
-          </Text>
+        <TouchableOpacity style={styles.action} onPress={action.onPress} activeOpacity={0.85}>
+          <Text style={styles.actionLabel}>{action.label}</Text>
         </TouchableOpacity>
       ) : null}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 48,
+  },
+  icon: { fontSize: 48, marginBottom: 16 },
+  title: {
+    fontSize: 18,
+    fontWeight: fontWeight.semibold,
+    color: colors.textPrimary,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  action: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 13,
+    borderRadius: radius.md,
+  },
+  actionLabel: {
+    color: colors.textOnBrand,
+    fontSize: 16,
+    fontWeight: fontWeight.semibold,
+  },
+});

@@ -1,49 +1,49 @@
 import { useEffect, useRef } from 'react';
-import { View, Animated } from 'react-native';
+import { View, Animated, StyleSheet } from 'react-native';
+import { colors, radius } from '@/constants/theme';
 
 export function PropertyCardSkeleton() {
   const opacity = useRef(new Animated.Value(0.4)).current;
 
   useEffect(() => {
-    const animation = Animated.loop(
+    const anim = Animated.loop(
       Animated.sequence([
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration: 700,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 0.4,
-          duration: 700,
-          useNativeDriver: true,
-        }),
+        Animated.timing(opacity, { toValue: 1,   duration: 700, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.4, duration: 700, useNativeDriver: true }),
       ])
     );
-    animation.start();
-    return () => animation.stop();
+    anim.start();
+    return () => anim.stop();
   }, [opacity]);
 
   return (
-    <Animated.View
-      style={{ opacity }}
-      className="bg-white rounded-2xl overflow-hidden mb-4 mx-4 border border-gray-100"
-    >
-      {/* Photo placeholder */}
-      <View className="h-52 bg-gray-200" />
-
-      {/* Body placeholder */}
-      <View className="p-3 gap-2">
-        {/* Price line */}
-        <View className="h-6 bg-gray-200 rounded-md w-2/5" />
-        {/* Details row */}
-        <View className="flex-row gap-3">
-          <View className="h-4 bg-gray-200 rounded-md w-16" />
-          <View className="h-4 bg-gray-200 rounded-md w-16" />
-          <View className="h-4 bg-gray-200 rounded-md w-20" />
+    <Animated.View style={[styles.card, { opacity }]}>
+      <View style={styles.imgPlaceholder} />
+      <View style={styles.body}>
+        <View style={[styles.line, { width: '40%', height: 22 }]} />
+        <View style={styles.row}>
+          <View style={[styles.line, { width: 64, height: 14 }]} />
+          <View style={[styles.line, { width: 64, height: 14 }]} />
+          <View style={[styles.line, { width: 80, height: 14 }]} />
         </View>
-        {/* Address line */}
-        <View className="h-4 bg-gray-200 rounded-md w-3/4" />
+        <View style={[styles.line, { width: '75%', height: 14 }]} />
       </View>
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    overflow: 'hidden',
+    marginBottom: 16,
+    marginHorizontal: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  imgPlaceholder: { height: 210, backgroundColor: colors.neutral100 },
+  body: { padding: 14, gap: 10 },
+  row: { flexDirection: 'row', gap: 12 },
+  line: { backgroundColor: colors.neutral200, borderRadius: radius.xs },
+});

@@ -1,46 +1,44 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import type { UserResponse } from '@/lib/types/user';
-
-interface ProfileHeaderProps {
-  user: UserResponse;
-}
+import { colors, fontWeight } from '@/constants/theme';
 
 function getInitials(user: UserResponse): string {
   const first = user.first_name?.trim()[0] ?? '';
-  const last = user.last_name?.trim()[0] ?? '';
+  const last  = user.last_name?.trim()[0]  ?? '';
   if (first || last) return `${first}${last}`.toUpperCase();
   return user.email[0]?.toUpperCase() ?? '?';
 }
 
 function getDisplayName(user: UserResponse): string {
   const parts = [user.first_name, user.last_name].filter(Boolean);
-  if (parts.length > 0) return parts.join(' ');
-  return user.email;
+  return parts.length > 0 ? parts.join(' ') : user.email;
 }
 
+interface ProfileHeaderProps { user: UserResponse }
+
 export function ProfileHeader({ user }: ProfileHeaderProps) {
-  const initials = getInitials(user);
-  const displayName = getDisplayName(user);
-
   return (
-    <View className="flex-row items-center px-4 py-6 border-b border-gray-100">
-      {/* Avatar */}
-      <View className="w-16 h-16 rounded-full bg-primary-500 items-center justify-center mr-4">
-        <Text className="text-white text-2xl font-bold">{initials}</Text>
+    <View style={styles.wrap}>
+      <View style={styles.avatar}>
+        <Text style={styles.initials}>{getInitials(user)}</Text>
       </View>
-
-      {/* Name + email */}
-      <View className="flex-1">
-        <Text className="text-lg font-bold text-gray-900" numberOfLines={1}>
-          {displayName}
-        </Text>
-        <Text className="text-sm text-gray-500 mt-0.5" numberOfLines={1}>
-          {user.email}
-        </Text>
+      <View style={styles.info}>
+        <Text style={styles.name} numberOfLines={1}>{getDisplayName(user)}</Text>
+        <Text style={styles.email} numberOfLines={1}>{user.email}</Text>
         {user.country_code ? (
-          <Text className="text-xs text-gray-400 mt-0.5">{user.country_code}</Text>
+          <Text style={styles.country}>{user.country_code}</Text>
         ) : null}
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrap:    { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: colors.border },
+  avatar:  { width: 60, height: 60, borderRadius: 30, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', marginRight: 14 },
+  initials: { fontSize: 22, fontWeight: fontWeight.bold, color: '#fff' },
+  info:    { flex: 1 },
+  name:    { fontSize: 17, fontWeight: fontWeight.bold, color: colors.textPrimary },
+  email:   { fontSize: 13, color: colors.textSecondary, marginTop: 2 },
+  country: { fontSize: 12, color: colors.textTertiary, marginTop: 2 },
+});

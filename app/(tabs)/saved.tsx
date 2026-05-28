@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   SafeAreaView,
+  StyleSheet,
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -14,7 +15,22 @@ import { useAuthStore } from '@/lib/stores/auth.store';
 import { PropertyCard } from '@/components/property/PropertyCard';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { EmptyState } from '@/components/shared/EmptyState';
+import { Icon } from '@/components/ui/Icon';
 import type { FavoriteResponse } from '@/lib/types/favorite';
+import { colors, fontWeight, radius } from '@/constants/theme';
+
+function GuestPrompt() {
+  return (
+    <SafeAreaView style={styles.safe}>
+      <EmptyState
+        title="Sign in to view saved homes"
+        subtitle="Save properties you love and access them anytime."
+        icon="❤️"
+        action={{ label: 'Sign In', onPress: () => router.push('/(auth)/welcome') }}
+      />
+    </SafeAreaView>
+  );
+}
 
 export default function SavedScreen() {
   const accessToken = useAuthStore((s) => s.accessToken);
@@ -22,154 +38,92 @@ export default function SavedScreen() {
   const [compareMode, setCompareMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
-  // Auth gate — guests see sign-in prompt
-  if (!accessToken) {
-    return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-white px-6">
-        <Text className="text-4xl mb-4">{'\u2764\uFE0F'}</Text>
-        <Text className="text-xl font-bold text-gray-900 mb-2 text-center">
-          Sign in to view saved homes
-        </Text>
-        <Text className="text-sm text-gray-500 text-center mb-6">
-          Save properties you love and access them anytime.
-        </Text>
-        <TouchableOpacity
-          className="bg-primary-500 px-6 py-3 rounded-xl"
-          onPress={() => router.push('/(auth)/welcome')}
-          accessibilityRole="button"
-          accessibilityLabel="Sign in"
-        >
-          <Text className="text-white font-semibold text-base">Sign In</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
-    );
-  }
+  if (!accessToken) return <GuestPrompt />;
 
   const favorites = list.data?.items ?? [];
 
   function toggleSelect(propertyId: number) {
     setSelectedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(propertyId)) {
-        next.delete(propertyId);
-      } else {
-        if (next.size < 5) {
-          next.add(propertyId);
-        }
-      }
+      if (next.has(propertyId)) { next.delete(propertyId); }
+      else if (next.size < 5) { next.add(propertyId); }
       return next;
     });
   }
 
-  function handleComparePress() {
+  function handleCompare() {
     if (compareMode && selectedIds.size >= 2) {
-      const ids = Array.from(selectedIds).join(',');
-      router.push(`/saved/compare?ids=${ids}`);
+      router.push(`/saved/compare?ids=${Array.from(selectedIds).join(',')}`);
       return;
     }
-    setCompareMode((prev) => !prev);
-    if (compareMode) {
-      setSelectedIds(new Set());
-    }
+    if (compareMode) setSelectedIds(new Set());
+    setCompareMode((p) => !p);
   }
 
   function renderItem({ item }: ListRenderItemInfo<FavoriteResponse>) {
     const isSelected = selectedIds.has(item.property_id);
-
     return (
-      <View className="relative">
+      <View style={styles.itemWrap}>
         {compareMode && (
           <TouchableOpacity
             onPress={() => toggleSelect(item.property_id)}
-            className={`absolute top-3 left-5 z-10 w-6 h-6 rounded-full border-2 items-center justify-center ${
-              isSelected
-                ? 'bg-primary-500 border-primary-500'
-                : 'bg-white border-gray-400'
-            }`}
+            style={[styles.checkbox, isSelected && styles.checkboxChecked]}
             accessibilityRole="checkbox"
             accessibilityState={{ checked: isSelected }}
-            accessibilityLabel={`Select ${item.property.title}`}
           >
-            {isSelected && (
-              <Text className="text-white text-xs font-bold">{'\u2713'}</Text>
-            )}
+            {isSelected && <Icon name="check" size={12} color="#fff" strokeWidth={3} />}
           </TouchableOpacity>
         )}
-        <View className={compareMode && isSelected ? 'opacity-90' : ''}>
-          <PropertyCard property={item.property} compact />
-        </View>
+        <PropertyCard property={item.property} compact />
         {!compareMode && (
           <TouchableOpacity
             onPress={() => remove.mutate(item.property_id)}
-            className="absolute top-3 right-5 bg-red-100 rounded-full px-3 py-1"
-            accessibilityRole="button"
+            style={styles.removeBtn}
             accessibilityLabel="Remove from saved"
           >
-            <Text className="text-red-600 text-xs font-semibold">Remove</Text>
+            <Text style={styles.removeBtnText}>Remove</Text>
           </TouchableOpacity>
         )}
       </View>
     );
   }
 
-  function keyExtractor(item: FavoriteResponse) {
-    return String(item.id);
-  }
-
   if (list.isLoading) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-white">
+      <SafeAreaView style={[styles.safe, styles.center]}>
         <LoadingSpinner />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView style={styles.safe}>
       {/* Header */}
-      <View className="flex-row items-center px-4 pt-4 pb-3 bg-white border-b border-gray-100">
-        <Text className="text-2xl font-bold text-gray-900 flex-1">
-          Saved Homes
-        </Text>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Saved Homes</Text>
         {favorites.length > 0 && (
           <TouchableOpacity
-            onPress={handleComparePress}
-            className={`px-3 py-2 rounded-lg ${
-              compareMode && selectedIds.size >= 2
-                ? 'bg-primary-500'
-                : compareMode
-                ? 'bg-gray-200'
-                : 'bg-gray-100'
-            }`}
-            accessibilityRole="button"
-            accessibilityLabel={
-              compareMode && selectedIds.size >= 2
-                ? `Compare ${selectedIds.size} homes`
-                : compareMode
-                ? 'Cancel compare'
-                : 'Compare homes'
-            }
+            onPress={handleCompare}
+            style={[
+              styles.compareBtn,
+              compareMode && selectedIds.size >= 2 ? styles.compareBtnActive : null,
+            ]}
           >
             <Text
-              className={`text-sm font-semibold ${
-                compareMode && selectedIds.size >= 2
-                  ? 'text-white'
-                  : 'text-gray-700'
-              }`}
+              style={[
+                styles.compareBtnLabel,
+                compareMode && selectedIds.size >= 2 ? styles.compareBtnLabelActive : null,
+              ]}
             >
-              {compareMode && selectedIds.size >= 2
-                ? `Compare ${selectedIds.size}`
-                : compareMode
-                ? 'Cancel'
-                : 'Compare'}
+              {compareMode && selectedIds.size >= 2 ? `Compare ${selectedIds.size}` : compareMode ? 'Cancel' : 'Compare'}
             </Text>
           </TouchableOpacity>
         )}
       </View>
 
       {compareMode && (
-        <View className="px-4 py-2 bg-primary-50 border-b border-primary-100">
-          <Text className="text-sm text-primary-700">
+        <View style={styles.compareHint}>
+          <Text style={styles.compareHintText}>
             Select 2–5 properties to compare. {selectedIds.size} selected.
           </Text>
         </View>
@@ -178,23 +132,21 @@ export default function SavedScreen() {
       <FlatList<FavoriteResponse>
         data={favorites}
         renderItem={renderItem}
-        keyExtractor={keyExtractor}
+        keyExtractor={(item) => String(item.id)}
         contentContainerStyle={{ paddingTop: 8, paddingBottom: 24, flexGrow: 1 }}
         ListEmptyComponent={
           <EmptyState
             title="No saved homes yet"
             subtitle="Tap the heart on any listing to save it here"
-            icon={'\u2764\uFE0F'}
-            action={{
-              label: 'Start searching',
-              onPress: () => router.push('/(tabs)/search'),
-            }}
+            icon="❤️"
+            action={{ label: 'Start searching', onPress: () => router.push('/(tabs)/search') }}
           />
         }
         refreshControl={
           <RefreshControl
             refreshing={list.isRefetching && !list.isLoading}
             onRefresh={() => void list.refetch()}
+            tintColor={colors.primary}
           />
         }
         showsVerticalScrollIndicator={false}
@@ -202,3 +154,62 @@ export default function SavedScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe:   { flex: 1, backgroundColor: colors.background },
+  center: { alignItems: 'center', justifyContent: 'center' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 12,
+    backgroundColor: colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  headerTitle: { flex: 1, fontSize: 22, fontWeight: fontWeight.bold, color: colors.textPrimary },
+  compareBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: radius.sm,
+    backgroundColor: colors.neutral100,
+  },
+  compareBtnActive: { backgroundColor: colors.primary },
+  compareBtnLabel: { fontSize: 13, fontWeight: fontWeight.semibold, color: colors.textPrimary },
+  compareBtnLabelActive: { color: '#fff' },
+  compareHint: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: colors.primaryLight,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.borderBrand,
+  },
+  compareHintText: { fontSize: 13, color: colors.primaryDark },
+  itemWrap: { position: 'relative' },
+  checkbox: {
+    position: 'absolute',
+    top: 12,
+    left: 22,
+    zIndex: 10,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: colors.neutral400,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxChecked: { backgroundColor: colors.primary, borderColor: colors.primary },
+  removeBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 22,
+    backgroundColor: colors.errorBg,
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+  removeBtnText: { fontSize: 12, fontWeight: fontWeight.semibold, color: colors.error },
+});

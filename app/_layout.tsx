@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { AppErrorBoundary } from '@/components/shared/AppErrorBoundary';
-import '../global.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {

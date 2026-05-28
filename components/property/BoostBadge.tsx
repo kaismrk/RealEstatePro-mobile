@@ -1,4 +1,5 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface BoostBadgeProps {
   label?: string;
@@ -6,8 +7,18 @@ interface BoostBadgeProps {
 
 export function BoostBadge({ label = 'Featured' }: BoostBadgeProps) {
   return (
-    <View className="bg-amber-400 rounded-full px-2 py-0.5">
-      <Text className="text-xs font-bold text-white">{label}</Text>
+    <View style={styles.badge}>
+      <Text style={styles.label}>{label}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    backgroundColor: colors.accent,
+    borderRadius: radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  label: { fontSize: 11, fontWeight: fontWeight.bold, color: '#fff' },
+});

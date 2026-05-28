@@ -2,18 +2,19 @@ import { useState } from 'react';
 import {
   View,
   Text,
-  Image,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { CountrySelector } from '@/components/shared/CountrySelector';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { colors, spacing, fontWeight, radius } from '@/constants/theme';
 
 export default function WelcomeScreen() {
   const [email, setEmail] = useState('');
@@ -21,73 +22,57 @@ export default function WelcomeScreen() {
   const countryCode = useAuthStore((state) => state.countryCode);
   const setCountry = useAuthStore((state) => state.setCountry);
 
-  function validateEmail(value: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value);
+  function validateEmail(value: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   }
 
   function handleContinue() {
-    if (!email.trim()) {
-      setEmailError('Please enter your email address');
-      return;
-    }
-    if (!validateEmail(email.trim())) {
-      setEmailError('Please enter a valid email address');
-      return;
-    }
+    if (!email.trim()) { setEmailError('Please enter your email address'); return; }
+    if (!validateEmail(email.trim())) { setEmailError('Please enter a valid email address'); return; }
     setEmailError(undefined);
     router.push({ pathname: '/(auth)/register', params: { email: email.trim() } });
   }
 
   function handleGoogleOAuth() {
-    // Navigates to google-callback which handles the full OAuth flow
     Alert.alert('Google Sign In', 'Google OAuth flow not yet configured in app.json');
   }
 
-  function handleGuestBrowse() {
-    router.replace('/(tabs)/search');
-  }
-
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
-        className="flex-1"
+        style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ flexGrow: 1 }}
+          style={styles.flex}
+          contentContainerStyle={styles.scroll}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          {/* Header row */}
-          <View className="flex-row justify-end px-4 pt-4">
+          {/* Top bar */}
+          <View style={styles.topBar}>
             <CountrySelector
               selectedCode={countryCode}
               onSelect={(code) => void setCountry(code)}
             />
           </View>
 
-          {/* Branding */}
-          <View className="flex-1 px-6 pt-10 pb-8">
-            <View className="items-center mb-12">
-              <Image
-                source={require('@/assets/homy-logo-violet.png')}
-                style={{ height: 48, width: 180, marginBottom: 8 }}
-                resizeMode="contain"
-              />
-              <Text className="text-base text-neutral-500 text-center">
-                Find your perfect home
-              </Text>
+          {/* Brand block */}
+          <View style={styles.brand}>
+            {/* Logo mark: violet gradient box with "H" */}
+            <View style={styles.logoMark}>
+              <Text style={styles.logoLetter}>H</Text>
             </View>
+            <Text style={styles.logoWordmark}>homy</Text>
+            <Text style={styles.tagline}>Find your perfect home.</Text>
+          </View>
 
-            {/* Email input */}
+          {/* Form */}
+          <View style={styles.form}>
             <Input
               label="Email address"
               value={email}
-              onChangeText={(text) => {
-                setEmail(text);
-                if (emailError) setEmailError(undefined);
-              }}
+              onChangeText={(t) => { setEmail(t); if (emailError) setEmailError(undefined); }}
               error={emailError}
               placeholder="you@example.com"
               keyboardType="email-address"
@@ -97,24 +82,21 @@ export default function WelcomeScreen() {
               onSubmitEditing={handleContinue}
             />
 
-            {/* Primary CTA */}
-            <Button onPress={handleContinue} size="lg" className="w-full mb-3">
+            <Button onPress={handleContinue} size="lg" style={styles.btnFull}>
               Continue
             </Button>
 
-            {/* Google OAuth */}
             <Button
               variant="secondary"
               onPress={handleGoogleOAuth}
               size="lg"
-              className="w-full mb-6"
+              style={[styles.btnFull, styles.btnMt]}
             >
               Continue with Google
             </Button>
 
-            {/* Guest browse */}
-            <View className="items-center">
-              <Button variant="ghost" onPress={handleGuestBrowse}>
+            <View style={styles.guestWrap}>
+              <Button variant="ghost" onPress={() => router.replace('/(tabs)/search')}>
                 Browse as guest
               </Button>
             </View>
@@ -124,3 +106,57 @@ export default function WelcomeScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe:    { flex: 1, backgroundColor: colors.surface },
+  flex:    { flex: 1 },
+  scroll:  { flexGrow: 1 },
+  topBar:  { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 8 },
+
+  brand: {
+    alignItems: 'center',
+    paddingTop: 48,
+    paddingBottom: 40,
+  },
+  logoMark: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 8,
+  },
+  logoLetter: {
+    fontSize: 36,
+    fontWeight: fontWeight.extrabold,
+    color: '#fff',
+    letterSpacing: -1,
+  },
+  logoWordmark: {
+    fontSize: 32,
+    fontWeight: fontWeight.extrabold,
+    color: colors.primary,
+    letterSpacing: -1,
+    marginBottom: 6,
+  },
+  tagline: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    textAlign: 'center',
+  },
+
+  form: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 32,
+  },
+  btnFull: { width: '100%' },
+  btnMt:   { marginTop: 12 },
+  guestWrap: { alignItems: 'center', marginTop: 20 },
+});

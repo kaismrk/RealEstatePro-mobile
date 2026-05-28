@@ -7,12 +7,9 @@ module.exports = function (api) {
       [
         'babel-preset-expo',
         {
-          jsxImportSource: 'nativewind',
-          // Disable reanimated plugin in test environment to avoid native deps
           reanimated: !isTest,
         },
       ],
-      ...(isTest ? [] : ['nativewind/babel']),
     ],
     plugins: [],
   };

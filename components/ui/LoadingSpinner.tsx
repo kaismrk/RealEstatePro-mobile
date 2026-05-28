@@ -1,4 +1,4 @@
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { colors } from '@/constants/theme';
 
 interface LoadingSpinnerProps {
@@ -6,13 +6,14 @@ interface LoadingSpinnerProps {
   color?: string;
 }
 
-export function LoadingSpinner({
-  size = 'large',
-  color = colors.primary,
-}: LoadingSpinnerProps) {
+export function LoadingSpinner({ size = 'large', color = colors.primary }: LoadingSpinnerProps) {
   return (
-    <View className="flex-1 items-center justify-center">
+    <View style={styles.wrap}>
       <ActivityIndicator size={size} color={color} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  wrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+});

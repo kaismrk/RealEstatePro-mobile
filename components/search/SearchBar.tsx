@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useSearchStore } from '@/lib/stores/search.store';
-import { colors } from '@/constants/theme';
+import { Icon } from '@/components/ui/Icon';
+import { colors, radius, fontWeight } from '@/constants/theme';
 
 interface SearchBarProps {
   activeFilterCount?: number;
@@ -14,10 +15,7 @@ export function SearchBar({ activeFilterCount = 0 }: SearchBarProps) {
   const [localValue, setLocalValue] = useState(filters.q ?? '');
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Sync local value when store resets
-  useEffect(() => {
-    setLocalValue(filters.q ?? '');
-  }, [filters.q]);
+  useEffect(() => { setLocalValue(filters.q ?? ''); }, [filters.q]);
 
   function handleChangeText(text: string) {
     setLocalValue(text);
@@ -33,17 +31,13 @@ export function SearchBar({ activeFilterCount = 0 }: SearchBarProps) {
     setFilters({ q: undefined });
   }
 
-  function handleFiltersPress() {
-    router.push('/search/filters');
-  }
-
   return (
-    <View className="flex-row items-center px-4 py-2 gap-2">
+    <View style={styles.row}>
       {/* Search input */}
-      <View className="flex-1 flex-row items-center bg-gray-100 rounded-xl px-3 py-2 gap-2">
-        <Text className="text-base">🔍</Text>
+      <View style={styles.inputWrap}>
+        <Icon name="search" size={18} color={colors.textTertiary} />
         <TextInput
-          className="flex-1 text-base text-gray-900"
+          style={styles.input}
           placeholder="Search properties..."
           placeholderTextColor={colors.textTertiary}
           value={localValue}
@@ -58,27 +52,76 @@ export function SearchBar({ activeFilterCount = 0 }: SearchBarProps) {
             onPress={handleClear}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             accessibilityLabel="Clear search"
-            accessibilityRole="button"
           >
-            <Text className="text-base text-gray-400">✕</Text>
+            <Icon name="x" size={16} color={colors.textTertiary} />
           </TouchableOpacity>
         )}
       </View>
 
       {/* Filters button */}
       <TouchableOpacity
-        onPress={handleFiltersPress}
-        className="relative flex-row items-center bg-white border border-gray-300 rounded-xl px-3 py-2"
+        onPress={() => router.push('/search/filters')}
+        style={styles.filterBtn}
         accessibilityLabel={`Filters${activeFilterCount > 0 ? `, ${activeFilterCount} active` : ''}`}
-        accessibilityRole="button"
       >
-        <Text className="text-sm font-semibold text-gray-700">Filters</Text>
+        <Icon name="sliders" size={16} color={colors.textPrimary} />
+        <Text style={styles.filterLabel}>Filters</Text>
         {activeFilterCount > 0 && (
-          <View className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-primary-500 rounded-full items-center justify-center">
-            <Text className="text-xs text-white font-bold">{activeFilterCount}</Text>
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{activeFilterCount}</Text>
           </View>
         )}
       </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 10,
+  },
+  inputWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surfaceSunken,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  input: {
+    flex: 1,
+    fontSize: 15,
+    color: colors.textPrimary,
+    padding: 0,
+  },
+  filterBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  filterLabel: { fontSize: 14, fontWeight: fontWeight.semibold, color: colors.textPrimary },
+  badge: {
+    width: 18,
+    height: 18,
+    backgroundColor: colors.primary,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 2,
+  },
+  badgeText: { fontSize: 10, color: '#fff', fontWeight: fontWeight.bold },
+});
