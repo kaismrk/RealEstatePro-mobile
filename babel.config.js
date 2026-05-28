@@ -12,7 +12,8 @@ module.exports = function (api) {
           reanimated: !isTest,
         },
       ],
+      ...(isTest ? [] : ['nativewind/babel']),
     ],
-    plugins: isTest ? [] : ['nativewind/babel'],
+    plugins: [],
   };
 };
