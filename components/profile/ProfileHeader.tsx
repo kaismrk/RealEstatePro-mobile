@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import type { UserResponse } from '@/lib/types/user';
 import { colors, fontWeight } from '@/constants/theme';
 
@@ -19,9 +20,14 @@ interface ProfileHeaderProps { user: UserResponse }
 export function ProfileHeader({ user }: ProfileHeaderProps) {
   return (
     <View style={styles.wrap}>
-      <View style={styles.avatar}>
+      <LinearGradient
+        colors={[colors.primaryDark, colors.primary, colors.accent]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.avatar}
+      >
         <Text style={styles.initials}>{getInitials(user)}</Text>
-      </View>
+      </LinearGradient>
       <View style={styles.info}>
         <Text style={styles.name} numberOfLines={1}>{getDisplayName(user)}</Text>
         <Text style={styles.email} numberOfLines={1}>{user.email}</Text>
@@ -34,11 +40,11 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
 }
 
 const styles = StyleSheet.create({
-  wrap:    { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: colors.border },
-  avatar:  { width: 60, height: 60, borderRadius: 30, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', marginRight: 14 },
-  initials: { fontSize: 22, fontWeight: fontWeight.bold, color: '#fff' },
+  wrap:    { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 20, backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border },
+  avatar:  { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginRight: 14 },
+  initials: { fontSize: 22, fontWeight: fontWeight.extrabold, color: colors.textOnBrand },
   info:    { flex: 1 },
-  name:    { fontSize: 17, fontWeight: fontWeight.bold, color: colors.textPrimary },
+  name:    { fontSize: 18, fontWeight: fontWeight.bold, color: colors.textPrimary },
   email:   { fontSize: 13, color: colors.textSecondary, marginTop: 2 },
   country: { fontSize: 12, color: colors.textTertiary, marginTop: 2 },
 });

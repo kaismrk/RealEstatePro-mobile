@@ -25,6 +25,12 @@ import {
   Coins,
   MessageCircle,
   PenLine,
+  Gift,
+  Building2,
+  TrendingUp,
+  HelpCircle,
+  Lock,
+  Shield,
   type LucideProps,
 } from 'lucide-react-native';
 
@@ -41,6 +47,7 @@ const icons = {
   key: KeyRound,
   'credit-card': CreditCard,
   'bar-chart': BarChart3,
+  chart: BarChart3,
   settings: Settings,
   logout: LogOut,
   'chevron-right': ChevronRight,
@@ -54,7 +61,15 @@ const icons = {
   star: Star,
   coins: Coins,
   chat: MessageCircle,
+  message: MessageCircle,
   edit: PenLine,
+  gift: Gift,
+  building: Building2,
+  agency: Building2,
+  'trending-up': TrendingUp,
+  help: HelpCircle,
+  lock: Lock,
+  privacy: Shield,
 } as const;
 
 export type IconName = keyof typeof icons;

@@ -54,41 +54,41 @@ function AuthenticatedProfile() {
         {user ? <ProfileHeader user={user} /> : null}
 
         <MenuSection title="Account">
-          <MenuRow icon="✏️" label="Edit Profile"      onPress={() => router.push('/profile/edit')} />
-          <MenuRow icon="🔑" label="Change Password"   onPress={() => router.push('/profile/change-password')} />
-          <MenuRow icon="🏠" label="My Listings"       onPress={() => router.push('/listings/my-listings')} />
-          <MenuRow icon="📊" label="Listing Quota"     onPress={() => router.push('/profile/quota')} />
-          <MenuRow icon="🎁" label="Listing Packs"     onPress={() => router.push('/listings/packs')} />
+          <MenuRow icon="edit"         label="Edit Profile"      onPress={() => router.push('/profile/edit')} />
+          <MenuRow icon="key"          label="Change Password"   onPress={() => router.push('/profile/change-password')} />
+          <MenuRow icon="home"         label="My Listings"       onPress={() => router.push('/listings/my-listings')} />
+          <MenuRow icon="chart"        label="Listing Quota"     onPress={() => router.push('/profile/quota')} />
+          <MenuRow icon="gift"         label="Listing Packs"     onPress={() => router.push('/listings/packs')} />
           {isAgent ? (
-            <MenuRow icon="📈" label="Agent Dashboard" onPress={() => router.push('/agent/dashboard')} />
+            <MenuRow icon="trending-up" label="Agent Dashboard" onPress={() => router.push('/agent/dashboard')} />
           ) : (
-            <MenuRow icon="🏢" label="Become an Agent" onPress={() => router.push('/agent/register')} />
+            <MenuRow icon="building"    label="Become an Agent" onPress={() => router.push('/agent/register')} />
           )}
           {ownedAgency ? (
             <>
-              <MenuRow icon="🏛" label="My Agency"            onPress={() => router.push('/agency/manage')} />
-              <MenuRow icon="💳" label="Agency Subscription"  onPress={() => router.push('/agency/subscription')} />
+              <MenuRow icon="agency"      label="My Agency"            onPress={() => router.push('/agency/manage')} />
+              <MenuRow icon="credit-card" label="Agency Subscription"  onPress={() => router.push('/agency/subscription')} />
             </>
           ) : (
-            <MenuRow icon="🏛" label="Create Agency" onPress={() => router.push('/agency/create')} />
+            <MenuRow icon="agency"      label="Create Agency" onPress={() => router.push('/agency/create')} />
           )}
         </MenuSection>
 
         <MenuSection title="Activity">
-          <MenuRow icon="💬" label="Messages"     badge={unreadCount} onPress={() => router.push('/messaging/inbox')} />
-          <MenuRow icon="❤️" label="Saved Homes"  onPress={() => router.push('/(tabs)/saved')} />
-          <MenuRow icon="🔔" label="Saved Searches" onPress={() => router.push('/(tabs)/updates')} />
+          <MenuRow icon="chat"  label="Messages"     badge={unreadCount} onPress={() => router.push('/messaging/inbox')} />
+          <MenuRow icon="heart" label="Saved Homes"  onPress={() => router.push('/(tabs)/saved')} />
+          <MenuRow icon="bell"  label="Saved Searches" onPress={() => router.push('/(tabs)/updates')} />
         </MenuSection>
 
         <MenuSection title="Settings">
-          <MenuRow icon="🔔" label="Notifications" onPress={() => router.push('/profile/notifications')} />
-          <MenuRow icon="⚙️" label="App Settings"  onPress={() => router.push('/profile/settings')} />
-          <MenuRow icon="❓" label="Help & Feedback" onPress={() => {}} />
-          <MenuRow icon="🔒" label="Privacy"        onPress={() => {}} />
+          <MenuRow icon="bell"     label="Notifications" onPress={() => router.push('/profile/notifications')} />
+          <MenuRow icon="settings" label="App Settings"  onPress={() => router.push('/profile/settings')} />
+          <MenuRow icon="help"     label="Help & Feedback" onPress={() => {}} />
+          <MenuRow icon="privacy"  label="Privacy"        onPress={() => {}} />
         </MenuSection>
 
         <MenuSection title="Account Actions">
-          <MenuRow icon="🚪" label="Sign Out" onPress={handleSignOut} destructive />
+          <MenuRow icon="logout" label="Sign Out" onPress={handleSignOut} destructive />
         </MenuSection>
 
         <View style={styles.spacer} />

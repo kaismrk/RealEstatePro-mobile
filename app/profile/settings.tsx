@@ -73,17 +73,17 @@ export default function SettingsScreen() {
         <View style={styles.sectionBody}>
           <SettingsRow label="App Version" value={APP_VERSION} />
           <MenuRow
-            icon="📄"
+            icon="edit"
             label="Terms of Use"
             onPress={() => void Linking.openURL('https://example.com/terms')}
           />
           <MenuRow
-            icon="🔒"
+            icon="privacy"
             label="Privacy Policy"
             onPress={() => void Linking.openURL('https://example.com/privacy')}
           />
           <MenuRow
-            icon="📦"
+            icon="gift"
             label="Open-Source Licenses"
             onPress={() => void Linking.openURL('https://example.com/licenses')}
           />
@@ -95,7 +95,7 @@ export default function SettingsScreen() {
         <Text style={styles.sectionLabel}>Account Actions</Text>
         <View style={styles.sectionBody}>
           <MenuRow
-            icon="🚪"
+            icon="logout"
             label="Sign Out"
             onPress={handleSignOut}
             destructive

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import * as SecureStore from 'expo-secure-store';
+import { secureStorage } from '@/lib/utils/secureStorage';
 
 interface User {
   id: number;
@@ -31,28 +31,28 @@ export const useAuthStore = create<AuthState>((set) => ({
   isHydrated: false,
 
   setTokens: async (access, refresh) => {
-    await SecureStore.setItemAsync('auth_access_token', access);
-    await SecureStore.setItemAsync('auth_refresh_token', refresh);
+    await secureStorage.setItem('auth_access_token', access);
+    await secureStorage.setItem('auth_refresh_token', refresh);
     set({ accessToken: access, refreshToken: refresh });
   },
 
   setUser: (user) => set({ user }),
 
   setCountry: async (code) => {
-    await SecureStore.setItemAsync('auth_country_code', code);
+    await secureStorage.setItem('auth_country_code', code);
     set({ countryCode: code });
   },
 
   clearAuth: async () => {
-    await SecureStore.deleteItemAsync('auth_access_token');
-    await SecureStore.deleteItemAsync('auth_refresh_token');
+    await secureStorage.removeItem('auth_access_token');
+    await secureStorage.removeItem('auth_refresh_token');
     set({ user: null, accessToken: null, refreshToken: null });
   },
 
   hydrate: async () => {
-    const accessToken = await SecureStore.getItemAsync('auth_access_token');
-    const refreshToken = await SecureStore.getItemAsync('auth_refresh_token');
-    const countryCode = await SecureStore.getItemAsync('auth_country_code');
+    const accessToken = await secureStorage.getItem('auth_access_token');
+    const refreshToken = await secureStorage.getItem('auth_refresh_token');
+    const countryCode = await secureStorage.getItem('auth_country_code');
     set({
       accessToken,
       refreshToken,

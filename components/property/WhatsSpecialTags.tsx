@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   tagText: {
-    fontSize: 14,
-    color: colors.primary,
+    fontSize: 13,
+    color: colors.primaryDark,
     fontWeight: fontWeight.medium,
   },
 });

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   View,
   Text,
+  Image,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
@@ -10,17 +11,14 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { CountrySelector } from '@/components/shared/CountrySelector';
-import { useAuthStore } from '@/lib/stores/auth.store';
-import { colors, spacing, fontWeight, radius } from '@/constants/theme';
+import { colors, fontWeight, radius } from '@/constants/theme';
 
 export default function WelcomeScreen() {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState<string | undefined>();
-  const countryCode = useAuthStore((state) => state.countryCode);
-  const setCountry = useAuthStore((state) => state.setCountry);
 
   function validateEmail(value: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -49,56 +47,59 @@ export default function WelcomeScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Top bar */}
-          <View style={styles.topBar}>
-            <CountrySelector
-              selectedCode={countryCode}
-              onSelect={(code) => void setCountry(code)}
+          {/* Brand gradient hero */}
+          <LinearGradient
+            colors={[colors.primaryDark, colors.primary, colors.accent]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.hero}
+          >
+            <Image
+              source={require('@/assets/homy-logo-white.png')}
+              style={styles.heroLogo}
+              resizeMode="contain"
             />
-          </View>
+          </LinearGradient>
 
-          {/* Brand block */}
-          <View style={styles.brand}>
-            {/* Logo mark: violet gradient box with "H" */}
-            <View style={styles.logoMark}>
-              <Text style={styles.logoLetter}>H</Text>
-            </View>
-            <Text style={styles.logoWordmark}>homy</Text>
-            <Text style={styles.tagline}>Find your perfect home.</Text>
-          </View>
+          {/* White card overlapping hero */}
+          <View style={styles.card}>
+            <Text style={styles.heading}>Find your perfect home</Text>
+            <Text style={styles.subtitle}>
+              Browse 200,000+ listings across Tunisia. Save favorites, message agents, and book tours — all in one place.
+            </Text>
 
-          {/* Form */}
-          <View style={styles.form}>
-            <Input
-              label="Email address"
-              value={email}
-              onChangeText={(t) => { setEmail(t); if (emailError) setEmailError(undefined); }}
-              error={emailError}
-              placeholder="you@example.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              returnKeyType="go"
-              onSubmitEditing={handleContinue}
-            />
+            <View style={styles.form}>
+              <Input
+                label="Email address"
+                value={email}
+                onChangeText={(t) => { setEmail(t); if (emailError) setEmailError(undefined); }}
+                error={emailError}
+                placeholder="you@example.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="go"
+                onSubmitEditing={handleContinue}
+              />
 
-            <Button onPress={handleContinue} size="lg" style={styles.btnFull}>
-              Continue
-            </Button>
-
-            <Button
-              variant="secondary"
-              onPress={handleGoogleOAuth}
-              size="lg"
-              style={[styles.btnFull, styles.btnMt]}
-            >
-              Continue with Google
-            </Button>
-
-            <View style={styles.guestWrap}>
-              <Button variant="ghost" onPress={() => router.replace('/(tabs)/search')}>
-                Browse as guest
+              <Button onPress={handleContinue} size="lg" style={styles.btnFull}>
+                Continue
               </Button>
+
+              <Button
+                variant="secondary"
+                onPress={handleGoogleOAuth}
+                size="lg"
+                style={[styles.btnFull, styles.btnMt]}
+              >
+                Continue with Google
+              </Button>
+
+              <View style={styles.guestWrap}>
+                <Button variant="ghost" onPress={() => router.replace('/(tabs)/search')}>
+                  Browse as guest
+                </Button>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -108,55 +109,46 @@ export default function WelcomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe:    { flex: 1, backgroundColor: colors.surface },
-  flex:    { flex: 1 },
-  scroll:  { flexGrow: 1 },
-  topBar:  { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 8 },
+  safe:   { flex: 1, backgroundColor: colors.surfaceMuted },
+  flex:   { flex: 1 },
+  scroll: { flexGrow: 1 },
 
-  brand: {
-    alignItems: 'center',
-    paddingTop: 48,
-    paddingBottom: 40,
-  },
-  logoMark: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
-    backgroundColor: colors.primary,
+  hero: {
+    height: 320,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 8,
   },
-  logoLetter: {
-    fontSize: 36,
-    fontWeight: fontWeight.extrabold,
-    color: '#fff',
-    letterSpacing: -1,
-  },
-  logoWordmark: {
-    fontSize: 32,
-    fontWeight: fontWeight.extrabold,
-    color: colors.primary,
-    letterSpacing: -1,
-    marginBottom: 6,
-  },
-  tagline: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    textAlign: 'center',
+  heroLogo: {
+    height: 150,
+    width: 200,
   },
 
-  form: {
+  card: {
     flex: 1,
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: radius.xl2,
+    borderTopRightRadius: radius.xl2,
+    marginTop: -16,
     paddingHorizontal: 24,
+    paddingTop: 28,
     paddingBottom: 32,
   },
+  heading: {
+    fontSize: 28,
+    fontWeight: fontWeight.extrabold,
+    color: colors.textPrimary,
+    letterSpacing: -0.4,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: colors.textSecondary,
+    lineHeight: 23,
+    marginBottom: 22,
+  },
+
+  form: { gap: 0 },
   btnFull: { width: '100%' },
   btnMt:   { marginTop: 12 },
-  guestWrap: { alignItems: 'center', marginTop: 20 },
+  guestWrap: { alignItems: 'center', marginTop: 12 },
 });
