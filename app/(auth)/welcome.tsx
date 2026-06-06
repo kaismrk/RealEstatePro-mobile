@@ -55,9 +55,10 @@ export default function WelcomeScreen() {
             style={styles.hero}
           >
             <Image
-              source={require('@/assets/homy-logo-white.png')}
+              source={require('@/assets/hovioo-logo-white.png')}
               style={styles.heroLogo}
               resizeMode="contain"
+              accessibilityLabel="Hovioo"
             />
           </LinearGradient>
 
