@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.realestatepro.app",
+      "bundleIdentifier": "com.hovioo.app",
       "buildNumber": "1",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Show properties near you",
@@ -24,7 +24,7 @@
       }
     },
     "android": {
-      "package": "com.realestatepro.app",
+      "package": "com.hovioo.app",
       "versionCode": 1,
       "permissions": [
         "ACCESS_FINE_LOCATION",
