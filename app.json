@@ -20,7 +20,8 @@
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Show properties near you",
         "NSCameraUsageDescription": "Take photos of your property",
-        "NSPhotoLibraryUsageDescription": "Select photos for your listing"
+        "NSPhotoLibraryUsageDescription": "Select photos for your listing",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -52,7 +53,15 @@
       "output": "static"
     },
     "plugins": [
-      "expo-router"
-    ]
+      "expo-router",
+      "expo-web-browser"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b3860b3d-7c8c-40ab-bf23-4cbb316eae88"
+      }
+    },
+    "owner": "kaismrk81"
   }
 }

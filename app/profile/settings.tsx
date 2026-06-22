@@ -75,17 +75,17 @@ export default function SettingsScreen() {
           <MenuRow
             icon="edit"
             label="Terms of Use"
-            onPress={() => void Linking.openURL('https://example.com/terms')}
+            onPress={() => void Linking.openURL('https://admin.hovioo.com/terms')}
           />
           <MenuRow
             icon="privacy"
             label="Privacy Policy"
-            onPress={() => void Linking.openURL('https://example.com/privacy')}
+            onPress={() => void Linking.openURL('https://admin.hovioo.com/privacy')}
           />
           <MenuRow
             icon="gift"
             label="Open-Source Licenses"
-            onPress={() => void Linking.openURL('https://example.com/licenses')}
+            onPress={() => void Linking.openURL('https://admin.hovioo.com/licenses')}
           />
         </View>
       </View>
