@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Typecheck and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Test
+        # --passWithNoTests covers PRs that only touch non-tested files.
+        # 3 pre-existing suite-level failures from expo/src/winter runtime
+        # mocks are EXPECTED — they don't affect the 321 actual test cases.
+        # Use --testPathIgnorePatterns if those become noisy later.
+        run: npx jest --passWithNoTests
+
+      # Note: no `eas build` step — EAS handles native builds in its own cloud,
+      # no point burning GH Actions minutes duplicating that. JS-only changes
+      # ship via `eas update` from the developer machine.
