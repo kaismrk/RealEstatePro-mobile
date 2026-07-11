@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, Linking, Alert, StyleSheet } from 'react-native';
+// Linking is kept for Open-Source Licenses (external URL).
 import { router } from 'expo-router';
 import Constants from 'expo-constants';
 import { useQueryClient } from '@tanstack/react-query';
@@ -75,12 +76,12 @@ export default function SettingsScreen() {
           <MenuRow
             icon="edit"
             label="Terms of Use"
-            onPress={() => void Linking.openURL('https://admin.hovioo.com/terms')}
+            onPress={() => router.push('/profile/legal/terms')}
           />
           <MenuRow
             icon="privacy"
             label="Privacy Policy"
-            onPress={() => void Linking.openURL('https://admin.hovioo.com/privacy')}
+            onPress={() => router.push('/profile/legal/privacy')}
           />
           <MenuRow
             icon="gift"

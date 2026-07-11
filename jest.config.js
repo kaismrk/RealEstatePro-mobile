@@ -12,8 +12,10 @@ module.exports = {
     '^components/ui/BottomSheet$': '<rootDir>/__mocks__/bottom-sheet-mock.js',
     '^@/components/ui/BottomSheet$': '<rootDir>/__mocks__/bottom-sheet-mock.js',
     '^@gorhom/bottom-sheet$': '<rootDir>/__mocks__/gorhom-bottom-sheet-mock.js',
+    // react-native-webview needs a JS mock in the test environment
+    '^react-native-webview$': '<rootDir>/__mocks__/react-native-webview.js',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|lucide-react-native|nativewind|zustand)',
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|lucide-react-native|nativewind|zustand|react-native-webview)',
   ],
 };

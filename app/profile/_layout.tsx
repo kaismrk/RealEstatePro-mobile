@@ -8,6 +8,8 @@ export default function ProfileLayout() {
       <Stack.Screen name="quota" />
       <Stack.Screen name="settings" />
       <Stack.Screen name="notifications" />
+      <Stack.Screen name="legal/terms" />
+      <Stack.Screen name="legal/privacy" />
     </Stack>
   );
 }
