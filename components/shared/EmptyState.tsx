@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors, radius, fontWeight } from '@/constants/theme';
 
@@ -9,18 +10,26 @@ interface EmptyStateAction {
 interface EmptyStateProps {
   title: string;
   subtitle?: string;
-  icon?: string;
+  /** Pass a string emoji for legacy callers, or a React element (e.g. <Icon …>) for icon components. */
+  icon?: string | ReactNode;
   action?: EmptyStateAction;
 }
 
 export function EmptyState({ title, subtitle, icon, action }: EmptyStateProps) {
+  const iconNode =
+    typeof icon === 'string'
+      ? <Text style={styles.icon}>{icon}</Text>
+      : icon
+        ? <View style={styles.iconWrap}>{icon}</View>
+        : null;
+
   return (
     <View style={styles.container}>
-      {icon ? <Text style={styles.icon}>{icon}</Text> : null}
+      {iconNode}
       <Text style={styles.title}>{title}</Text>
       {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       {action ? (
-        <TouchableOpacity style={styles.action} onPress={action.onPress} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.action} onPress={action.onPress} activeOpacity={0.85} accessibilityRole="button" accessibilityLabel={action.label}>
           <Text style={styles.actionLabel}>{action.label}</Text>
         </TouchableOpacity>
       ) : null}
@@ -37,6 +46,7 @@ const styles = StyleSheet.create({
     paddingVertical: 48,
   },
   icon: { fontSize: 48, marginBottom: 16 },
+  iconWrap: { marginBottom: 16 },
   title: {
     fontSize: 18,
     fontWeight: fontWeight.semibold,

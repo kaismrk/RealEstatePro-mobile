@@ -10,6 +10,7 @@ import {
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
+import { Bell } from 'lucide-react-native';
 import { useSavedSearches } from '@/hooks/useSavedSearches';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useSearchStore } from '@/lib/stores/search.store';
@@ -141,7 +142,7 @@ export default function UpdatesScreen() {
           <EmptyState
             title="No saved searches yet"
             subtitle="Save your current search to get notified when new homes match."
-            icon={'🔔'}
+            icon={<Bell size={48} color={colors.textTertiary} />}
             action={{
               label: 'Go to Search',
               onPress: () => router.push('/(tabs)/search'),

@@ -11,6 +11,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { Eye, EyeOff } from 'lucide-react-native';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useLogin } from '@/hooks/useAuth';
@@ -51,11 +52,6 @@ export default function LoginScreen() {
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView style={styles.flex} contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.content}>
-            {/* Back */}
-            <TouchableOpacity onPress={() => router.back()} style={styles.back} accessibilityLabel="Back">
-              <Text style={styles.backText}>← Back</Text>
-            </TouchableOpacity>
-
             <Text style={styles.heading}>Welcome back</Text>
 
             <Input
@@ -80,8 +76,14 @@ export default function LoginScreen() {
                 returnKeyType="go"
                 onSubmitEditing={handleSignIn}
               />
-              <TouchableOpacity style={styles.showPw} onPress={() => setShowPw((v) => !v)}>
-                <Text style={styles.showPwText}>{showPw ? 'Hide' : 'Show'}</Text>
+              <TouchableOpacity
+                style={styles.showPw}
+                onPress={() => setShowPw((v) => !v)}
+                accessibilityLabel={showPw ? 'Hide password' : 'Show password'}
+              >
+                {showPw
+                  ? <EyeOff size={20} color={colors.textTertiary} />
+                  : <Eye size={20} color={colors.textTertiary} />}
               </TouchableOpacity>
             </View>
 
@@ -103,9 +105,9 @@ export default function LoginScreen() {
             </Button>
 
             <View style={styles.registerRow}>
-              <Text style={styles.registerPrompt}>Don't have an account? </Text>
-              <TouchableOpacity onPress={() => router.replace('/(auth)/welcome')}>
-                <Text style={styles.registerLink}>Register</Text>
+              <Text style={styles.registerPrompt}>New here? </Text>
+              <TouchableOpacity onPress={() => router.push('/(auth)/welcome')}>
+                <Text style={styles.registerLink}>Create an account</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -119,13 +121,10 @@ const styles = StyleSheet.create({
   safe:    { flex: 1, backgroundColor: colors.surface },
   flex:    { flex: 1 },
   scroll:  { flexGrow: 1 },
-  content: { flex: 1, paddingHorizontal: 24, paddingTop: 16, paddingBottom: 32 },
-  back:    { marginBottom: 16 },
-  backText: { fontSize: 15, color: colors.primary, fontWeight: fontWeight.medium },
+  content: { flex: 1, paddingHorizontal: 24, paddingTop: 32, paddingBottom: 32 },
   heading: { fontSize: 26, fontWeight: fontWeight.bold, color: colors.textPrimary, marginBottom: 28 },
   pwWrap:  { position: 'relative' },
-  showPw:  { position: 'absolute', right: 14, top: 38 },
-  showPwText: { fontSize: 13, color: colors.primary, fontWeight: fontWeight.semibold },
+  showPw:  { position: 'absolute', right: 14, top: 36, padding: 4 },
   forgotWrap: { alignItems: 'flex-end', marginBottom: 20, marginTop: -8 },
   forgotText: { fontSize: 13, color: colors.primary },
   rateBanner: { backgroundColor: colors.warningBg, borderWidth: 1, borderColor: '#fed7aa', borderRadius: radius.md, paddingHorizontal: 16, paddingVertical: 12, marginBottom: 16 },

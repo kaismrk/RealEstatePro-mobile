@@ -88,11 +88,11 @@ describe('ProfileScreen', () => {
       expect(screen.getByText('Your Profile')).toBeTruthy();
     });
 
-    it('navigates to welcome screen when Sign In is pressed', () => {
+    it('navigates to login when Sign In is pressed', () => {
       mockAccessToken = null;
       renderProfile();
       fireEvent.press(screen.getByText('Sign In'));
-      expect(mockRouterPush).toHaveBeenCalledWith('/(auth)/welcome');
+      expect(mockRouterPush).toHaveBeenCalledWith('/(auth)/login');
     });
   });
 

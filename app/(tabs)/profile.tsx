@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, Alert, SafeAreaView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { User } from 'lucide-react-native';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useLogout } from '@/hooks/useAuth';
 import { useCurrentUser } from '@/hooks/useUser';
@@ -19,8 +20,8 @@ function GuestView() {
       <EmptyState
         title="Your Profile"
         subtitle="Sign in to access your profile, listings, and settings."
-        icon="👤"
-        action={{ label: 'Sign In', onPress: () => router.push('/(auth)/welcome') }}
+        icon={<User size={48} color={colors.textTertiary} />}
+        action={{ label: 'Sign In', onPress: () => router.push('/(auth)/login') }}
       />
     </SafeAreaView>
   );
@@ -84,7 +85,7 @@ function AuthenticatedProfile() {
           <MenuRow icon="bell"     label="Notifications" onPress={() => router.push('/profile/notifications')} />
           <MenuRow icon="settings" label="App Settings"  onPress={() => router.push('/profile/settings')} />
           <MenuRow icon="help"     label="Help & Feedback" onPress={() => {}} />
-          <MenuRow icon="privacy"  label="Privacy"        onPress={() => {}} />
+          <MenuRow icon="privacy"  label="Privacy"        onPress={() => router.push('/profile/legal/privacy')} />
         </MenuSection>
 
         <MenuSection title="Account Actions">

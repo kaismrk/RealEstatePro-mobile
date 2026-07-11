@@ -10,6 +10,7 @@ import {
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
+import { Heart } from 'lucide-react-native';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { PropertyCard } from '@/components/property/PropertyCard';
@@ -25,8 +26,8 @@ function GuestPrompt() {
       <EmptyState
         title="Sign in to view saved homes"
         subtitle="Save properties you love and access them anytime."
-        icon="❤️"
-        action={{ label: 'Sign In', onPress: () => router.push('/(auth)/welcome') }}
+        icon={<Heart size={48} color={colors.heartRed} />}
+        action={{ label: 'Sign In', onPress: () => router.push('/(auth)/login') }}
       />
     </SafeAreaView>
   );
@@ -138,7 +139,7 @@ export default function SavedScreen() {
           <EmptyState
             title="No saved homes yet"
             subtitle="Tap the heart on any listing to save it here"
-            icon="❤️"
+            icon={<Heart size={48} color={colors.heartRed} strokeWidth={1.5} />}
             action={{ label: 'Start searching', onPress: () => router.push('/(tabs)/search') }}
           />
         }

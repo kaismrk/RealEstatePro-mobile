@@ -10,6 +10,7 @@ import {
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
+import { Home } from 'lucide-react-native';
 import { useProperties } from '@/hooks/useProperties';
 import { useSearchStore, type PropertyFilters } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
@@ -129,7 +130,11 @@ export default function SearchScreen() {
             isFetchingNextPage ? <View style={styles.footerSpinner}><LoadingSpinner size="small" /></View> : null
           }
           ListEmptyComponent={
-            <EmptyState title="No properties found" subtitle="Try adjusting your filters" icon="🏠" />
+            <EmptyState
+                title="No properties found"
+                subtitle="Try adjusting your filters"
+                icon={<Home size={48} color={colors.textTertiary} />}
+              />
           }
           contentContainerStyle={{ paddingTop: 4, paddingBottom: 24, flexGrow: 1 }}
           refreshControl={

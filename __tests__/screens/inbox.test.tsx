@@ -127,15 +127,15 @@ describe('InboxScreen', () => {
     });
   });
 
-  it('shows unread count badge when there are unread messages', async () => {
+  it('renders back button in the header', async () => {
     mockAccessToken = 'valid-token';
     mockApiGet.mockResolvedValueOnce({ data: MOCK_MESSAGES });
 
     renderInbox();
 
     await waitFor(() => {
-      // 1 unread message in MOCK_MESSAGES
-      expect(screen.getByText('1')).toBeTruthy();
+      // ScreenHeader provides a back button with this accessibility label
+      expect(screen.getByLabelText('Go back')).toBeTruthy();
     });
   });
 

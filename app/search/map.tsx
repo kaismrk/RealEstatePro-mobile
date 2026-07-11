@@ -8,6 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import { router } from 'expo-router';
+import { ChevronLeft, List } from 'lucide-react-native';
 import type MapView from 'react-native-maps';
 import type { Region } from 'react-native-maps';
 import { useSearchStore } from '@/lib/stores/search.store';
@@ -145,6 +146,20 @@ export default function MapScreen() {
       <SafeAreaView style={styles.overlay} pointerEvents="box-none">
         {/* Top bar */}
         <View style={styles.topBar}>
+          {/* Back button */}
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => {
+              if (router.canGoBack()) { router.back(); }
+              else { router.replace('/(tabs)/search'); }
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            testID="map-back-btn"
+          >
+            <ChevronLeft size={22} color="#111827" />
+          </TouchableOpacity>
+
           {/* Country selector */}
           <CountrySelector
             selectedCode={countryCode}
@@ -168,7 +183,8 @@ export default function MapScreen() {
             accessibilityRole="button"
             testID="list-toggle"
           >
-            <Text style={styles.listToggleText}>{'☰ List'}</Text>
+            <List size={14} color="#111827" />
+            <Text style={styles.listToggleText}>List</Text>
           </TouchableOpacity>
         </View>
 
@@ -240,10 +256,26 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#374151',
   },
-  listToggle: {
+  backBtn: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
-    paddingHorizontal: 14,
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  listToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingHorizontal: 12,
     paddingVertical: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },

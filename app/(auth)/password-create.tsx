@@ -10,6 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { Eye, EyeOff } from 'lucide-react-native';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { PasswordStrengthMeter } from '@/components/auth/PasswordStrengthMeter';
@@ -26,8 +27,11 @@ export default function PasswordCreateScreen() {
   const countryCode = useAuthStore((state) => state.countryCode);
 
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [fieldError, setFieldError] = useState<string | undefined>();
+  const [confirmError, setConfirmError] = useState<string | undefined>();
   const [rateLimitCountdown, setRateLimitCountdown] = useState(0);
 
   const register = useRegister();
@@ -40,11 +44,21 @@ export default function PasswordCreateScreen() {
   }, [rateLimitCountdown]);
 
   function handleCreateAccount() {
+    setFieldError(undefined);
+    setConfirmError(undefined);
+
     if (!password) {
       setFieldError('Password is required');
       return;
     }
-    setFieldError(undefined);
+    if (!confirmPassword) {
+      setConfirmError('Please confirm your password');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setConfirmError('Passwords do not match');
+      return;
+    }
 
     register.mutate(
       {
@@ -109,26 +123,52 @@ export default function PasswordCreateScreen() {
                 onChangeText={(text) => {
                   setPassword(text);
                   if (fieldError) setFieldError(undefined);
+                  if (confirmError && text === confirmPassword) setConfirmError(undefined);
                 }}
                 error={fieldError}
                 secureTextEntry={!showPassword}
                 placeholder="Enter your password"
-                returnKeyType="go"
-                onSubmitEditing={handleCreateAccount}
+                returnKeyType="next"
               />
               <TouchableOpacity
                 style={styles.showHideBtn}
                 onPress={() => setShowPassword((v) => !v)}
                 accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
               >
-                <Text style={styles.showHideText}>
-                  {showPassword ? 'Hide' : 'Show'}
-                </Text>
+                {showPassword
+                  ? <EyeOff size={20} color={colors.textTertiary} />
+                  : <Eye size={20} color={colors.textTertiary} />}
               </TouchableOpacity>
             </View>
 
             {/* Real-time strength meter */}
             {password.length > 0 && <PasswordStrengthMeter password={password} />}
+
+            {/* Confirm password field */}
+            <View style={styles.passwordWrapper}>
+              <Input
+                label="Confirm password"
+                value={confirmPassword}
+                onChangeText={(text) => {
+                  setConfirmPassword(text);
+                  if (confirmError && text === password) setConfirmError(undefined);
+                }}
+                error={confirmError}
+                secureTextEntry={!showConfirm}
+                placeholder="Re-enter your password"
+                returnKeyType="go"
+                onSubmitEditing={handleCreateAccount}
+              />
+              <TouchableOpacity
+                style={styles.showHideBtn}
+                onPress={() => setShowConfirm((v) => !v)}
+                accessibilityLabel={showConfirm ? 'Hide password' : 'Show password'}
+              >
+                {showConfirm
+                  ? <EyeOff size={20} color={colors.textTertiary} />
+                  : <Eye size={20} color={colors.textTertiary} />}
+              </TouchableOpacity>
+            </View>
 
             {/* Rate limit banner */}
             {isRateLimited && (
@@ -144,7 +184,13 @@ export default function PasswordCreateScreen() {
               size="lg"
               style={styles.createBtn}
               loading={register.isPending}
-              disabled={isRateLimited || register.isPending}
+              disabled={
+                isRateLimited ||
+                register.isPending ||
+                !password ||
+                !confirmPassword ||
+                password !== confirmPassword
+              }
             >
               Create Account
             </Button>

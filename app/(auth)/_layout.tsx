@@ -12,5 +12,12 @@ export default function AuthLayout() {
     }
   }, [accessToken, isHydrated]);
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      {/* login is the default entry for unauthenticated users.
+          welcome is the sign-up entry point (reachable via the "Create an account" link). */}
+      <Stack.Screen name="login" />
+      <Stack.Screen name="welcome" />
+    </Stack>
+  );
 }

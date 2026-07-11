@@ -188,7 +188,7 @@ describe('SavedScreen', () => {
     mockAccessToken = null;
     renderSaved();
     fireEvent.press(screen.getByRole('button', { name: /Sign In/i }));
-    expect(mockRouterPush).toHaveBeenCalledWith('/(auth)/welcome');
+    expect(mockRouterPush).toHaveBeenCalledWith('/(auth)/login');
   });
 
   it('renders favorites list for authenticated user', () => {

@@ -18,6 +18,7 @@ import { useDeleteProperty } from '@/hooks/useDeleteProperty';
 import { useListingQuota } from '@/hooks/useUser';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { haptic } from '@/lib/utils/haptics';
+import { ScreenHeader } from '@/components/layout/ScreenHeader';
 import { PublishStatusBadge } from '@/components/property/PublishStatusBadge';
 import { CurrencyText } from '@/components/ui/CurrencyText';
 import { Button } from '@/components/ui/Button';
@@ -254,16 +255,14 @@ export default function MyListingsScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.pageHeader}>
-        <View>
-          <Text style={styles.pageTitle}>My Listings</Text>
-          {quota && (
-            <Text style={styles.quotaSubtitle}>
-              {quota.free_remaining} free + {quota.paid_remaining} paid slots remaining
-            </Text>
-          )}
-        </View>
+      <ScreenHeader title="My Listings" back />
+      {/* Quota subtitle + New button row */}
+      <View style={styles.pageSubHeader}>
+        {quota && (
+          <Text style={styles.quotaSubtitle}>
+            {quota.free_remaining} free + {quota.paid_remaining} paid slots remaining
+          </Text>
+        )}
         <TouchableOpacity
           onPress={handleCreate}
           style={styles.newBtn}
@@ -349,10 +348,9 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     marginBottom: 8,
   },
-  pageHeader: {
+  pageSubHeader: {
     paddingHorizontal: 16,
-    paddingTop: 56,
-    paddingBottom: 16,
+    paddingVertical: 10,
     backgroundColor: colors.surface,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
@@ -360,15 +358,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  pageTitle: {
-    fontSize: fontSize.xl,
-    fontWeight: fontWeight.bold,
-    color: colors.textPrimary,
-  },
   quotaSubtitle: {
     fontSize: fontSize.xs,
     color: colors.textTertiary,
-    marginTop: 2,
+    flex: 1,
   },
   newBtn: {
     backgroundColor: colors.primary,
