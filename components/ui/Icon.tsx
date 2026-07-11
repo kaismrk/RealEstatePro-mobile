@@ -33,6 +33,7 @@ import {
   Shield,
   type LucideProps,
 } from 'lucide-react-native';
+import { colors } from '@/constants/theme';
 
 const icons = {
   search: Search,
@@ -78,7 +79,7 @@ interface IconProps extends Omit<LucideProps, 'ref'> {
   name: IconName;
 }
 
-export function Icon({ name, size = 22, color = '#0f0f14', ...props }: IconProps) {
+export function Icon({ name, size = 22, color = colors.textPrimary, ...props }: IconProps) {
   const LucideIcon = icons[name];
   return <LucideIcon size={size} color={color} {...props} />;
 }

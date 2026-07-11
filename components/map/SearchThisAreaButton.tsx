@@ -1,4 +1,5 @@
 import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
+import { useTheme } from '@/lib/theme';
 
 interface SearchThisAreaButtonProps {
   visible: boolean;
@@ -11,6 +12,8 @@ export function SearchThisAreaButton({
   loading = false,
   onPress,
 }: SearchThisAreaButtonProps) {
+  const { palette } = useTheme();
+
   if (!visible) return null;
 
   return (
@@ -34,7 +37,7 @@ export function SearchThisAreaButton({
           flexDirection: 'row',
           alignItems: 'center',
           gap: 6,
-          backgroundColor: '#FFFFFF',
+          backgroundColor: palette.surface,
           paddingHorizontal: 16,
           paddingVertical: 10,
           borderRadius: 24,
@@ -46,6 +49,7 @@ export function SearchThisAreaButton({
         }}
       >
         {loading ? (
+          // ActivityIndicator is a third-party-adjacent UI primitive — color left as static
           <ActivityIndicator size="small" color="#2563EB" testID="search-loading" />
         ) : (
           <Text style={{ fontSize: 16 }}>{'🔍'}</Text>
@@ -54,7 +58,7 @@ export function SearchThisAreaButton({
           style={{
             fontSize: 14,
             fontWeight: '600',
-            color: '#111827',
+            color: palette.textPrimary,
           }}
         >
           Search this area

@@ -1,6 +1,7 @@
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import type { MapType, Camera } from 'react-native-maps';
+import { colors } from '@/constants/theme';
 
 interface MapControlsProps {
   onLocateMe: (coordinate: { latitude: number; longitude: number }) => void;
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',

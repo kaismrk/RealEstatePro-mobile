@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { Marker } from 'react-native-maps';
+import { useTheme } from '@/lib/theme';
 
 interface ClusterPinProps {
   count: number;
@@ -11,6 +12,7 @@ interface ClusterPinProps {
 }
 
 export function ClusterPin({ count, coordinate, onPress }: ClusterPinProps) {
+  const { palette } = useTheme();
   return (
     <Marker
       coordinate={coordinate}
@@ -24,11 +26,11 @@ export function ClusterPin({ count, coordinate, onPress }: ClusterPinProps) {
           width: 40,
           height: 40,
           borderRadius: 20,
-          backgroundColor: '#2563EB',
+          backgroundColor: palette.info,
           alignItems: 'center',
           justifyContent: 'center',
           borderWidth: 2,
-          borderColor: '#FFFFFF',
+          borderColor: palette.surface,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.2,
@@ -39,7 +41,7 @@ export function ClusterPin({ count, coordinate, onPress }: ClusterPinProps) {
         <Text
           testID="cluster-count"
           style={{
-            color: '#FFFFFF',
+            color: palette.textOnBrand,
             fontSize: 13,
             fontWeight: '700',
           }}

@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   compareBtnActive: { backgroundColor: colors.primary },
   compareBtnLabel: { fontSize: 13, fontWeight: fontWeight.semibold, color: colors.textPrimary },
-  compareBtnLabelActive: { color: '#fff' },
+  compareBtnLabelActive: { color: colors.textOnBrand },
   compareHint: {
     paddingHorizontal: 16,
     paddingVertical: 8,

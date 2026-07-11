@@ -215,6 +215,34 @@ exports[`Settings language picker matches snapshot of the settings screen 1`] = 
           </View>
         </View>
         <View
+          accessibilityLabel="Theme"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             {
               "alignItems": "center",
@@ -222,6 +250,7 @@ exports[`Settings language picker matches snapshot of the settings screen 1`] = 
               "borderBottomWidth": 1,
               "flexDirection": "row",
               "justifyContent": "space-between",
+              "opacity": 1,
               "paddingHorizontal": 16,
               "paddingVertical": 16,
             }
@@ -237,16 +266,26 @@ exports[`Settings language picker matches snapshot of the settings screen 1`] = 
           >
             Theme
           </Text>
-          <Text
+          <View
             style={
               {
-                "color": "#4a4a55",
-                "fontSize": 16,
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 4,
               }
             }
           >
-            Light
-          </Text>
+            <Text
+              style={
+                {
+                  "color": "#4a4a55",
+                  "fontSize": 16,
+                }
+              }
+            >
+              System
+            </Text>
+          </View>
         </View>
       </View>
     </View>

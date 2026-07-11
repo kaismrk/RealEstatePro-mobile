@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   dot: {
     borderRadius: 999,
   },
-  dotActive:   { width: 8,  height: 8,  backgroundColor: '#fff' },
+  dotActive:   { width: 8,  height: 8,  backgroundColor: colors.surface },
   dotInactive: { width: 6,  height: 6,  backgroundColor: 'rgba(255,255,255,0.5)' },
   noImagePlaceholder: {
     backgroundColor: colors.neutral100,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
-  timeBadgeText: { fontSize: 11, color: '#fff', fontWeight: fontWeight.medium },
+  timeBadgeText: { fontSize: 11, color: colors.textOnBrand, fontWeight: fontWeight.medium },
   heartWrap: { position: 'absolute', top: 8, right: 8 },
   boostWrap: { position: 'absolute', top: 10, left: 52 },
   body: { padding: 14 },

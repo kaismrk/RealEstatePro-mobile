@@ -36,7 +36,23 @@ jest.mock('react-native-maps', () => {
   };
 });
 
+// ── Theme mock — tests don't need real SecureStore/Appearance wiring ──────────
+jest.mock('@/lib/theme', () => {
+  const { lightPalette } = jest.requireActual('@/constants/theme');
+  return {
+    useTheme: () => ({
+      palette: lightPalette,
+      mode: 'light',
+      setMode: jest.fn(),
+      isDark: false,
+    }),
+    ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
+    THEME_STORAGE_KEY: 'hovioo.theme.mode',
+  };
+});
+
 import { PricePinMarker } from '@/components/map/PricePinMarker';
+import { lightPalette } from '@/constants/theme';
 import type { PropertySchema } from '@/lib/types/property';
 
 const BASE_PROPERTY: PropertySchema = {
@@ -108,41 +124,41 @@ describe('PricePinMarker', () => {
     expect(toJSON()).toBeNull();
   });
 
-  it('applies primary background color when selected', () => {
+  it('applies info (blue) background color when selected', () => {
     render(<PricePinMarker property={BASE_PROPERTY} selected={true} />);
     const container = screen.getByTestId('price-pin-container');
-    expect(container.props.style.backgroundColor).toBe('#2563EB');
+    expect(container.props.style.backgroundColor).toBe(lightPalette.info);
   });
 
-  it('applies white background when not selected', () => {
+  it('applies surface background when not selected', () => {
     render(<PricePinMarker property={BASE_PROPERTY} selected={false} />);
     const container = screen.getByTestId('price-pin-container');
-    expect(container.props.style.backgroundColor).toBe('#FFFFFF');
+    expect(container.props.style.backgroundColor).toBe(lightPalette.surface);
   });
 
-  it('uses white text color when selected', () => {
+  it('uses textOnBrand color when selected', () => {
     render(<PricePinMarker property={BASE_PROPERTY} selected={true} />);
     const text = screen.getByTestId('price-pin-text');
-    expect(text.props.style.color).toBe('#FFFFFF');
+    expect(text.props.style.color).toBe(lightPalette.textOnBrand);
   });
 
-  it('uses dark text color when not selected', () => {
+  it('uses textPrimary color when not selected', () => {
     render(<PricePinMarker property={BASE_PROPERTY} selected={false} />);
     const text = screen.getByTestId('price-pin-text');
-    expect(text.props.style.color).toBe('#111827');
+    expect(text.props.style.color).toBe(lightPalette.textPrimary);
   });
 
-  it('applies gold border for boosted property', () => {
+  it('applies warning border for boosted property', () => {
     const boostedProperty: PropertySchema = { ...BASE_PROPERTY, is_boosted: true };
     render(<PricePinMarker property={boostedProperty} />);
     const container = screen.getByTestId('price-pin-container');
-    expect(container.props.style.borderColor).toBe('#F59E0B');
+    expect(container.props.style.borderColor).toBe(lightPalette.warning);
   });
 
-  it('does NOT apply gold border for non-boosted property', () => {
+  it('does NOT apply warning border for non-boosted property', () => {
     render(<PricePinMarker property={BASE_PROPERTY} />);
     const container = screen.getByTestId('price-pin-container');
-    expect(container.props.style.borderColor).not.toBe('#F59E0B');
+    expect(container.props.style.borderColor).not.toBe(lightPalette.warning);
   });
 
   it('renders larger padding when selected', () => {

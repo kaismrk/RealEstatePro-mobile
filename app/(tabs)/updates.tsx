@@ -183,14 +183,14 @@ const styles = StyleSheet.create({
   authTitle: {
     fontSize: 20,
     fontWeight: fontWeight.bold,
-    color: '#111827',
+    color: colors.textPrimary,
     marginBottom: 8,
     marginTop: 16,
     textAlign: 'center',
   },
   authSubtitle: {
     fontSize: 14,
-    color: '#6b7280',
+    color: colors.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
   },
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 22,
     fontWeight: fontWeight.bold,
-    color: '#111827',
+    color: colors.textPrimary,
     flex: 1,
   },
   newButton: {
@@ -268,16 +268,16 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: fontWeight.semibold,
-    color: '#111827',
+    color: colors.textPrimary,
     marginBottom: 4,
   },
   cardSummary: {
     fontSize: 14,
-    color: '#6b7280',
+    color: colors.textSecondary,
   },
   cardCountry: {
     fontSize: 12,
-    color: '#9ca3af',
+    color: colors.textTertiary,
     marginTop: 4,
   },
   deleteButton: {

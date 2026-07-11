@@ -20,5 +20,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
-  label: { fontSize: 11, fontWeight: fontWeight.bold, color: '#fff' },
+  label: { fontSize: 11, fontWeight: fontWeight.bold, color: colors.textOnBrand },
 });

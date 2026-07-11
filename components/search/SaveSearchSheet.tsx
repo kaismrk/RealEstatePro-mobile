@@ -130,7 +130,7 @@ export function SaveSearchSheet({ visible, onClose }: SaveSearchSheetProps) {
                 value={emailNotifications}
                 onValueChange={setEmailNotifications}
                 trackColor={{ false: colors.borderStrong, true: colors.borderBrand }}
-                thumbColor={emailNotifications ? colors.primary : '#f5f5f7'}
+                thumbColor={emailNotifications ? colors.primary : colors.surfaceMuted}
                 accessibilityLabel="Email notifications toggle"
               />
             </View>

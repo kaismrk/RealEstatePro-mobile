@@ -345,13 +345,13 @@ const styles = StyleSheet.create({
   errorBox: {
     backgroundColor: colors.errorBg,
     borderWidth: 1,
-    borderColor: '#FECACA',
+    borderColor: colors.errorBorder,
     borderRadius: radius.md,
     padding: 12,
     marginBottom: 16,
   },
   errorBoxTitle: {
-    color: '#B91C1C',
+    color: colors.error,
     fontWeight: fontWeight.semibold,
     marginBottom: 4,
     fontSize: fontSize.sm,

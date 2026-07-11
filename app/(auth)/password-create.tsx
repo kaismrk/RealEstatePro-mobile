@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   rateLimitText: {
-    color: '#92400e',
+    color: colors.warningText,
     fontSize: fontSize.sm,
     fontWeight: fontWeight.medium,
   },

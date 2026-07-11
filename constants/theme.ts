@@ -1,6 +1,15 @@
+// Design reference: docs/design/ — Homy design bundle.
+// Dark palette values are conservative defaults — the bundle does not define
+// dark mode. Spec: background #0F1115, surface #1A1D24, on-surface #F1F3F7,
+// primary keeps hue, borders #2A2E38.
+
 import { StyleSheet } from 'react-native';
 
-export const colors = {
+// ── Palette type (shared shape for light + dark) ───────────────────────────
+export type Palette = typeof lightPalette;
+
+// ── Light palette (Homy design bundle) ────────────────────────────────────
+export const lightPalette = {
   // Brand gradient: #3a0699 → #5f09fe → #ee8b60
   primary:       '#5f09fe',
   primaryDark:   '#3a0699',
@@ -54,7 +63,77 @@ export const colors = {
   overlayScrim: 'rgba(15,15,20,0.55)',
   photoBadge:   'rgba(0,0,0,0.4)',
   heartBg:      'rgba(255,255,255,0.85)',
+
+  // Extended semantic tokens (not in Homy bundle — conservative additions)
+  warningText:  '#92400e',  // amber-800 — text inside warning banners
+  errorBorder:  '#fecaca',  // red-200 — light red border on error states
+  accentBg:     '#fdf0e8',  // warm tint — accent-variant badge background
 } as const;
+
+// ── Dark palette (conservative defaults — not in Homy bundle) ─────────────
+export const darkPalette: Palette = {
+  // Brand — primary hue unchanged per spec
+  primary:       '#5f09fe',
+  primaryDark:   '#3a0699',
+  primaryLight:  '#1c0547',
+  primaryMid:    '#4d05d6',
+  accent:        '#ee8b60',
+
+  // Surfaces (dark spec)
+  surface:       '#1A1D24',
+  surfaceMuted:  '#1F2330',
+  surfaceSunken: '#15171D',
+
+  // Neutrals (inverted scale)
+  neutral50:  '#1A1D24',
+  neutral100: '#1F2330',
+  neutral200: '#2A2E38',
+  neutral300: '#3A3F50',
+  neutral400: '#6B7280',
+  neutral500: '#9CA3AF',
+  neutral600: '#C1C7D4',
+  neutral700: '#DDE3EE',
+  neutral800: '#EEF2F8',
+  neutral900: '#F8FAFF',
+
+  // Foreground (on-surface per spec)
+  textPrimary:   '#F1F3F7',
+  textSecondary: '#A0A8B8',
+  textTertiary:  '#6B7280',
+  textOnBrand:   '#FFFFFF',
+
+  // Borders (per spec)
+  border:       '#2A2E38',
+  borderStrong: '#3A3F50',
+  borderBrand:  '#7C5FE8',
+
+  // Background (per spec)
+  background: '#0F1115',
+
+  // Semantic
+  error:      '#f87171',
+  errorBg:    '#2d0d0d',
+  success:    '#34d399',
+  successBg:  '#052e16',
+  warning:    '#fbbf24',
+  warningBg:  '#292108',
+  info:       '#60a5fa',
+  infoBg:     '#0d1f3c',
+  heartRed:   '#f87171',
+
+  // Overlays
+  overlayScrim: 'rgba(0,0,0,0.7)',
+  photoBadge:   'rgba(0,0,0,0.55)',
+  heartBg:      'rgba(15,15,20,0.85)',
+
+  // Extended semantic tokens
+  warningText:  '#fcd34d',  // amber-300 — readable on dark backgrounds
+  errorBorder:  '#7f1d1d',  // red-900 — dark red border on dark surfaces
+  accentBg:     '#2d1a0e',  // warm dark — accent-variant badge background
+} as const;
+
+// ── Backward-compat alias — light palette (all existing imports continue to work)
+export const colors = lightPalette;
 
 export const spacing = {
   1: 4,

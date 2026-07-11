@@ -105,11 +105,11 @@ export default function GalleryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: colors.neutral900,
   },
   emptyContainer: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: colors.neutral900,
     alignItems: 'center',
     justifyContent: 'center',
   },

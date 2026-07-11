@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native';
 import { Marker } from 'react-native-maps';
 import { formatPrice } from '@/lib/utils/currency';
+import { useTheme } from '@/lib/theme';
 import type { PropertySchema } from '@/lib/types/property';
 
 interface PricePinMarkerProps {
@@ -16,6 +17,8 @@ export function PricePinMarker({
   onPress,
   currency = 'TND',
 }: PricePinMarkerProps) {
+  const { palette } = useTheme();
+
   if (property.latitude == null || property.longitude == null) return null;
 
   const formattedPrice = formatPrice(property.price, currency);
@@ -38,9 +41,9 @@ export function PricePinMarker({
           paddingHorizontal: selected ? 12 : 8,
           paddingVertical: selected ? 7 : 5,
           borderRadius: 20,
-          backgroundColor: selected ? '#2563EB' : '#FFFFFF',
+          backgroundColor: selected ? palette.info : palette.surface,
           borderWidth: isBoosted ? 2 : 1,
-          borderColor: isBoosted ? '#F59E0B' : selected ? '#2563EB' : '#D1D5DB',
+          borderColor: isBoosted ? palette.warning : selected ? palette.info : palette.neutral300,
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: selected ? 0.25 : 0.15,
@@ -53,7 +56,7 @@ export function PricePinMarker({
           style={{
             fontSize: selected ? 14 : 12,
             fontWeight: '700',
-            color: selected ? '#FFFFFF' : '#111827',
+            color: selected ? palette.textOnBrand : palette.textPrimary,
           }}
           numberOfLines={1}
         >

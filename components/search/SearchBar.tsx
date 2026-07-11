@@ -123,5 +123,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 2,
   },
-  badgeText: { fontSize: 10, color: '#fff', fontWeight: fontWeight.bold },
+  badgeText: { fontSize: 10, color: colors.textOnBrand, fontWeight: fontWeight.bold },
 });

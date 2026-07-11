@@ -21,6 +21,7 @@ import { useAuthStore } from '@/lib/stores/auth.store';
 import { useLogout } from '@/hooks/useAuth';
 import { MenuRow } from '@/components/profile/MenuRow';
 import { colors, fontWeight } from '@/constants/theme';
+import { useTheme, type ThemeMode } from '@/lib/theme';
 import i18n from '@/lib/i18n';
 import { persistLanguage } from '@/lib/i18n/detect';
 
@@ -30,6 +31,12 @@ const APP_VERSION =
 const LANGUAGE_OPTIONS: Array<{ label: string; code: string }> = [
   { label: 'Français', code: 'fr' },
   { label: 'English', code: 'en' },
+];
+
+const THEME_OPTIONS: Array<{ labelKey: string; mode: ThemeMode }> = [
+  { labelKey: 'settings.theme.system', mode: 'system' },
+  { labelKey: 'settings.theme.light',  mode: 'light'  },
+  { labelKey: 'settings.theme.dark',   mode: 'dark'   },
 ];
 
 function SettingsRow({ label, value }: { label: string; value: string }) {
@@ -47,8 +54,10 @@ export default function SettingsScreen() {
   const countryCode = useAuthStore((s) => s.countryCode);
   const setCountry = useAuthStore((s) => s.setCountry);
   const logout = useLogout();
+  const { mode: themeMode, setMode: setThemeMode } = useTheme();
 
   const [langPickerVisible, setLangPickerVisible] = useState(false);
+  const [themePickerVisible, setThemePickerVisible] = useState(false);
   const currentLang = i18n.language;
 
   function handleCountrySelect(code: string) {
@@ -60,6 +69,11 @@ export default function SettingsScreen() {
     setLangPickerVisible(false);
     await persistLanguage(code);
     await i18n.changeLanguage(code);
+  }
+
+  async function handleThemeSelect(mode: ThemeMode) {
+    setThemePickerVisible(false);
+    await setThemeMode(mode);
   }
 
   function handleSignOut() {
@@ -75,6 +89,10 @@ export default function SettingsScreen() {
 
   const currentLangLabel =
     LANGUAGE_OPTIONS.find((o) => o.code === currentLang)?.label ?? currentLang;
+
+  const currentThemeLabel = t(
+    THEME_OPTIONS.find((o) => o.mode === themeMode)?.labelKey ?? 'settings.theme.system'
+  );
 
   return (
     <ScrollView style={styles.root}>
@@ -109,7 +127,18 @@ export default function SettingsScreen() {
             </View>
           </TouchableOpacity>
 
-          <SettingsRow label={t('settings.theme')} value={t('settings.themeValue')} />
+          {/* Theme picker row */}
+          <TouchableOpacity
+            style={styles.settingsRow}
+            onPress={() => setThemePickerVisible(true)}
+            accessibilityLabel={t('settings.themeLabel')}
+          >
+            <Text style={styles.settingsRowLabel}>{t('settings.themeLabel')}</Text>
+            <View style={styles.langRowRight}>
+              <Text style={styles.settingsRowValue}>{currentThemeLabel}</Text>
+              <Icon name="chevron-right" size={16} color={colors.textTertiary} />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -179,6 +208,46 @@ export default function SettingsScreen() {
                 >
                   <Text style={styles.langOptionLabel}>{item.label}</Text>
                   {currentLang === item.code && (
+                    <Icon name="check" size={18} color={colors.primary} />
+                  )}
+                </TouchableOpacity>
+              )}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Theme picker modal — same pattern as language picker */}
+      <Modal
+        visible={themePickerVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setThemePickerVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalBackdrop}
+          activeOpacity={1}
+          onPress={() => setThemePickerVisible(false)}
+        >
+          <View style={styles.modalSheet}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{t('settings.picker.themeTitle')}</Text>
+              <TouchableOpacity onPress={() => setThemePickerVisible(false)}>
+                <Text style={styles.modalClose}>{t('settings.picker.close')}</Text>
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={THEME_OPTIONS}
+              keyExtractor={(item) => item.mode}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.langOption}
+                  onPress={() => void handleThemeSelect(item.mode)}
+                  accessibilityLabel={t(item.labelKey)}
+                >
+                  <Text style={styles.langOptionLabel}>{t(item.labelKey)}</Text>
+                  {themeMode === item.mode && (
                     <Icon name="check" size={18} color={colors.primary} />
                   )}
                 </TouchableOpacity>

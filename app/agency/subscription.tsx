@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   },
   cancelBtn: {
     borderWidth: 1,
-    borderColor: '#f87171',
+    borderColor: colors.errorBorder,
     borderRadius: radius.md,
     paddingVertical: 12,
     alignItems: 'center',
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   noSubBanner: {
     backgroundColor: colors.warningBg,
     borderWidth: 1,
-    borderColor: '#fde68a',
+    borderColor: colors.warningBg,
     borderRadius: radius.md,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -372,12 +372,12 @@ const styles = StyleSheet.create({
   noSubTitle: {
     fontSize: 14,
     fontWeight: fontWeight.semibold,
-    color: '#92400e',
+    color: colors.warningText,
     marginBottom: 4,
   },
   noSubBody: {
     fontSize: 12,
-    color: '#b45309',
+    color: colors.warningText,
   },
   plansHeading: {
     fontSize: 16,

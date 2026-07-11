@@ -149,8 +149,7 @@
     },
     "country": "Country",
     "language": "Language",
-    "theme": "Theme",
-    "themeValue": "Light",
+    "themeLabel": "Theme",
     "appVersion": "App Version",
     "legal": {
       "terms": "Terms of Use",
@@ -159,11 +158,17 @@
     },
     "picker": {
       "title": "Select Language",
+      "themeTitle": "Select Theme",
       "close": "Close",
       "languages": {
         "fr": "Français",
         "en": "English"
       }
+    },
+    "theme": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
     }
   },
   "editProfile": {

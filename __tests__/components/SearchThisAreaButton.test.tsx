@@ -1,5 +1,21 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react-native';
+
+// ── Theme mock — tests don't need real SecureStore/Appearance wiring ──────────
+jest.mock('@/lib/theme', () => {
+  const { lightPalette } = jest.requireActual('@/constants/theme');
+  return {
+    useTheme: () => ({
+      palette: lightPalette,
+      mode: 'light',
+      setMode: jest.fn(),
+      isDark: false,
+    }),
+    ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
+    THEME_STORAGE_KEY: 'hovioo.theme.mode',
+  };
+});
+
 import { SearchThisAreaButton } from '@/components/map/SearchThisAreaButton';
 
 describe('SearchThisAreaButton', () => {

@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: fontWeight.semibold,
-    color: '#1f2937',
+    color: colors.textPrimary,
   },
 });

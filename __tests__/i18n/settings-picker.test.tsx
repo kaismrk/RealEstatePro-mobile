@@ -25,6 +25,26 @@ jest.mock('@/lib/i18n/detect', () => ({
   LANG_STORAGE_KEY: 'hovioo.i18n.lang',
 }));
 
+// ── Theme mock — light palette, no SecureStore side-effects in this test ─────
+
+jest.mock('@/lib/theme', () => {
+  const { lightPalette } = jest.requireActual('@/constants/theme');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const React = require('react') as any;
+  function ThemeProvider({ children }: { children: React.ReactNode }) {
+    return children;
+  }
+  function useTheme() {
+    return {
+      palette: lightPalette,
+      mode: 'system' as const,
+      setMode: jest.fn().mockResolvedValue(undefined),
+      isDark: false,
+    };
+  }
+  return { ThemeProvider, useTheme, THEME_STORAGE_KEY: 'hovioo.theme.mode' };
+});
+
 // ── Shared UI mocks ───────────────────────────────────────────────────────────
 
 jest.mock('expo-router', () => ({
@@ -87,5 +107,29 @@ describe('Settings language picker', () => {
   it('matches snapshot of the settings screen', () => {
     const { toJSON } = renderSettings();
     expect(toJSON()).toMatchSnapshot();
+  });
+});
+
+describe('Settings theme picker', () => {
+  beforeEach(async () => {
+    await i18n.changeLanguage('en');
+  });
+
+  it('theme option labels are correctly defined in EN', () => {
+    expect(i18n.t('settings.theme.system')).toBe('System');
+    expect(i18n.t('settings.theme.light')).toBe('Light');
+    expect(i18n.t('settings.theme.dark')).toBe('Dark');
+  });
+
+  it('theme option labels are correctly defined in FR', async () => {
+    await i18n.changeLanguage('fr');
+    expect(i18n.t('settings.theme.system')).toBe('Système');
+    expect(i18n.t('settings.theme.light')).toBe('Clair');
+    expect(i18n.t('settings.theme.dark')).toBe('Sombre');
+    await i18n.changeLanguage('en');
+  });
+
+  it('theme picker title is defined in EN', () => {
+    expect(i18n.t('settings.picker.themeTitle')).toBe('Select Theme');
   });
 });

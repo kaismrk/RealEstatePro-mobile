@@ -22,6 +22,7 @@ import { MapControls } from '@/components/map/MapControls';
 import { SearchThisAreaButton } from '@/components/map/SearchThisAreaButton';
 import { PropertyCard } from '@/components/property/PropertyCard';
 import { CountrySelector } from '@/components/shared/CountrySelector';
+import { colors } from '@/constants/theme';
 import type { PropertySchema } from '@/lib/types/property';
 
 const DEBOUNCE_MS = 500;
@@ -225,7 +226,7 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surfaceSunken,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -256,10 +257,10 @@ const styles = StyleSheet.create({
   countText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#374151',
+    color: colors.neutral600,
   },
   backBtn: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderRadius: 20,
     width: 36,
     height: 36,
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -288,12 +289,12 @@ const styles = StyleSheet.create({
   listToggleText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#111827',
+    color: colors.textPrimary,
   },
   radiusHint: {
     alignSelf: 'center',
     fontSize: 11,
-    color: '#6B7280',
+    color: colors.textSecondary,
     backgroundColor: 'rgba(255,255,255,0.8)',
     paddingHorizontal: 8,
     paddingVertical: 3,

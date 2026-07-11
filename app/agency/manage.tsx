@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 40,
     borderWidth: 1,
-    borderColor: '#fecaca',
+    borderColor: colors.errorBorder,
     borderRadius: radius.md,
     padding: 16,
     backgroundColor: colors.errorBg,
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
   dangerTitle: {
     fontSize: 14,
     fontWeight: fontWeight.semibold,
-    color: '#b91c1c',
+    color: colors.error,
     marginBottom: 8,
   },
   dangerBody: {
@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   deleteBtn: {
-    backgroundColor: '#dc2626',
+    backgroundColor: colors.error,
     borderRadius: radius.md,
     paddingVertical: 12,
     alignItems: 'center',

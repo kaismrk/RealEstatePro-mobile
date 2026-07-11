@@ -449,14 +449,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   boostedBadge: {
-    backgroundColor: '#FEF9C3',
+    backgroundColor: colors.warningBg,
     borderRadius: radius.pill,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   boostedBadgeText: {
     fontSize: fontSize.xs,
-    color: '#A16207',
+    color: colors.warningText,
     fontWeight: fontWeight.semibold,
   },
   cardTitle: {
@@ -492,7 +492,7 @@ const styles = StyleSheet.create({
   actionBtnDanger: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#FCA5A5',
+    borderColor: colors.errorBorder,
     borderRadius: radius.md,
     paddingVertical: 8,
     alignItems: 'center',

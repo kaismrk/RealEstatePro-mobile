@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   benefitsBanner: {
     backgroundColor: colors.primaryLight,
     borderWidth: 1,
-    borderColor: '#c8a9ff',
+    borderColor: colors.borderBrand,
     borderRadius: radius.md,
     padding: 16,
     marginBottom: 20,

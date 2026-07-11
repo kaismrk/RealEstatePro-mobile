@@ -14,7 +14,7 @@ const variantColors: Record<BadgeVariant, { bg: string; text: string }> = {
   warning:  { bg: colors.warningBg,  text: colors.warning },
   error:    { bg: colors.errorBg,    text: colors.error },
   info:     { bg: colors.infoBg,     text: colors.info },
-  accent:   { bg: '#fdf0e8',         text: colors.accent },
+  accent:   { bg: colors.accentBg,    text: colors.accent },
 };
 
 export function Badge({ label, variant = 'default' }: BadgeProps) {

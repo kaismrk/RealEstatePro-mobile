@@ -7,6 +7,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import type { PropertySchema } from '@/lib/types/property';
 import type { Region } from 'react-native-maps';
+import { colors } from '@/constants/theme';
 
 interface MapViewWrapperProps {
   properties: PropertySchema[];
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.surfaceSunken,
     padding: 32,
     gap: 12,
   },
@@ -46,12 +47,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#111827',
+    color: colors.textPrimary,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 14,
-    color: '#6B7280',
+    color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 20,
   },

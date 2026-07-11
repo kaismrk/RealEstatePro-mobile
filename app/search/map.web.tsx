@@ -7,6 +7,7 @@
  */
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { colors } from '@/constants/theme';
 
 export default function MapScreenWeb() {
   return (
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.surfaceSunken,
     padding: 32,
     gap: 16,
   },
@@ -45,25 +46,25 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#111827',
+    color: colors.textPrimary,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 15,
-    color: '#6B7280',
+    color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
     maxWidth: 360,
   },
   button: {
     marginTop: 8,
-    backgroundColor: '#5f09fe',
+    backgroundColor: colors.primary,
     borderRadius: 10,
     paddingHorizontal: 28,
     paddingVertical: 13,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.textOnBrand,
     fontSize: 15,
     fontWeight: '600',
   },

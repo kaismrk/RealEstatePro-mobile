@@ -149,8 +149,7 @@
     },
     "country": "Pays",
     "language": "Langue",
-    "theme": "Thème",
-    "themeValue": "Clair",
+    "themeLabel": "Thème",
     "appVersion": "Version de l'app",
     "legal": {
       "terms": "Conditions d'utilisation",
@@ -159,11 +158,17 @@
     },
     "picker": {
       "title": "Choisir la langue",
+      "themeTitle": "Choisir le thème",
       "close": "Fermer",
       "languages": {
         "fr": "Français",
         "en": "English"
       }
+    },
+    "theme": {
+      "system": "Système",
+      "light": "Clair",
+      "dark": "Sombre"
     }
   },
   "editProfile": {
