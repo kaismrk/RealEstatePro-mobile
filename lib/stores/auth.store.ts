@@ -8,6 +8,7 @@ interface User {
   last_name: string | null;
   country_code: string | null;
   is_active: boolean;
+  phone_e164?: string | null;
 }
 
 interface AuthState {

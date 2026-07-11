@@ -31,6 +31,7 @@ export function useUpdateProfile() {
         last_name: updatedUser.last_name,
         country_code: updatedUser.country_code,
         is_active: updatedUser.is_active,
+        phone_e164: updatedUser.phone_e164,
       });
     },
   });

@@ -10,11 +10,16 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import type { CountryCode } from 'libphonenumber-js';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { PhoneInput } from '@/components/inputs/PhoneInput';
+import type { PhoneValue } from '@/components/inputs/PhoneInput';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { useCurrentUser, useUpdateProfile } from '@/hooks/useUser';
 import { colors, fontWeight, radius } from '@/constants/theme';
 
@@ -22,10 +27,12 @@ function EditProfileContent() {
   const { t } = useTranslation();
   const { data: user, isLoading } = useCurrentUser();
   const updateProfile = useUpdateProfile();
+  const countryCode = useAuthStore((s) => s.countryCode);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [phoneValue, setPhoneValue] = useState<PhoneValue>({ raw: '', e164: '', isValid: false });
   const [errors, setErrors] = useState<{ email?: string }>({});
 
   useEffect(() => {
@@ -33,8 +40,18 @@ function EditProfileContent() {
       setFirstName(user.first_name ?? '');
       setLastName(user.last_name ?? '');
       setEmail(user.email);
+
+      const stored = user.phone_e164 ?? '';
+      if (stored) {
+        const parsed = parsePhoneNumberFromString(stored, countryCode as CountryCode);
+        setPhoneValue({
+          raw: parsed?.formatInternational() ?? stored,
+          e164: parsed?.format('E.164') ?? stored,
+          isValid: parsed?.isValid() ?? false,
+        });
+      }
     }
-  }, [user]);
+  }, [user, countryCode]);
 
   function validate(): boolean {
     const newErrors: { email?: string } = {};
@@ -48,7 +65,7 @@ function EditProfileContent() {
   function handleSave() {
     if (!validate()) return;
 
-    const payload: { first_name?: string; last_name?: string; email?: string } = {};
+    const payload: { first_name?: string; last_name?: string; email?: string; phone_e164?: string | null } = {};
     if (firstName.trim() !== (user?.first_name ?? '')) {
       payload.first_name = firstName.trim() || undefined;
     }
@@ -57,6 +74,13 @@ function EditProfileContent() {
     }
     if (email.trim() && email.trim() !== user?.email) {
       payload.email = email.trim();
+    }
+    // Always send phone_e164 when it has a value (even unchanged — backend is idempotent)
+    if (phoneValue.isValid) {
+      payload.phone_e164 = phoneValue.e164;
+    } else if (phoneValue.raw.trim() === '' && (user?.phone_e164 ?? '') !== '') {
+      // User cleared the field — send null to clear on backend
+      payload.phone_e164 = null;
     }
 
     updateProfile.mutate(payload, {
@@ -122,6 +146,12 @@ function EditProfileContent() {
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
+          />
+
+          <PhoneInput
+            countryCode={countryCode}
+            value={phoneValue.raw}
+            onValueChange={setPhoneValue}
           />
 
           {/* Country read-only (FINDING-011: not editable) */}

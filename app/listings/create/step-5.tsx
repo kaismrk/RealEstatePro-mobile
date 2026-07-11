@@ -11,6 +11,7 @@ import {
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/lib/stores/ui.store';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { useCreateProperty } from '@/hooks/useCreateProperty';
 import { Button } from '@/components/ui/Button';
 import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
@@ -100,9 +101,11 @@ export default function CreateStep5() {
   const { t } = useTranslation();
   const draft = useUIStore((s) => s.createListingDraft);
   const clearDraft = useUIStore((s) => s.clearDraft);
+  const user = useAuthStore((s) => s.user);
   const createProperty = useCreateProperty();
 
   const [showQuotaModal, setShowQuotaModal] = useState(false);
+  const [showPhoneGateModal, setShowPhoneGateModal] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<string[]>([]);
 
   function buildPayload(): PropertyCreatePayload {
@@ -142,6 +145,12 @@ export default function CreateStep5() {
   }
 
   function handleSubmit() {
+    // Phone gate: user must have a verified phone before publishing.
+    if (!user?.phone_e164) {
+      setShowPhoneGateModal(true);
+      return;
+    }
+
     const payload = buildPayload();
 
     createProperty.mutate(payload, {
@@ -298,6 +307,36 @@ export default function CreateStep5() {
             <TouchableOpacity
               style={styles.modalCancel}
               onPress={() => setShowQuotaModal(false)}
+            >
+              <Text style={styles.modalCancelText}>{t('common.cancel')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Phone Gate Modal — user must have a phone number to publish */}
+      <Modal
+        visible={showPhoneGateModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowPhoneGateModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>{t('common.phone.gate.title')}</Text>
+            <Text style={styles.modalBody}>{t('common.phone.gate.body')}</Text>
+            <Button
+              onPress={() => {
+                setShowPhoneGateModal(false);
+                router.push('/profile/edit');
+              }}
+              size="lg"
+            >
+              {t('common.phone.label')}
+            </Button>
+            <TouchableOpacity
+              style={styles.modalCancel}
+              onPress={() => setShowPhoneGateModal(false)}
             >
               <Text style={styles.modalCancelText}>{t('common.cancel')}</Text>
             </TouchableOpacity>

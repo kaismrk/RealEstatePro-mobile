@@ -16,6 +16,7 @@ interface UserResponse {
   last_name: string | null;
   country_code: string | null;
   is_active: boolean;
+  phone_e164?: string | null;
 }
 
 interface LoginParams {
@@ -29,6 +30,7 @@ interface RegisterParams {
   first_name: string;
   last_name: string;
   country_code: string;
+  phone_e164?: string;
 }
 
 async function fetchMe(): Promise<UserResponse> {
@@ -52,7 +54,15 @@ async function performLogin(email: string, password: string): Promise<void> {
 
   await setTokens(tokenRes.data.access_token, tokenRes.data.refresh_token);
   const user = await fetchMe();
-  setUser(user);
+  setUser({
+    id: user.id,
+    email: user.email,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    country_code: user.country_code,
+    is_active: user.is_active,
+    phone_e164: user.phone_e164,
+  });
 }
 
 export function useLogin() {
@@ -66,9 +76,9 @@ export function useLogin() {
 
 export function useRegister() {
   return useMutation<void, Error, RegisterParams>({
-    mutationFn: async ({ email, password, first_name, last_name, country_code }) => {
+    mutationFn: async ({ email, password, first_name, last_name, country_code, phone_e164 }) => {
       // Register the user
-      await api.post('/users/', { email, password, first_name, last_name, country_code });
+      await api.post('/users/', { email, password, first_name, last_name, country_code, phone_e164 });
       // Auto-login with the same credentials
       await performLogin(email, password);
     },

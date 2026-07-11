@@ -17,7 +17,16 @@
     "signIn": "Se connecter",
     "signOut": "Se déconnecter",
     "remove": "Retirer",
-    "phone": "Téléphone",
+    "phone": {
+      "label": "Numéro de téléphone",
+      "placeholder": "+216 12 345 678",
+      "invalid": "Numéro invalide",
+      "required": "Numéro obligatoire pour publier",
+      "gate": {
+        "title": "Ajoutez votre numéro",
+        "body": "Vous devez vérifier votre numéro avant de publier une annonce."
+      }
+    },
     "viewAll": "Voir tout",
     "errors": {
       "generic": "Une erreur est survenue. Veuillez réessayer.",

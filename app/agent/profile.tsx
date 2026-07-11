@@ -9,30 +9,47 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import type { CountryCode } from 'libphonenumber-js';
 import { useAgentProfile, useUpdateAgentProfile } from '@/hooks/useAgentProfile';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { PhoneInput } from '@/components/inputs/PhoneInput';
+import type { PhoneValue } from '@/components/inputs/PhoneInput';
 import { colors, radius, fontWeight } from '@/constants/theme';
 
 export default function AgentProfileScreen() {
   const { data: agent, isLoading, isError } = useAgentProfile();
   const updateAgent = useUpdateAgentProfile();
+  const countryCode = useAuthStore((s) => s.countryCode);
 
   const [bio, setBio] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneValue, setPhoneValue] = useState<PhoneValue>({ raw: '', e164: '', isValid: false });
 
   useEffect(() => {
     if (!agent) return;
     setBio(agent.bio ?? '');
-    setPhone(agent.phone ?? '');
-  }, [agent]);
+
+    const stored = agent.phone ?? '';
+    if (stored) {
+      const parsed = parsePhoneNumberFromString(stored, countryCode as CountryCode);
+      setPhoneValue({
+        raw: parsed?.formatInternational() ?? stored,
+        e164: parsed?.format('E.164') ?? stored,
+        isValid: parsed?.isValid() ?? false,
+      });
+    } else {
+      setPhoneValue({ raw: '', e164: '', isValid: false });
+    }
+  }, [agent, countryCode]);
 
   function handleSave() {
     updateAgent.mutate(
       {
         bio: bio.trim() || null,
-        phone: phone.trim() || null,
+        phone: phoneValue.isValid ? phoneValue.e164 : (phoneValue.raw.trim() || null),
       },
       {
         onSuccess: () => {
@@ -110,12 +127,10 @@ export default function AgentProfileScreen() {
           />
         </View>
 
-        <Input
-          label="Phone"
-          value={phone}
-          onChangeText={setPhone}
-          placeholder="+216 XX XXX XXX"
-          keyboardType="phone-pad"
+        <PhoneInput
+          countryCode={countryCode}
+          value={phoneValue.raw}
+          onValueChange={setPhoneValue}
         />
 
         <Text style={styles.footNote}>

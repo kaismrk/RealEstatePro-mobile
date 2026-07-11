@@ -54,6 +54,16 @@ jest.mock('@/lib/stores/ui.store', () => ({
     }),
 }));
 
+// Auth store mock — user with phone_e164 by default so existing tests pass
+// through the phone gate unobstructed.
+type MockUser = { id: number; email: string; phone_e164: string | null } | null;
+let mockAuthUser: MockUser = { id: 1, email: 'test@example.com', phone_e164: '+21620123456' };
+
+jest.mock('@/lib/stores/auth.store', () => ({
+  useAuthStore: (selector: (s: { user: MockUser }) => unknown) =>
+    selector({ user: mockAuthUser }),
+}));
+
 function createWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -79,6 +89,8 @@ function renderStep5() {
 describe('CreateStep5 — Review & Submit', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Restore user with phone so phone gate does not block these tests.
+    mockAuthUser = { id: 1, email: 'test@example.com', phone_e164: '+21620123456' };
   });
 
   it('renders review sections with draft data', () => {
@@ -158,5 +170,48 @@ describe('CreateStep5 — Review & Submit', () => {
     });
 
     await waitFor(() => expect(mockClearDraft).toHaveBeenCalled());
+  });
+});
+
+describe('CreateStep5 — Phone gate', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Override to a user with no phone
+    mockAuthUser = { id: 1, email: 'test@example.com', phone_e164: null };
+  });
+
+  afterEach(() => {
+    // Restore default user
+    mockAuthUser = { id: 1, email: 'test@example.com', phone_e164: '+21620123456' };
+  });
+
+  it('shows phone gate modal when user has no phone_e164', async () => {
+    renderStep5();
+
+    await act(async () => {
+      fireEvent.press(screen.getByText('Submit Listing'));
+    });
+
+    expect(screen.getByText('Add your phone number')).toBeTruthy();
+    expect(
+      screen.getByText(
+        'You need to verify your phone before publishing a listing.'
+      )
+    ).toBeTruthy();
+    // Submission must NOT have happened
+    expect(mockApiPost).not.toHaveBeenCalled();
+  });
+
+  it('phone gate modal CTA routes to /profile/edit', async () => {
+    renderStep5();
+
+    await act(async () => {
+      fireEvent.press(screen.getByText('Submit Listing'));
+    });
+
+    // Press the CTA button (label = phone label key = "Phone number")
+    await waitFor(() => expect(screen.getByText('Add your phone number')).toBeTruthy());
+    fireEvent.press(screen.getByText('Phone number'));
+    expect(mockRouterPush).toHaveBeenCalledWith('/profile/edit');
   });
 });

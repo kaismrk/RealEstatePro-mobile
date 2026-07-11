@@ -17,7 +17,16 @@
     "signIn": "Sign In",
     "signOut": "Sign Out",
     "remove": "Remove",
-    "phone": "Phone",
+    "phone": {
+      "label": "Phone number",
+      "placeholder": "+216 12 345 678",
+      "invalid": "Invalid phone number",
+      "required": "Phone number required to publish",
+      "gate": {
+        "title": "Add your phone number",
+        "body": "You need to verify your phone before publishing a listing."
+      }
+    },
     "viewAll": "View all",
     "errors": {
       "generic": "Something went wrong. Please try again.",

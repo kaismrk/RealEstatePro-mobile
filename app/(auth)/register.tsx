@@ -13,13 +13,20 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { PhoneInput } from '@/components/inputs/PhoneInput';
+import type { PhoneValue } from '@/components/inputs/PhoneInput';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 export default function RegisterScreen() {
   const { t } = useTranslation();
   const { email } = useLocalSearchParams<{ email: string }>();
+  const countryCode = useAuthStore((s) => s.countryCode);
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [phoneValue, setPhoneValue] = useState<PhoneValue>({ raw: '', e164: '', isValid: false });
+
   const [firstNameError, setFirstNameError] = useState<string | undefined>();
   const [lastNameError, setLastNameError] = useState<string | undefined>();
 
@@ -37,6 +44,9 @@ export default function RegisterScreen() {
     } else {
       setLastNameError(undefined);
     }
+    if (!phoneValue.isValid) {
+      valid = false;
+    }
     if (!valid) return;
 
     router.push({
@@ -45,9 +55,15 @@ export default function RegisterScreen() {
         email,
         first_name: firstName.trim(),
         last_name: lastName.trim(),
+        phone_e164: phoneValue.e164,
       },
     });
   }
+
+  const canProceed =
+    firstName.trim().length > 0 &&
+    lastName.trim().length > 0 &&
+    phoneValue.isValid;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -94,11 +110,21 @@ export default function RegisterScreen() {
               error={lastNameError}
               placeholder={t('register.lastName.placeholder')}
               autoCapitalize="words"
-              returnKeyType="go"
-              onSubmitEditing={handleNext}
+              returnKeyType="next"
             />
 
-            <Button onPress={handleNext} size="lg" style={styles.nextButton}>
+            <PhoneInput
+              countryCode={countryCode}
+              value={phoneValue.raw}
+              onValueChange={setPhoneValue}
+            />
+
+            <Button
+              onPress={handleNext}
+              size="lg"
+              style={styles.nextButton}
+              disabled={!canProceed}
+            >
               {t('common.next')}
             </Button>
 

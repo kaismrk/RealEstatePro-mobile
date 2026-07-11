@@ -10,23 +10,27 @@ import {
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useRegisterAgent } from '@/hooks/useAgentProfile';
+import { useAuthStore } from '@/lib/stores/auth.store';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { PhoneInput } from '@/components/inputs/PhoneInput';
+import type { PhoneValue } from '@/components/inputs/PhoneInput';
 import { colors, radius, fontWeight } from '@/constants/theme';
 
 export default function AgentRegisterScreen() {
   const { t } = useTranslation();
   const registerAgent = useRegisterAgent();
+  const countryCode = useAuthStore((s) => s.countryCode);
 
   const [bio, setBio] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneValue, setPhoneValue] = useState<PhoneValue>({ raw: '', e164: '', isValid: false });
 
   function handleSubmit() {
     registerAgent.mutate(
       {
         bio: bio.trim() || null,
-        phone: phone.trim() || null,
+        phone: phoneValue.isValid ? phoneValue.e164 : (phoneValue.raw.trim() || null),
       },
       {
         onSuccess: () => {
@@ -80,12 +84,10 @@ export default function AgentRegisterScreen() {
           />
         </View>
 
-        <Input
-          label={t('common.phone')}
-          value={phone}
-          onChangeText={setPhone}
-          placeholder="+216 XX XXX XXX"
-          keyboardType="phone-pad"
+        <PhoneInput
+          countryCode={countryCode}
+          value={phoneValue.raw}
+          onValueChange={setPhoneValue}
         />
 
         <Text style={styles.footNote}>

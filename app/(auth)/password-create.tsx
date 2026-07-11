@@ -21,10 +21,11 @@ import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 export default function PasswordCreateScreen() {
   const { t } = useTranslation();
-  const { email, first_name, last_name } = useLocalSearchParams<{
+  const { email, first_name, last_name, phone_e164 } = useLocalSearchParams<{
     email: string;
     first_name: string;
     last_name: string;
+    phone_e164?: string;
   }>();
   const countryCode = useAuthStore((state) => state.countryCode);
 
@@ -68,6 +69,7 @@ export default function PasswordCreateScreen() {
         first_name,
         last_name,
         country_code: countryCode,
+        phone_e164: phone_e164 || undefined,
       },
       {
         onError: (err: unknown) => {
