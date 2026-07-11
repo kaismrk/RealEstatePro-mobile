@@ -684,5 +684,32 @@
       "validation": { "nameRequired": "Agency name is required." },
       "error": "Failed to create agency. Please try again."
     }
+  },
+  "help": {
+    "title": "Help & Feedback",
+    "contact": {
+      "title": "Contact support",
+      "category": {
+        "label": "Category",
+        "bug": "Bug report",
+        "feature": "Feature request",
+        "question": "Question",
+        "other": "Other"
+      },
+      "subject": {
+        "label": "Subject",
+        "placeholder": "Briefly describe your issue"
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "Please provide as much detail as possible…"
+      },
+      "submit": "Send",
+      "success": "Thanks — we'll get back to you.",
+      "error": "Could not send. Try again later."
+    },
+    "faq": {
+      "title": "Frequently asked questions"
+    }
   }
 }

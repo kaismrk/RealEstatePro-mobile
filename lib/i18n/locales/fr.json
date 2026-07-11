@@ -684,5 +684,32 @@
       "validation": { "nameRequired": "Le nom de l'agence est obligatoire." },
       "error": "Impossible de créer l'agence. Veuillez réessayer."
     }
+  },
+  "help": {
+    "title": "Aide et retours",
+    "contact": {
+      "title": "Contacter le support",
+      "category": {
+        "label": "Catégorie",
+        "bug": "Signalement de bug",
+        "feature": "Demande de fonctionnalité",
+        "question": "Question",
+        "other": "Autre"
+      },
+      "subject": {
+        "label": "Sujet",
+        "placeholder": "Décrivez brièvement votre problème"
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "Veuillez fournir le plus de détails possible…"
+      },
+      "submit": "Envoyer",
+      "success": "Merci — nous vous répondrons bientôt.",
+      "error": "Envoi impossible. Réessayez plus tard."
+    },
+    "faq": {
+      "title": "Questions fréquentes"
+    }
   }
 }

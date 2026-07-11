@@ -1,0 +1,22 @@
+[
+  {
+    "question": "Comment publier une annonce ?",
+    "answer": "Appuyez sur le bouton + dans l'onglet Recherche, remplissez les informations de votre bien en 5 étapes (type, localisation, caractéristiques, photos, récapitulatif), puis appuyez sur Soumettre. Votre annonce sera examinée et publiée dans les 24 heures."
+  },
+  {
+    "question": "Comment mon numéro de téléphone est-il utilisé ?",
+    "answer": "Votre numéro de téléphone est nécessaire pour publier des annonces afin que les acheteurs ou locataires potentiels puissent vous contacter. Il n'est jamais partagé avec des tiers ni utilisé à des fins marketing sans votre consentement."
+  },
+  {
+    "question": "Comment contacter un vendeur ?",
+    "answer": "Ouvrez n'importe quelle annonce et appuyez sur le bouton « Envoyer un message » ou « Contacter l'agent » en bas de l'écran. Votre demande sera envoyée directement au vendeur ou à l'agent responsable."
+  },
+  {
+    "question": "Puis-je modifier ou supprimer mon annonce ?",
+    "answer": "Oui. Allez dans Profil → Mes annonces, puis appuyez sur l'annonce concernée. Vous trouverez les options Modifier et Supprimer. Les modifications d'une annonce active sont appliquées immédiatement."
+  },
+  {
+    "question": "Comment changer la langue ou le thème ?",
+    "answer": "Allez dans Profil → Paramètres de l'app. Dans la section Région, vous pouvez basculer entre le français et l'anglais. En dessous, vous pouvez choisir le thème Clair, Sombre ou Système. Le changement prend effet immédiatement."
+  }
+]

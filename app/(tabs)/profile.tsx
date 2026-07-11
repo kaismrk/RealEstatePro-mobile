@@ -86,7 +86,7 @@ function AuthenticatedProfile() {
         <MenuSection title={t('profile.sections.settings')}>
           <MenuRow icon="bell"     label={t('profile.settings.notifications')} onPress={() => router.push('/profile/notifications')} />
           <MenuRow icon="settings" label={t('profile.settings.appSettings')}   onPress={() => router.push('/profile/settings')} />
-          <MenuRow icon="help"     label={t('profile.settings.helpFeedback')}  onPress={() => {}} />
+          <MenuRow icon="help"     label={t('profile.settings.helpFeedback')}  onPress={() => router.push('/profile/help')} />
           <MenuRow icon="privacy"  label={t('profile.settings.privacy')}       onPress={() => router.push('/profile/legal/privacy')} />
         </MenuSection>
 

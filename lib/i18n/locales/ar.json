@@ -23,5 +23,32 @@
   },
   "login": {
     "title": "مرحباً بعودتك"
+  },
+  "help": {
+    "title": "",
+    "contact": {
+      "title": "",
+      "category": {
+        "label": "",
+        "bug": "",
+        "feature": "",
+        "question": "",
+        "other": ""
+      },
+      "subject": {
+        "label": "",
+        "placeholder": ""
+      },
+      "message": {
+        "label": "",
+        "placeholder": ""
+      },
+      "submit": "",
+      "success": "",
+      "error": ""
+    },
+    "faq": {
+      "title": ""
+    }
   }
 }
