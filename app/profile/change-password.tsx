@@ -10,6 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { Input } from '@/components/ui/Input';
@@ -29,6 +30,7 @@ function meetsPolicy(pw: string): boolean {
 }
 
 function ChangePasswordContent() {
+  const { t } = useTranslation();
   const changePassword = useChangePassword();
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -44,17 +46,17 @@ function ChangePasswordContent() {
     const errs: { current?: string; new?: string; confirm?: string } = {};
 
     if (!currentPassword) {
-      errs.current = 'Please enter your current password';
+      errs.current = t('changePassword.errors.currentRequired');
     }
     if (!newPassword) {
-      errs.new = 'Please enter a new password';
+      errs.new = t('changePassword.errors.newRequired');
     } else if (!meetsPolicy(newPassword)) {
-      errs.new = 'Password must be 8+ chars with uppercase, lowercase, and a number';
+      errs.new = t('changePassword.errors.policy');
     }
     if (!confirmPassword) {
-      errs.confirm = 'Please confirm your new password';
+      errs.confirm = t('changePassword.errors.confirmRequired');
     } else if (newPassword !== confirmPassword) {
-      errs.confirm = 'Passwords do not match';
+      errs.confirm = t('changePassword.errors.mismatch');
     }
 
     setErrors(errs);
@@ -69,17 +71,17 @@ function ChangePasswordContent() {
       {
         onSuccess: () => {
           Alert.alert(
-            'Password Changed',
-            'Your password has been changed. Please sign in again.',
+            t('changePassword.success.title'),
+            t('changePassword.success.body'),
             [{ text: 'OK' }]
           );
         },
         onError: (err) => {
-          const message = err.message ?? 'Failed to change password. Please try again.';
+          const message = err.message ?? t('changePassword.error');
           if (message.toLowerCase().includes('401') || message.toLowerCase().includes('unauthorized')) {
-            setErrors({ current: 'Current password is incorrect' });
+            setErrors({ current: t('changePassword.errors.currentIncorrect') });
           } else {
-            Alert.alert('Error', message);
+            Alert.alert(t('common.error'), message);
           }
         },
       }
@@ -96,39 +98,39 @@ function ChangePasswordContent() {
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Icon name="chevron-left" size={20} color={colors.primary} />
-            <Text style={styles.backText}>Back</Text>
+            <Text style={styles.backText}>{t('common.back')}</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Change Password</Text>
+          <Text style={styles.headerTitle}>{t('changePassword.header.title')}</Text>
         </View>
 
         <View style={styles.form}>
           <Text style={styles.hint}>
-            After changing your password you will be signed out and asked to sign in again.
+            {t('changePassword.hint')}
           </Text>
 
           <Input
-            label="Current Password"
+            label={t('changePassword.currentPassword.label')}
             value={currentPassword}
-            onChangeText={(t) => {
-              setCurrentPassword(t);
+            onChangeText={(text) => {
+              setCurrentPassword(text);
               if (errors.current) setErrors((e) => ({ ...e, current: undefined }));
             }}
             error={errors.current}
-            placeholder="Your current password"
+            placeholder={t('changePassword.currentPassword.placeholder')}
             secureTextEntry
             autoCapitalize="none"
             autoCorrect={false}
           />
 
           <Input
-            label="New Password"
+            label={t('changePassword.newPassword.label')}
             value={newPassword}
-            onChangeText={(t) => {
-              setNewPassword(t);
+            onChangeText={(text) => {
+              setNewPassword(text);
               if (errors.new) setErrors((e) => ({ ...e, new: undefined }));
             }}
             error={errors.new}
-            placeholder="New password"
+            placeholder={t('changePassword.newPassword.placeholder')}
             secureTextEntry
             autoCapitalize="none"
             autoCorrect={false}
@@ -139,14 +141,14 @@ function ChangePasswordContent() {
           ) : null}
 
           <Input
-            label="Confirm New Password"
+            label={t('changePassword.confirmPassword.label')}
             value={confirmPassword}
-            onChangeText={(t) => {
-              setConfirmPassword(t);
+            onChangeText={(text) => {
+              setConfirmPassword(text);
               if (errors.confirm) setErrors((e) => ({ ...e, confirm: undefined }));
             }}
             error={errors.confirm}
-            placeholder="Confirm new password"
+            placeholder={t('changePassword.confirmPassword.placeholder')}
             secureTextEntry
             autoCapitalize="none"
             autoCorrect={false}
@@ -158,7 +160,7 @@ function ChangePasswordContent() {
             size="lg"
             style={styles.submitButton}
           >
-            Change Password
+            {t('changePassword.submit')}
           </Button>
         </View>
       </ScrollView>

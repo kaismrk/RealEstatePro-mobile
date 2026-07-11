@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Eye, EyeOff } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { PasswordStrengthMeter } from '@/components/auth/PasswordStrengthMeter';
@@ -19,6 +20,7 @@ import { useAuthStore } from '@/lib/stores/auth.store';
 import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 export default function PasswordCreateScreen() {
+  const { t } = useTranslation();
   const { email, first_name, last_name } = useLocalSearchParams<{
     email: string;
     first_name: string;
@@ -36,7 +38,6 @@ export default function PasswordCreateScreen() {
 
   const register = useRegister();
 
-  // Countdown timer for rate-limit
   useEffect(() => {
     if (rateLimitCountdown <= 0) return;
     const timer = setTimeout(() => setRateLimitCountdown((c) => c - 1), 1000);
@@ -48,15 +49,15 @@ export default function PasswordCreateScreen() {
     setConfirmError(undefined);
 
     if (!password) {
-      setFieldError('Password is required');
+      setFieldError(t('passwordCreate.errors.passwordRequired'));
       return;
     }
     if (!confirmPassword) {
-      setConfirmError('Please confirm your password');
+      setConfirmError(t('passwordCreate.errors.confirmRequired'));
       return;
     }
     if (password !== confirmPassword) {
-      setConfirmError('Passwords do not match');
+      setConfirmError(t('passwordCreate.errors.mismatch'));
       return;
     }
 
@@ -86,10 +87,9 @@ export default function PasswordCreateScreen() {
               setFieldError('Invalid data. Please check your inputs.');
             }
           } else if (status === 429) {
-            // Start 60-second countdown
             setRateLimitCountdown(60);
           } else {
-            setFieldError('Something went wrong. Please try again.');
+            setFieldError(t('common.errors.generic'));
           }
         },
       }
@@ -110,15 +110,13 @@ export default function PasswordCreateScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.inner}>
-            <Text style={styles.title}>Create a password</Text>
-            <Text style={styles.subtitle}>
-              Choose a strong password to protect your account.
-            </Text>
+            <Text style={styles.title}>{t('passwordCreate.title')}</Text>
+            <Text style={styles.subtitle}>{t('passwordCreate.subtitle')}</Text>
 
             {/* Password field with show/hide toggle */}
             <View style={styles.passwordWrapper}>
               <Input
-                label="Password"
+                label={t('passwordCreate.password.label')}
                 value={password}
                 onChangeText={(text) => {
                   setPassword(text);
@@ -127,7 +125,7 @@ export default function PasswordCreateScreen() {
                 }}
                 error={fieldError}
                 secureTextEntry={!showPassword}
-                placeholder="Enter your password"
+                placeholder={t('passwordCreate.password.placeholder')}
                 returnKeyType="next"
               />
               <TouchableOpacity
@@ -147,7 +145,7 @@ export default function PasswordCreateScreen() {
             {/* Confirm password field */}
             <View style={styles.passwordWrapper}>
               <Input
-                label="Confirm password"
+                label={t('passwordCreate.confirmPassword.label')}
                 value={confirmPassword}
                 onChangeText={(text) => {
                   setConfirmPassword(text);
@@ -155,7 +153,7 @@ export default function PasswordCreateScreen() {
                 }}
                 error={confirmError}
                 secureTextEntry={!showConfirm}
-                placeholder="Re-enter your password"
+                placeholder={t('passwordCreate.confirmPassword.placeholder')}
                 returnKeyType="go"
                 onSubmitEditing={handleCreateAccount}
               />
@@ -174,7 +172,7 @@ export default function PasswordCreateScreen() {
             {isRateLimited && (
               <View style={styles.rateLimitBanner}>
                 <Text style={styles.rateLimitText}>
-                  Too many attempts. Please wait {rateLimitCountdown}s before trying again.
+                  {t('common.errors.rateLimited', { countdown: rateLimitCountdown })}
                 </Text>
               </View>
             )}
@@ -192,7 +190,7 @@ export default function PasswordCreateScreen() {
                 password !== confirmPassword
               }
             >
-              Create Account
+              {t('passwordCreate.submit')}
             </Button>
           </View>
         </ScrollView>
@@ -233,11 +231,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 12,
     top: 36,
-  },
-  showHideText: {
-    fontSize: fontSize.sm,
-    color: colors.primary,
-    fontWeight: fontWeight.semibold,
   },
   rateLimitBanner: {
     backgroundColor: colors.warningBg,

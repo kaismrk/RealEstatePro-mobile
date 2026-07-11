@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Heart } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { PropertyCard } from '@/components/property/PropertyCard';
@@ -21,19 +22,21 @@ import type { FavoriteResponse } from '@/lib/types/favorite';
 import { colors, fontWeight, radius } from '@/constants/theme';
 
 function GuestPrompt() {
+  const { t } = useTranslation();
   return (
     <SafeAreaView style={styles.safe}>
       <EmptyState
-        title="Sign in to view saved homes"
-        subtitle="Save properties you love and access them anytime."
+        title={t('saved.guest.title')}
+        subtitle={t('saved.guest.subtitle')}
         icon={<Heart size={48} color={colors.heartRed} />}
-        action={{ label: 'Sign In', onPress: () => router.push('/(auth)/login') }}
+        action={{ label: t('common.signIn'), onPress: () => router.push('/(auth)/login') }}
       />
     </SafeAreaView>
   );
 }
 
 export default function SavedScreen() {
+  const { t } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
   const { list, remove } = useFavorites();
   const [compareMode, setCompareMode] = useState(false);
@@ -80,9 +83,9 @@ export default function SavedScreen() {
           <TouchableOpacity
             onPress={() => remove.mutate(item.property_id)}
             style={styles.removeBtn}
-            accessibilityLabel="Remove from saved"
+            accessibilityLabel={t('saved.removeLabel')}
           >
-            <Text style={styles.removeBtnText}>Remove</Text>
+            <Text style={styles.removeBtnText}>{t('saved.removeButton')}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -101,7 +104,7 @@ export default function SavedScreen() {
     <SafeAreaView style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Saved Homes</Text>
+        <Text style={styles.headerTitle}>{t('saved.header.title')}</Text>
         {favorites.length > 0 && (
           <TouchableOpacity
             onPress={handleCompare}
@@ -116,7 +119,11 @@ export default function SavedScreen() {
                 compareMode && selectedIds.size >= 2 ? styles.compareBtnLabelActive : null,
               ]}
             >
-              {compareMode && selectedIds.size >= 2 ? `Compare ${selectedIds.size}` : compareMode ? 'Cancel' : 'Compare'}
+              {compareMode && selectedIds.size >= 2
+                ? t('saved.compare.compareCount', { count: selectedIds.size })
+                : compareMode
+                ? t('common.cancel')
+                : t('saved.compare.button')}
             </Text>
           </TouchableOpacity>
         )}
@@ -125,7 +132,7 @@ export default function SavedScreen() {
       {compareMode && (
         <View style={styles.compareHint}>
           <Text style={styles.compareHintText}>
-            Select 2–5 properties to compare. {selectedIds.size} selected.
+            {t('saved.compare.hint', { count: selectedIds.size })}
           </Text>
         </View>
       )}
@@ -137,10 +144,10 @@ export default function SavedScreen() {
         contentContainerStyle={{ paddingTop: 8, paddingBottom: 24, flexGrow: 1 }}
         ListEmptyComponent={
           <EmptyState
-            title="No saved homes yet"
-            subtitle="Tap the heart on any listing to save it here"
+            title={t('saved.empty.title')}
+            subtitle={t('saved.empty.subtitle')}
             icon={<Heart size={48} color={colors.heartRed} strokeWidth={1.5} />}
-            action={{ label: 'Start searching', onPress: () => router.push('/(tabs)/search') }}
+            action={{ label: t('saved.empty.action'), onPress: () => router.push('/(tabs)/search') }}
           />
         }
         refreshControl={

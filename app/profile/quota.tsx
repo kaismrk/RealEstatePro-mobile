@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { Button } from '@/components/ui/Button';
@@ -27,12 +28,13 @@ function QuotaBar({ used, total, fillColor }: QuotaBarProps) {
 }
 
 function QuotaContent() {
+  const { t } = useTranslation();
   const { data: quota, isLoading, isError } = useListingQuota();
 
   if (isLoading) {
     return (
       <View style={styles.stateContainer}>
-        <Text style={styles.loadingText}>Loading quota...</Text>
+        <Text style={styles.loadingText}>{t('quota.loading')}</Text>
       </View>
     );
   }
@@ -40,7 +42,7 @@ function QuotaContent() {
   if (isError || !quota) {
     return (
       <View style={styles.stateContainerPadded}>
-        <Text style={styles.errorText}>Failed to load quota. Please try again.</Text>
+        <Text style={styles.errorText}>{t('quota.error')}</Text>
       </View>
     );
   }
@@ -54,23 +56,23 @@ function QuotaContent() {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Icon name="chevron-left" size={20} color={colors.primary} />
-          <Text style={styles.backText}>Back</Text>
+          <Text style={styles.backText}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Listing Quota</Text>
+        <Text style={styles.headerTitle}>{t('quota.header.title')}</Text>
       </View>
 
       <View style={styles.content}>
         {/* Summary card */}
         <View style={styles.card}>
-          <Text style={styles.cardHeading}>Total Available Slots</Text>
+          <Text style={styles.cardHeading}>{t('quota.totalSlots.heading')}</Text>
           <Text style={styles.totalSlotsNumber}>{totalSlots}</Text>
-          <Text style={styles.cardSubtext}>listings you can publish right now</Text>
+          <Text style={styles.cardSubtext}>{t('quota.totalSlots.subtext')}</Text>
         </View>
 
         {/* Free slots */}
         <View style={styles.card}>
           <View style={styles.cardRowBetween}>
-            <Text style={styles.cardHeading}>Free Slots</Text>
+            <Text style={styles.cardHeading}>{t('quota.freeSlots.heading')}</Text>
             <Text style={styles.freeRemaining}>
               {quota.free_remaining} / {FREE_TOTAL} remaining
             </Text>
@@ -84,7 +86,7 @@ function QuotaContent() {
         {/* Paid slots */}
         <View style={styles.card}>
           <View style={styles.cardRowBetween}>
-            <Text style={styles.cardHeading}>Paid Slots</Text>
+            <Text style={styles.cardHeading}>{t('quota.paidSlots.heading')}</Text>
             <Text style={styles.paidRemaining}>
               {quota.paid_remaining} remaining
             </Text>
@@ -103,11 +105,11 @@ function QuotaContent() {
           variant="secondary"
           size="lg"
         >
-          Buy Listing Pack
+          {t('quota.cta')}
         </Button>
 
         <Text style={styles.updatedAt}>
-          Last updated: {new Date(quota.updated_at).toLocaleDateString()}
+          {t('quota.lastUpdated', { date: new Date(quota.updated_at).toLocaleDateString() })}
         </Text>
 
         <View style={styles.bottomSpacer} />

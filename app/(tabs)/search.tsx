@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Home } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { useProperties } from '@/hooks/useProperties';
 import { useSearchStore, type PropertyFilters } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
@@ -47,6 +48,7 @@ const FILTER_LABELS: Partial<Record<keyof PropertyFilters, (v: unknown) => strin
 };
 
 export default function SearchScreen() {
+  const { t } = useTranslation();
   const filters    = useSearchStore((s) => s.filters);
   const setFilters = useSearchStore((s) => s.setFilters);
   const setCountry = useAuthStore((s) => s.setCountry);
@@ -73,18 +75,18 @@ export default function SearchScreen() {
         <TouchableOpacity
           onPress={() => setSaveSheetVisible(true)}
           style={styles.iconBtn}
-          accessibilityLabel="Save search"
+          accessibilityLabel={t('search.saveSearchLabel')}
         >
           <Icon name="bell" size={18} color={colors.textPrimary} />
-          <Text style={styles.iconBtnLabel}>Save</Text>
+          <Text style={styles.iconBtnLabel}>{t('search.saveButton')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => router.push('/search/map')}
           style={[styles.iconBtn, styles.iconBtnMl]}
-          accessibilityLabel="Map view"
+          accessibilityLabel={t('search.mapViewLabel')}
         >
           <Icon name="map" size={18} color={colors.textPrimary} />
-          <Text style={styles.iconBtnLabel}>Map</Text>
+          <Text style={styles.iconBtnLabel}>{t('search.mapButton')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -131,8 +133,8 @@ export default function SearchScreen() {
           }
           ListEmptyComponent={
             <EmptyState
-                title="No properties found"
-                subtitle="Try adjusting your filters"
+                title={t('search.empty.title')}
+                subtitle={t('search.empty.subtitle')}
                 icon={<Home size={48} color={colors.textTertiary} />}
               />
           }

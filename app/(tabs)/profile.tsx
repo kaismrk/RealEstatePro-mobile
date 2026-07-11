@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, Alert, SafeAreaView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { User } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useLogout } from '@/hooks/useAuth';
 import { useCurrentUser } from '@/hooks/useUser';
@@ -10,24 +11,25 @@ import { useAgencies } from '@/hooks/useAgencies';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { MenuRow } from '@/components/profile/MenuRow';
 import { MenuSection } from '@/components/profile/MenuSection';
-import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { colors, fontWeight } from '@/constants/theme';
 
 function GuestView() {
+  const { t } = useTranslation();
   return (
     <SafeAreaView style={styles.safe}>
       <EmptyState
-        title="Your Profile"
-        subtitle="Sign in to access your profile, listings, and settings."
+        title={t('profile.guest.title')}
+        subtitle={t('profile.guest.subtitle')}
         icon={<User size={48} color={colors.textTertiary} />}
-        action={{ label: 'Sign In', onPress: () => router.push('/(auth)/login') }}
+        action={{ label: t('common.signIn'), onPress: () => router.push('/(auth)/login') }}
       />
     </SafeAreaView>
   );
 }
 
 function AuthenticatedProfile() {
+  const { t } = useTranslation();
   const { data: user }       = useCurrentUser();
   const { data: inboxData }  = useInbox();
   const { data: agentProfile } = useAgentProfile();
@@ -38,9 +40,9 @@ function AuthenticatedProfile() {
   const unreadCount = inboxData?.items.filter((m) => !m.is_read).length ?? 0;
 
   function handleSignOut() {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: () => logout.mutate() },
+    Alert.alert(t('profile.signOut'), t('profile.signOutConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('profile.signOut'), style: 'destructive', onPress: () => logout.mutate() },
     ]);
   }
 
@@ -49,47 +51,47 @@ function AuthenticatedProfile() {
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Profile</Text>
+          <Text style={styles.headerTitle}>{t('profile.header.title')}</Text>
         </View>
 
         {user ? <ProfileHeader user={user} /> : null}
 
-        <MenuSection title="Account">
-          <MenuRow icon="edit"         label="Edit Profile"      onPress={() => router.push('/profile/edit')} />
-          <MenuRow icon="key"          label="Change Password"   onPress={() => router.push('/profile/change-password')} />
-          <MenuRow icon="home"         label="My Listings"       onPress={() => router.push('/listings/my-listings')} />
-          <MenuRow icon="chart"        label="Listing Quota"     onPress={() => router.push('/profile/quota')} />
-          <MenuRow icon="gift"         label="Listing Packs"     onPress={() => router.push('/listings/packs')} />
+        <MenuSection title={t('profile.sections.account')}>
+          <MenuRow icon="edit"         label={t('profile.account.editProfile')}      onPress={() => router.push('/profile/edit')} />
+          <MenuRow icon="key"          label={t('profile.account.changePassword')}   onPress={() => router.push('/profile/change-password')} />
+          <MenuRow icon="home"         label={t('profile.account.myListings')}       onPress={() => router.push('/listings/my-listings')} />
+          <MenuRow icon="chart"        label={t('profile.account.listingQuota')}     onPress={() => router.push('/profile/quota')} />
+          <MenuRow icon="gift"         label={t('profile.account.listingPacks')}     onPress={() => router.push('/listings/packs')} />
           {isAgent ? (
-            <MenuRow icon="trending-up" label="Agent Dashboard" onPress={() => router.push('/agent/dashboard')} />
+            <MenuRow icon="trending-up" label={t('profile.account.agentDashboard')} onPress={() => router.push('/agent/dashboard')} />
           ) : (
-            <MenuRow icon="building"    label="Become an Agent" onPress={() => router.push('/agent/register')} />
+            <MenuRow icon="building"    label={t('profile.account.becomeAgent')}    onPress={() => router.push('/agent/register')} />
           )}
           {ownedAgency ? (
             <>
-              <MenuRow icon="agency"      label="My Agency"            onPress={() => router.push('/agency/manage')} />
-              <MenuRow icon="credit-card" label="Agency Subscription"  onPress={() => router.push('/agency/subscription')} />
+              <MenuRow icon="agency"      label={t('profile.account.myAgency')}           onPress={() => router.push('/agency/manage')} />
+              <MenuRow icon="credit-card" label={t('profile.account.agencySubscription')} onPress={() => router.push('/agency/subscription')} />
             </>
           ) : (
-            <MenuRow icon="agency"      label="Create Agency" onPress={() => router.push('/agency/create')} />
+            <MenuRow icon="agency"      label={t('profile.account.createAgency')} onPress={() => router.push('/agency/create')} />
           )}
         </MenuSection>
 
-        <MenuSection title="Activity">
-          <MenuRow icon="chat"  label="Messages"     badge={unreadCount} onPress={() => router.push('/messaging/inbox')} />
-          <MenuRow icon="heart" label="Saved Homes"  onPress={() => router.push('/(tabs)/saved')} />
-          <MenuRow icon="bell"  label="Saved Searches" onPress={() => router.push('/(tabs)/updates')} />
+        <MenuSection title={t('profile.sections.activity')}>
+          <MenuRow icon="chat"  label={t('profile.activity.messages')}     badge={unreadCount} onPress={() => router.push('/messaging/inbox')} />
+          <MenuRow icon="heart" label={t('profile.activity.savedHomes')}   onPress={() => router.push('/(tabs)/saved')} />
+          <MenuRow icon="bell"  label={t('profile.activity.savedSearches')} onPress={() => router.push('/(tabs)/updates')} />
         </MenuSection>
 
-        <MenuSection title="Settings">
-          <MenuRow icon="bell"     label="Notifications" onPress={() => router.push('/profile/notifications')} />
-          <MenuRow icon="settings" label="App Settings"  onPress={() => router.push('/profile/settings')} />
-          <MenuRow icon="help"     label="Help & Feedback" onPress={() => {}} />
-          <MenuRow icon="privacy"  label="Privacy"        onPress={() => router.push('/profile/legal/privacy')} />
+        <MenuSection title={t('profile.sections.settings')}>
+          <MenuRow icon="bell"     label={t('profile.settings.notifications')} onPress={() => router.push('/profile/notifications')} />
+          <MenuRow icon="settings" label={t('profile.settings.appSettings')}   onPress={() => router.push('/profile/settings')} />
+          <MenuRow icon="help"     label={t('profile.settings.helpFeedback')}  onPress={() => {}} />
+          <MenuRow icon="privacy"  label={t('profile.settings.privacy')}       onPress={() => router.push('/profile/legal/privacy')} />
         </MenuSection>
 
-        <MenuSection title="Account Actions">
-          <MenuRow icon="logout" label="Sign Out" onPress={handleSignOut} destructive />
+        <MenuSection title={t('profile.sections.accountActions')}>
+          <MenuRow icon="logout" label={t('profile.signOut')} onPress={handleSignOut} destructive />
         </MenuSection>
 
         <View style={styles.spacer} />

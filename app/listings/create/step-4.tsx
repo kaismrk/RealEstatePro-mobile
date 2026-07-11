@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
+import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
@@ -20,6 +21,7 @@ import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 const MAX_IMAGES = 20;
 
 export default function CreateStep4() {
+  const { t } = useTranslation();
   const draft = useUIStore((s) => s.createListingDraft);
   const setDraft = useUIStore((s) => s.setDraft);
 
@@ -30,7 +32,7 @@ export default function CreateStep4() {
 
   async function handlePickImages() {
     if (imageUris.length >= MAX_IMAGES) {
-      Alert.alert('Limit reached', `You can upload at most ${MAX_IMAGES} photos.`);
+      Alert.alert('Limit reached', t('listings.create.step4.limitReached', { max: MAX_IMAGES }));
       return;
     }
 
@@ -38,7 +40,7 @@ export default function CreateStep4() {
     if (status !== 'granted') {
       Alert.alert(
         'Permission denied',
-        'Media library access is required to pick photos.'
+        t('listings.create.step4.permissionDenied')
       );
       return;
     }
@@ -72,19 +74,19 @@ export default function CreateStep4() {
           source={{ uri: item }}
           style={styles.photo}
           resizeMode="cover"
-          accessibilityLabel={`Photo ${index + 1}`}
+          accessibilityLabel={t('listings.create.step4.photoAlt', { index: index + 1 })}
         />
         <TouchableOpacity
           onPress={() => handleRemove(item)}
           style={styles.removeBtn}
           accessibilityRole="button"
-          accessibilityLabel={`Remove photo ${index + 1}`}
+          accessibilityLabel={t('listings.create.step4.removePhotoLabel', { index: index + 1 })}
         >
           <Icon name="x" size={12} color={colors.textOnBrand} />
         </TouchableOpacity>
         {index === 0 && (
           <View style={styles.coverBadge}>
-            <Text style={styles.coverBadgeText}>Cover</Text>
+            <Text style={styles.coverBadgeText}>{t('listings.create.step4.coverBadge')}</Text>
           </View>
         )}
       </View>
@@ -96,11 +98,11 @@ export default function CreateStep4() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
-          <Text style={styles.linkText}>Back</Text>
+          <Text style={styles.linkText}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.screenTitle}>Photos</Text>
+        <Text style={styles.screenTitle}>{t('listings.create.step4.photosTitle')}</Text>
         <Text style={styles.stepSubtitle}>
-          Step 4 of 5 — Photos ({imageUris.length}/{MAX_IMAGES})
+          {t('listings.create.step4.photoCount', { count: imageUris.length, max: MAX_IMAGES })}
         </Text>
       </View>
 
@@ -110,12 +112,12 @@ export default function CreateStep4() {
           onPress={handlePickImages}
           style={styles.uploadBtn}
           accessibilityRole="button"
-          accessibilityLabel="Add photos"
+          accessibilityLabel={t('listings.create.step4.addPhotos')}
         >
           <Icon name="plus" size={40} color={colors.textTertiary} />
-          <Text style={styles.uploadTitle}>Add Photos</Text>
+          <Text style={styles.uploadTitle}>{t('listings.create.step4.addPhotos')}</Text>
           <Text style={styles.uploadSubtitle}>
-            Up to {MAX_IMAGES} photos. Tap to select.
+            {t('listings.create.step4.uploadSubtitle', { max: MAX_IMAGES })}
           </Text>
         </TouchableOpacity>
 
@@ -123,7 +125,7 @@ export default function CreateStep4() {
         {imageUris.length > 0 && (
           <>
             <Text style={styles.selectedLabel}>
-              Selected photos — first photo is the cover
+              {t('listings.create.step4.selectedPhotos')}
             </Text>
             <FlatList<string>
               data={imageUris}
@@ -142,7 +144,7 @@ export default function CreateStep4() {
       {/* Footer */}
       <View style={styles.footer}>
         <Button onPress={handleNext} size="lg">
-          Next: Review
+          {t('listings.create.step4.next')}
         </Button>
       </View>
     </View>

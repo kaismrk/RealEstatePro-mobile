@@ -12,11 +12,13 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { colors, fontWeight, radius } from '@/constants/theme';
 
 export default function WelcomeScreen() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState<string | undefined>();
 
@@ -25,8 +27,8 @@ export default function WelcomeScreen() {
   }
 
   function handleContinue() {
-    if (!email.trim()) { setEmailError('Please enter your email address'); return; }
-    if (!validateEmail(email.trim())) { setEmailError('Please enter a valid email address'); return; }
+    if (!email.trim()) { setEmailError(t('welcome.errors.required')); return; }
+    if (!validateEmail(email.trim())) { setEmailError(t('welcome.errors.invalid')); return; }
     setEmailError(undefined);
     router.push({ pathname: '/(auth)/register', params: { email: email.trim() } });
   }
@@ -64,18 +66,16 @@ export default function WelcomeScreen() {
 
           {/* White card overlapping hero */}
           <View style={styles.card}>
-            <Text style={styles.heading}>Find your perfect home</Text>
-            <Text style={styles.subtitle}>
-              Browse 200,000+ listings across Tunisia. Save favorites, message agents, and book tours — all in one place.
-            </Text>
+            <Text style={styles.heading}>{t('welcome.title')}</Text>
+            <Text style={styles.subtitle}>{t('welcome.subtitle')}</Text>
 
             <View style={styles.form}>
               <Input
-                label="Email address"
+                label={t('login.email.label')}
                 value={email}
-                onChangeText={(t) => { setEmail(t); if (emailError) setEmailError(undefined); }}
+                onChangeText={(v) => { setEmail(v); if (emailError) setEmailError(undefined); }}
                 error={emailError}
-                placeholder="you@example.com"
+                placeholder={t('login.email.placeholder')}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -84,7 +84,7 @@ export default function WelcomeScreen() {
               />
 
               <Button onPress={handleContinue} size="lg" style={styles.btnFull}>
-                Continue
+                {t('common.continue')}
               </Button>
 
               <Button
@@ -93,12 +93,12 @@ export default function WelcomeScreen() {
                 size="lg"
                 style={[styles.btnFull, styles.btnMt]}
               >
-                Continue with Google
+                {t('auth.googleSignIn')}
               </Button>
 
               <View style={styles.guestWrap}>
                 <Button variant="ghost" onPress={() => router.replace('/(tabs)/search')}>
-                  Browse as guest
+                  {t('welcome.browseAsGuest')}
                 </Button>
               </View>
             </View>

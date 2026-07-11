@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { ScreenHeader } from '@/components/layout/ScreenHeader';
 import { MessageThread } from '@/components/messaging/MessageThread';
@@ -8,6 +9,7 @@ import { useInbox, useMarkAsRead } from '@/hooks/useMessages';
 import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 function MessageDetailContent() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const messageId = Number(id);
 
@@ -28,7 +30,7 @@ function MessageDetailContent() {
   if (!message) {
     return (
       <View style={styles.container}>
-        <ScreenHeader title="Message" back />
+        <ScreenHeader title={t('messaging.chat.title')} back />
         <View style={styles.centeredFill}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -38,7 +40,7 @@ function MessageDetailContent() {
 
   return (
     <View style={styles.container}>
-      <ScreenHeader title={message.sender_name ?? message.sender_email ?? 'Message'} back />
+      <ScreenHeader title={message.sender_name ?? message.sender_email ?? t('messaging.chat.title')} back />
 
       <MessageThread message={message} />
 
@@ -52,7 +54,7 @@ function MessageDetailContent() {
             // Stub — full conversation threading is future
           }}
         >
-          <Text style={styles.replyBtnText}>Reply</Text>
+          <Text style={styles.replyBtnText}>{t('messaging.chat.replyButton')}</Text>
         </TouchableOpacity>
       </View>
     </View>

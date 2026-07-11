@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { useTopLevelRegions, type Region } from '@/hooks/useRegions';
 import { useAuthStore } from '@/lib/stores/auth.store';
@@ -20,6 +21,7 @@ import { haptic } from '@/lib/utils/haptics';
 import { colors, radius, fontWeight } from '@/constants/theme';
 
 export default function OnboardingStep2() {
+  const { t } = useTranslation();
   const countryCode = useAuthStore((s) => s.countryCode);
   const setOnboardingDraft = useUIStore((s) => s.setOnboardingDraft);
 
@@ -52,14 +54,14 @@ export default function OnboardingStep2() {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setLocationError('Location permission denied. You can type a city instead.');
+        setLocationError(t('onboarding.step2.locationDenied'));
         setLocationLoading(false);
         return;
       }
       await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       setQuery(countryCode);
     } catch {
-      setLocationError('Could not get your location. Please try typing a city.');
+      setLocationError(t('onboarding.step2.locationError'));
     } finally {
       setLocationLoading(false);
     }
@@ -83,15 +85,15 @@ export default function OnboardingStep2() {
     <SafeAreaView style={styles.safeArea}>
       {/* Header */}
       <View style={styles.headerSection}>
-        <Text style={styles.title}>Where are you looking?</Text>
-        <Text style={styles.subtitle}>Choose a region to focus your search.</Text>
+        <Text style={styles.title}>{t('onboarding.step2.title')}</Text>
+        <Text style={styles.subtitle}>{t('onboarding.step2.subtitle')}</Text>
 
         {/* Search input */}
         <View style={styles.searchBox}>
           <Icon name="search" size={18} color={colors.textTertiary} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Type a region or city…"
+            placeholder={t('onboarding.step2.searchPlaceholder')}
             placeholderTextColor={colors.textTertiary}
             value={query}
             onChangeText={setQuery}
@@ -119,7 +121,7 @@ export default function OnboardingStep2() {
             <Icon name="map-pin" size={16} color={colors.primary} />
           )}
           <Text style={styles.locationButtonText}>
-            {locationLoading ? 'Getting location…' : 'Use my current location'}
+            {locationLoading ? t('onboarding.step2.gettingLocation') : t('onboarding.step2.useLocation')}
           </Text>
         </TouchableOpacity>
 
@@ -142,7 +144,7 @@ export default function OnboardingStep2() {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>No regions found</Text>
+              <Text style={styles.emptyText}>{t('onboarding.step2.noRegions')}</Text>
             </View>
           }
         />
@@ -156,7 +158,7 @@ export default function OnboardingStep2() {
           accessibilityRole="button"
           accessibilityLabel="Back"
         >
-          <Text style={styles.backButtonText}>Back</Text>
+          <Text style={styles.backButtonText}>{t('common.back')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleSkip}
@@ -164,7 +166,7 @@ export default function OnboardingStep2() {
           accessibilityRole="button"
           accessibilityLabel="Skip this step"
         >
-          <Text style={styles.skipButtonText}>Skip</Text>
+          <Text style={styles.skipButtonText}>{t('common.skip')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

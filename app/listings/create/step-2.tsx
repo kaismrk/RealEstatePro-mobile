@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
+import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { Button } from '@/components/ui/Button';
@@ -20,16 +21,17 @@ import { Icon } from '@/components/ui/Icon';
 import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 import type { Region } from '@/hooks/useRegions';
 
-const DISCLOSURE_LEVELS = [
-  { value: 'exact', label: 'Exact address (shown on map)' },
-  { value: 'approximate', label: 'Approximate location' },
-  { value: 'city_only', label: 'City only' },
-];
-
 export default function CreateStep2() {
+  const { t } = useTranslation();
   const draft = useUIStore((s) => s.createListingDraft);
   const setDraft = useUIStore((s) => s.setDraft);
   const countryCode = useAuthStore((s) => s.countryCode);
+
+  const DISCLOSURE_LEVELS = [
+    { value: 'exact', label: t('listings.disclosureLevels.exact') },
+    { value: 'approximate', label: t('listings.disclosureLevels.approximate') },
+    { value: 'city_only', label: t('listings.disclosureLevels.city_only') },
+  ];
 
   const [regionId, setRegionId] = useState<number | null>(
     (draft?.region_id as number | null) ?? null
@@ -46,8 +48,8 @@ export default function CreateStep2() {
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
-    if (!address.trim()) newErrors.address = 'Address is required';
-    if (!city.trim()) newErrors.city = 'City is required';
+    if (!address.trim()) newErrors.address = t('listings.create.step2.address.error');
+    if (!city.trim()) newErrors.city = t('listings.create.step2.city.error');
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -57,7 +59,7 @@ export default function CreateStep2() {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission denied', 'Location permission is required to use this feature.');
+        Alert.alert('Permission denied', t('listings.create.step2.locationDenied'));
         return;
       }
       const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
@@ -72,7 +74,7 @@ export default function CreateStep2() {
         if (geocode.postalCode) setZipCode(geocode.postalCode);
       }
     } catch {
-      Alert.alert('Error', 'Could not retrieve location. Please enter manually.');
+      Alert.alert(t('common.error'), t('listings.create.step2.locationError'));
     } finally {
       setLocating(false);
     }
@@ -95,10 +97,10 @@ export default function CreateStep2() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
-          <Text style={styles.linkText}>Back</Text>
+          <Text style={styles.linkText}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.screenTitle}>Location</Text>
-        <Text style={styles.stepSubtitle}>Step 2 of 5 — Location</Text>
+        <Text style={styles.screenTitle}>{t('listings.create.step2.locationTitle')}</Text>
+        <Text style={styles.stepSubtitle}>{t('listings.create.step2.subtitle')}</Text>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
@@ -136,14 +138,14 @@ export default function CreateStep2() {
           ) : (
             <>
               <Icon name="map-pin" size={18} color={colors.primary} style={styles.locationIcon} />
-              <Text style={styles.locationBtnText}>Use my current location</Text>
+              <Text style={styles.locationBtnText}>{t('listings.create.step2.useLocation')}</Text>
             </>
           )}
         </TouchableOpacity>
 
         {/* City */}
         <Text style={styles.fieldLabel}>
-          City <Text style={styles.required}>*</Text>
+          {t('listings.create.step2.city.label')} <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           value={city}
@@ -161,7 +163,7 @@ export default function CreateStep2() {
 
         {/* Address */}
         <Text style={styles.fieldLabel}>
-          Address <Text style={styles.required}>*</Text>
+          {t('listings.create.step2.address.label')} <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           value={address}
@@ -178,7 +180,7 @@ export default function CreateStep2() {
         )}
 
         {/* Zip Code */}
-        <Text style={styles.fieldLabel}>Zip Code</Text>
+        <Text style={styles.fieldLabel}>{t('listings.create.step2.zipCode.label')}</Text>
         <TextInput
           value={zipCode}
           onChangeText={setZipCode}
@@ -190,7 +192,7 @@ export default function CreateStep2() {
         />
 
         {/* Address Disclosure Level */}
-        <Text style={styles.fieldLabel}>Address Visibility</Text>
+        <Text style={styles.fieldLabel}>{t('listings.create.step2.addressVisibility.label')}</Text>
         {DISCLOSURE_LEVELS.map((dl) => (
           <TouchableOpacity
             key={dl.value}
@@ -224,7 +226,7 @@ export default function CreateStep2() {
       {/* Footer */}
       <View style={styles.footer}>
         <Button onPress={handleNext} size="lg">
-          Next: Property Details
+          {t('listings.create.step2.next')}
         </Button>
       </View>
     </View>

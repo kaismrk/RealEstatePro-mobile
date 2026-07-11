@@ -10,6 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { Input } from '@/components/ui/Input';
@@ -18,6 +19,7 @@ import { useCurrentUser, useUpdateProfile } from '@/hooks/useUser';
 import { colors, fontWeight, radius } from '@/constants/theme';
 
 function EditProfileContent() {
+  const { t } = useTranslation();
   const { data: user, isLoading } = useCurrentUser();
   const updateProfile = useUpdateProfile();
 
@@ -37,7 +39,7 @@ function EditProfileContent() {
   function validate(): boolean {
     const newErrors: { email?: string } = {};
     if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      newErrors.email = 'Enter a valid email address';
+      newErrors.email = t('editProfile.email.error');
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -59,11 +61,11 @@ function EditProfileContent() {
 
     updateProfile.mutate(payload, {
       onSuccess: () => {
-        Alert.alert('Success', 'Profile updated successfully.');
+        Alert.alert(t('common.success'), t('editProfile.success'));
         router.back();
       },
       onError: (err) => {
-        Alert.alert('Error', err.message ?? 'Failed to update profile. Please try again.');
+        Alert.alert(t('common.error'), err.message ?? t('editProfile.error'));
       },
     });
   }
@@ -71,7 +73,7 @@ function EditProfileContent() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <Text style={styles.loadingText}>{t('editProfile.loading')}</Text>
       </View>
     );
   }
@@ -86,37 +88,37 @@ function EditProfileContent() {
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Icon name="chevron-left" size={20} color={colors.primary} />
-            <Text style={styles.backText}>Back</Text>
+            <Text style={styles.backText}>{t('common.back')}</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Edit Profile</Text>
+          <Text style={styles.headerTitle}>{t('editProfile.header.title')}</Text>
         </View>
 
         <View style={styles.form}>
           <Input
-            label="First Name"
+            label={t('editProfile.firstName.label')}
             value={firstName}
             onChangeText={setFirstName}
-            placeholder="Enter your first name"
+            placeholder={t('editProfile.firstName.placeholder')}
             autoCorrect={false}
           />
 
           <Input
-            label="Last Name"
+            label={t('editProfile.lastName.label')}
             value={lastName}
             onChangeText={setLastName}
-            placeholder="Enter your last name"
+            placeholder={t('editProfile.lastName.placeholder')}
             autoCorrect={false}
           />
 
           <Input
-            label="Email"
+            label={t('editProfile.email.label')}
             value={email}
-            onChangeText={(t) => {
-              setEmail(t);
+            onChangeText={(text) => {
+              setEmail(text);
               if (errors.email) setErrors({});
             }}
             error={errors.email}
-            placeholder="your@email.com"
+            placeholder={t('editProfile.email.placeholder')}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -125,12 +127,12 @@ function EditProfileContent() {
           {/* Country read-only (FINDING-011: not editable) */}
           {user?.country_code ? (
             <View style={styles.countryField}>
-              <Text style={styles.countryLabel}>Country</Text>
+              <Text style={styles.countryLabel}>{t('editProfile.country.label')}</Text>
               <View style={styles.countryValue}>
                 <Text style={styles.countryText}>{user.country_code}</Text>
               </View>
               <Text style={styles.countryHint}>
-                Country can only be changed in App Settings.
+                {t('editProfile.country.hint')}
               </Text>
             </View>
           ) : null}
@@ -141,7 +143,7 @@ function EditProfileContent() {
             size="lg"
             style={styles.submitButton}
           >
-            Save Changes
+            {t('editProfile.submit')}
           </Button>
         </View>
       </ScrollView>

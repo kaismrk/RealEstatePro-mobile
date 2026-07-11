@@ -10,6 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useSearchStore, type PropertyFilters } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { haptic } from '@/lib/utils/haptics';
@@ -18,35 +19,24 @@ import { RegionPicker } from '@/components/geo/RegionPicker';
 import { RegionBreadcrumb } from '@/components/geo/RegionBreadcrumb';
 import type { Region } from '@/hooks/useRegions';
 
-const LISTING_TYPES = [
-  { label: 'For Sale', value: 'sale' },
-  { label: 'For Rent', value: 'rent' },
-  { label: 'Commercial', value: 'commercial' },
-  { label: 'Land', value: 'land' },
-];
-
-const PROPERTY_TYPES = [
+const LISTING_TYPE_VALUES = ['sale', 'rent', 'commercial', 'land'] as const;
+const PROPERTY_TYPE_VALUES = [
   'apartment', 'villa', 'house', 'studio', 'land', 'commercial',
   'office', 'shop', 'warehouse', 'farmhouse', 'chalet', 'penthouse',
   'duplex', 'townhouse', 'building',
-];
-
+] as const;
 const ENERGY_RATINGS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-
-const AMENITY_FIELDS: { label: string; key: keyof PropertyFilters }[] = [
-  { label: 'Pool', key: 'has_pool' },
-  { label: 'Garden', key: 'has_garden' },
-  { label: 'Balcony', key: 'has_balcony' },
-  { label: 'Elevator', key: 'has_elevator' },
-  { label: 'Parking', key: 'has_parking' },
-  { label: 'Garage', key: 'has_garage' },
+const AMENITY_KEYS: Array<keyof PropertyFilters> = [
+  'has_pool', 'has_garden', 'has_balcony', 'has_elevator', 'has_parking', 'has_garage',
 ];
+const AMENITY_TRANSLATION_KEYS = ['pool', 'garden', 'balcony', 'elevator', 'parking', 'garage'] as const;
 
 function SectionTitle({ children }: { children: string }) {
   return <Text style={styles.sectionTitle}>{children}</Text>;
 }
 
 export default function FiltersScreen() {
+  const { t } = useTranslation();
   const storeFilters = useSearchStore((s) => s.filters);
   const setStoreFilters = useSearchStore((s) => s.setFilters);
   const resetStoreFilters = useSearchStore((s) => s.resetFilters);
@@ -90,22 +80,22 @@ export default function FiltersScreen() {
       >
         {/* Transaction type */}
         <View style={styles.section}>
-          <SectionTitle>Transaction Type</SectionTitle>
+          <SectionTitle>{t('filters.transactionType')}</SectionTitle>
           <View style={styles.chipRow}>
-            {LISTING_TYPES.map((lt) => {
-              const isSelected = local.listing_type === lt.value;
+            {LISTING_TYPE_VALUES.map((value) => {
+              const isSelected = local.listing_type === value;
               return (
                 <TouchableOpacity
-                  key={lt.value}
+                  key={value}
                   onPress={() =>
-                    setField('listing_type', isSelected ? undefined : lt.value)
+                    setField('listing_type', isSelected ? undefined : value)
                   }
                   style={[styles.chip, isSelected ? styles.chipSelected : styles.chipUnselected]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: isSelected }}
                 >
                   <Text style={[styles.chipText, isSelected ? styles.chipTextSelected : styles.chipTextUnselected]}>
-                    {lt.label}
+                    {t(`listings.listingTypes.${value}`)}
                   </Text>
                 </TouchableOpacity>
               );
@@ -115,33 +105,33 @@ export default function FiltersScreen() {
 
         {/* Price range */}
         <View style={styles.section}>
-          <SectionTitle>Price Range</SectionTitle>
+          <SectionTitle>{t('filters.priceRange')}</SectionTitle>
           <View style={styles.row}>
             <View style={styles.flex1}>
-              <Text style={styles.inputLabel}>Min price</Text>
+              <Text style={styles.inputLabel}>{t('filters.minPrice')}</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="0"
                 keyboardType="numeric"
                 value={local.min_price != null ? String(local.min_price) : ''}
-                onChangeText={(t) =>
-                  setField('min_price', t ? Number(t) : undefined)
+                onChangeText={(v) =>
+                  setField('min_price', v ? Number(v) : undefined)
                 }
-                accessibilityLabel="Minimum price"
+                accessibilityLabel={t('filters.minPrice')}
               />
             </View>
             <View style={styles.rowGap} />
             <View style={styles.flex1}>
-              <Text style={styles.inputLabel}>Max price</Text>
+              <Text style={styles.inputLabel}>{t('filters.maxPrice')}</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Any"
                 keyboardType="numeric"
                 value={local.max_price != null ? String(local.max_price) : ''}
-                onChangeText={(t) =>
-                  setField('max_price', t ? Number(t) : undefined)
+                onChangeText={(v) =>
+                  setField('max_price', v ? Number(v) : undefined)
                 }
-                accessibilityLabel="Maximum price"
+                accessibilityLabel={t('filters.maxPrice')}
               />
             </View>
           </View>
@@ -149,33 +139,33 @@ export default function FiltersScreen() {
 
         {/* Bedrooms */}
         <View style={styles.section}>
-          <SectionTitle>Bedrooms</SectionTitle>
+          <SectionTitle>{t('filters.bedrooms')}</SectionTitle>
           <View style={styles.row}>
             <View style={styles.flex1}>
-              <Text style={styles.inputLabel}>Min</Text>
+              <Text style={styles.inputLabel}>{t('filters.min')}</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="0"
                 keyboardType="numeric"
                 value={local.min_bedrooms != null ? String(local.min_bedrooms) : ''}
-                onChangeText={(t) =>
-                  setField('min_bedrooms', t ? Number(t) : undefined)
+                onChangeText={(v) =>
+                  setField('min_bedrooms', v ? Number(v) : undefined)
                 }
-                accessibilityLabel="Minimum bedrooms"
+                accessibilityLabel={t('filters.min')}
               />
             </View>
             <View style={styles.rowGap} />
             <View style={styles.flex1}>
-              <Text style={styles.inputLabel}>Max</Text>
+              <Text style={styles.inputLabel}>{t('filters.max')}</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Any"
                 keyboardType="numeric"
                 value={local.max_bedrooms != null ? String(local.max_bedrooms) : ''}
-                onChangeText={(t) =>
-                  setField('max_bedrooms', t ? Number(t) : undefined)
+                onChangeText={(v) =>
+                  setField('max_bedrooms', v ? Number(v) : undefined)
                 }
-                accessibilityLabel="Maximum bedrooms"
+                accessibilityLabel={t('filters.max')}
               />
             </View>
           </View>
@@ -183,33 +173,33 @@ export default function FiltersScreen() {
 
         {/* Area */}
         <View style={styles.section}>
-          <SectionTitle>Area (m²)</SectionTitle>
+          <SectionTitle>{t('filters.area')}</SectionTitle>
           <View style={styles.row}>
             <View style={styles.flex1}>
-              <Text style={styles.inputLabel}>Min area</Text>
+              <Text style={styles.inputLabel}>{t('filters.minArea')}</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="0"
                 keyboardType="numeric"
                 value={local.min_area != null ? String(local.min_area) : ''}
-                onChangeText={(t) =>
-                  setField('min_area', t ? Number(t) : undefined)
+                onChangeText={(v) =>
+                  setField('min_area', v ? Number(v) : undefined)
                 }
-                accessibilityLabel="Minimum area"
+                accessibilityLabel={t('filters.minArea')}
               />
             </View>
             <View style={styles.rowGap} />
             <View style={styles.flex1}>
-              <Text style={styles.inputLabel}>Max area</Text>
+              <Text style={styles.inputLabel}>{t('filters.maxArea')}</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Any"
                 keyboardType="numeric"
                 value={local.max_area != null ? String(local.max_area) : ''}
-                onChangeText={(t) =>
-                  setField('max_area', t ? Number(t) : undefined)
+                onChangeText={(v) =>
+                  setField('max_area', v ? Number(v) : undefined)
                 }
-                accessibilityLabel="Maximum area"
+                accessibilityLabel={t('filters.maxArea')}
               />
             </View>
           </View>
@@ -217,9 +207,9 @@ export default function FiltersScreen() {
 
         {/* Property type */}
         <View style={styles.section}>
-          <SectionTitle>Property Type</SectionTitle>
+          <SectionTitle>{t('filters.propertyType')}</SectionTitle>
           <View style={styles.chipRow}>
-            {PROPERTY_TYPES.map((pt) => {
+            {PROPERTY_TYPE_VALUES.map((pt) => {
               const isSelected = local.property_type === pt;
               return (
                 <TouchableOpacity
@@ -233,10 +223,9 @@ export default function FiltersScreen() {
                     style={[
                       styles.chipTextSm,
                       isSelected ? styles.chipTextSelected : styles.chipTextUnselected,
-                      { textTransform: 'capitalize' },
                     ]}
                   >
-                    {pt}
+                    {t(`listings.propertyTypes.${pt}`)}
                   </Text>
                 </TouchableOpacity>
               );
@@ -246,24 +235,28 @@ export default function FiltersScreen() {
 
         {/* Amenities */}
         <View style={styles.section}>
-          <SectionTitle>Amenities</SectionTitle>
-          {AMENITY_FIELDS.map(({ label, key }) => (
-            <View key={key} style={styles.amenityRow}>
-              <Text style={styles.amenityLabel}>{label}</Text>
-              <Switch
-                value={!!local[key]}
-                onValueChange={(v) => setField(key, v || undefined)}
-                trackColor={{ false: colors.border, true: colors.primary }}
-                thumbColor={colors.surface}
-                accessibilityLabel={label}
-              />
-            </View>
-          ))}
+          <SectionTitle>{t('filters.amenities')}</SectionTitle>
+          {AMENITY_KEYS.map((key, idx) => {
+            const translationKey = AMENITY_TRANSLATION_KEYS[idx];
+            const label = t(`filters.amenityItems.${translationKey}`);
+            return (
+              <View key={key} style={styles.amenityRow}>
+                <Text style={styles.amenityLabel}>{label}</Text>
+                <Switch
+                  value={!!local[key]}
+                  onValueChange={(v) => setField(key, v || undefined)}
+                  trackColor={{ false: colors.border, true: colors.primary }}
+                  thumbColor={colors.surface}
+                  accessibilityLabel={label}
+                />
+              </View>
+            );
+          })}
         </View>
 
         {/* Energy rating */}
         <View style={styles.section}>
-          <SectionTitle>Energy Rating</SectionTitle>
+          <SectionTitle>{t('filters.energyRating')}</SectionTitle>
           <View style={styles.chipRow}>
             {ENERGY_RATINGS.map((rating) => {
               const isSelected = local.energy_rating === rating;
@@ -311,17 +304,17 @@ export default function FiltersScreen() {
           onPress={handleReset}
           style={styles.resetBtn}
           accessibilityRole="button"
-          accessibilityLabel="Reset all filters"
+          accessibilityLabel={t('common.reset')}
         >
-          <Text style={styles.resetBtnText}>Reset</Text>
+          <Text style={styles.resetBtnText}>{t('common.reset')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleApply}
           style={styles.applyBtn}
           accessibilityRole="button"
-          accessibilityLabel="Apply filters"
+          accessibilityLabel={t('filters.apply')}
         >
-          <Text style={styles.applyBtnText}>Apply Filters</Text>
+          <Text style={styles.applyBtnText}>{t('filters.apply')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

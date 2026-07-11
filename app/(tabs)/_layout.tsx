@@ -1,8 +1,11 @@
 import { Tabs } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { colors } from '@/constants/theme';
 
 export default function TabLayout() {
+  const { t } = useTranslation();
+
   return (
     <Tabs
       screenOptions={{
@@ -24,35 +27,35 @@ export default function TabLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
+          title: t('tabs.search'),
           tabBarIcon: ({ color }) => <Icon name="search" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="updates"
         options={{
-          title: 'Updates',
+          title: t('tabs.updates'),
           tabBarIcon: ({ color }) => <Icon name="bell" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="saved"
         options={{
-          title: 'Saved',
+          title: t('tabs.saved'),
           tabBarIcon: ({ color }) => <Icon name="heart" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="loans"
         options={{
-          title: 'Loans',
+          title: t('tabs.loans'),
           tabBarIcon: ({ color }) => <Icon name="coins" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: t('tabs.profile'),
           tabBarIcon: ({ color }) => <Icon name="user" size={22} color={color} />,
         }}
       />

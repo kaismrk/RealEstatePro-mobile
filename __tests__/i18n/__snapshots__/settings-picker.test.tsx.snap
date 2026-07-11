@@ -1,0 +1,372 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Settings language picker matches snapshot of the settings screen 1`] = `
+<RCTScrollView
+  style={
+    {
+      "backgroundColor": "#fafafb",
+      "flex": 1,
+    }
+  }
+>
+  <View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#ffffff",
+          "borderBottomColor": "#e7e7ec",
+          "borderBottomWidth": 1,
+          "flexDirection": "row",
+          "paddingBottom": 16,
+          "paddingHorizontal": 16,
+          "paddingTop": 56,
+        }
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "marginRight": 12,
+            "opacity": 1,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#5f09fe",
+              "fontSize": 16,
+              "marginLeft": 2,
+            }
+          }
+        >
+          Back
+        </Text>
+      </View>
+      <Text
+        style={
+          {
+            "color": "#0f0f14",
+            "flex": 1,
+            "fontSize": 20,
+            "fontWeight": "700",
+          }
+        }
+      >
+        App Settings
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "marginTop": 24,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#a1a1ac",
+            "fontSize": 12,
+            "fontWeight": "600",
+            "letterSpacing": 1,
+            "marginBottom": 4,
+            "paddingHorizontal": 16,
+            "textTransform": "uppercase",
+          }
+        }
+      >
+        Region
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#ffffff",
+            "borderTopColor": "#e7e7ec",
+            "borderTopWidth": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomColor": "#e7e7ec",
+              "borderBottomWidth": 1,
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "paddingHorizontal": 16,
+              "paddingVertical": 16,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#0f0f14",
+                "fontSize": 16,
+              }
+            }
+          >
+            Country
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Language"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomColor": "#e7e7ec",
+              "borderBottomWidth": 1,
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "opacity": 1,
+              "paddingHorizontal": 16,
+              "paddingVertical": 16,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#0f0f14",
+                "fontSize": 16,
+              }
+            }
+          >
+            Language
+          </Text>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 4,
+              }
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#4a4a55",
+                  "fontSize": 16,
+                }
+              }
+            >
+              English
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomColor": "#e7e7ec",
+              "borderBottomWidth": 1,
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "paddingHorizontal": 16,
+              "paddingVertical": 16,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#0f0f14",
+                "fontSize": 16,
+              }
+            }
+          >
+            Theme
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#4a4a55",
+                "fontSize": 16,
+              }
+            }
+          >
+            Light
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "marginTop": 24,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#a1a1ac",
+            "fontSize": 12,
+            "fontWeight": "600",
+            "letterSpacing": 1,
+            "marginBottom": 4,
+            "paddingHorizontal": 16,
+            "textTransform": "uppercase",
+          }
+        }
+      >
+        About
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#ffffff",
+            "borderTopColor": "#e7e7ec",
+            "borderTopWidth": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomColor": "#e7e7ec",
+              "borderBottomWidth": 1,
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "paddingHorizontal": 16,
+              "paddingVertical": 16,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#0f0f14",
+                "fontSize": 16,
+              }
+            }
+          >
+            App Version
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#4a4a55",
+                "fontSize": 16,
+              }
+            }
+          >
+            1.0.0
+          </Text>
+        </View>
+        <Text>
+          Terms of Use
+        </Text>
+        <Text>
+          Privacy Policy
+        </Text>
+        <Text>
+          Open-Source Licenses
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        [
+          {
+            "marginTop": 24,
+          },
+          {
+            "marginBottom": 32,
+          },
+        ]
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#a1a1ac",
+            "fontSize": 12,
+            "fontWeight": "600",
+            "letterSpacing": 1,
+            "marginBottom": 4,
+            "paddingHorizontal": 16,
+            "textTransform": "uppercase",
+          }
+        }
+      >
+        Account Actions
+      </Text>
+      <View
+        style={
+          {
+            "backgroundColor": "#ffffff",
+            "borderTopColor": "#e7e7ec",
+            "borderTopWidth": 1,
+          }
+        }
+      >
+        <Text>
+          Sign Out
+        </Text>
+      </View>
+    </View>
+  </View>
+</RCTScrollView>
+`;

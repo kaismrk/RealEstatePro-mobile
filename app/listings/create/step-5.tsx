@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { useCreateProperty } from '@/hooks/useCreateProperty';
 import { Button } from '@/components/ui/Button';
@@ -53,6 +54,7 @@ function ReviewSection({
   stepIndex: number;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <View style={rsStyles.wrap}>
       <View style={rsStyles.header}>
@@ -61,7 +63,7 @@ function ReviewSection({
           onPress={() => router.push(`/listings/create/step-${stepIndex}` as never)}
           accessibilityRole="button"
         >
-          <Text style={rsStyles.editLink}>Edit</Text>
+          <Text style={rsStyles.editLink}>{t('listings.create.step5.editLink')}</Text>
         </TouchableOpacity>
       </View>
       <View style={rsStyles.body}>{children}</View>
@@ -95,6 +97,7 @@ const rsStyles = StyleSheet.create({
 });
 
 export default function CreateStep5() {
+  const { t } = useTranslation();
   const draft = useUIStore((s) => s.createListingDraft);
   const clearDraft = useUIStore((s) => s.clearDraft);
   const createProperty = useCreateProperty();
@@ -144,12 +147,16 @@ export default function CreateStep5() {
     createProperty.mutate(payload, {
       onSuccess: () => {
         clearDraft();
-        Alert.alert('Success', 'Your listing has been submitted for review!', [
-          {
-            text: 'View My Listings',
-            onPress: () => router.replace('/listings/my-listings'),
-          },
-        ]);
+        Alert.alert(
+          t('listings.create.step5.success.title'),
+          t('listings.create.step5.success.body'),
+          [
+            {
+              text: t('listings.create.step5.success.viewMyListings'),
+              onPress: () => router.replace('/listings/my-listings'),
+            },
+          ]
+        );
       },
       onError: (err) => {
         if (err.name === 'QuotaExhaustedError') {
@@ -168,7 +175,7 @@ export default function CreateStep5() {
             return;
           }
         }
-        Alert.alert('Error', err.message ?? 'Failed to create listing. Please try again.');
+        Alert.alert(t('common.error'), err.message ?? t('listings.create.step5.error'));
       },
     });
   }
@@ -181,17 +188,17 @@ export default function CreateStep5() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
-          <Text style={styles.linkText}>Back</Text>
+          <Text style={styles.linkText}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.screenTitle}>Review</Text>
-        <Text style={styles.stepSubtitle}>Step 5 of 5 — Review &amp; Submit</Text>
+        <Text style={styles.screenTitle}>{t('listings.create.step5.reviewTitle')}</Text>
+        <Text style={styles.stepSubtitle}>{t('listings.create.step5.subtitle')}</Text>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Validation errors from 422 */}
         {fieldErrors.length > 0 && (
           <View style={styles.errorBox}>
-            <Text style={styles.errorBoxTitle}>Please fix these issues:</Text>
+            <Text style={styles.errorBoxTitle}>{t('listings.create.step5.errors.title')}</Text>
             {fieldErrors.map((e, i) => (
               <Text key={i} style={styles.errorBoxItem}>
                 {'•'} {e}
@@ -200,38 +207,56 @@ export default function CreateStep5() {
           </View>
         )}
 
-        <ReviewSection title="Basic Info" stepIndex={1}>
-          <ReviewRow label="Title" value={d.title as string} />
-          <ReviewRow label="Listing Type" value={d.listing_type as string} />
-          <ReviewRow label="Property Type" value={d.property_type as string} />
-          <ReviewRow label="Price" value={d.price as number} />
+        <ReviewSection title={t('listings.create.step5.sections.basicInfo')} stepIndex={1}>
+          <ReviewRow label={t('listings.create.step5.fields.title')} value={d.title as string} />
+          <ReviewRow
+            label={t('listings.create.step5.fields.listingType')}
+            value={d.listing_type ? t(`listings.listingTypes.${d.listing_type as string}`) : null}
+          />
+          <ReviewRow
+            label={t('listings.create.step5.fields.propertyType')}
+            value={d.property_type ? t(`listings.propertyTypes.${d.property_type as string}`) : null}
+          />
+          <ReviewRow label={t('listings.create.step5.fields.price')} value={d.price as number} />
         </ReviewSection>
 
-        <ReviewSection title="Location" stepIndex={2}>
-          <ReviewRow label="City" value={d.city as string} />
-          <ReviewRow label="Address" value={d.address as string} />
-          <ReviewRow label="Zip Code" value={d.zip_code as string} />
-          <ReviewRow label="Visibility" value={d.address_disclosure_level as string} />
+        <ReviewSection title={t('listings.create.step5.sections.location')} stepIndex={2}>
+          <ReviewRow label={t('listings.create.step5.fields.city')} value={d.city as string} />
+          <ReviewRow label={t('listings.create.step5.fields.address')} value={d.address as string} />
+          <ReviewRow label={t('listings.create.step5.fields.zipCode')} value={d.zip_code as string} />
+          <ReviewRow
+            label={t('listings.create.step5.fields.visibility')}
+            value={d.address_disclosure_level ? t(`listings.disclosureLevels.${d.address_disclosure_level as string}`) : null}
+          />
         </ReviewSection>
 
-        <ReviewSection title="Property Details" stepIndex={3}>
-          <ReviewRow label="Area (m²)" value={d.area_sqm as number} />
-          <ReviewRow label="Bedrooms" value={d.bedrooms as number} />
-          <ReviewRow label="Bathrooms" value={d.bathrooms as number} />
-          <ReviewRow label="Floor" value={d.floor as number} />
-          <ReviewRow label="Year Built" value={d.year_built as number} />
-          <ReviewRow label="Furnished" value={(d.furnished as boolean) ? 'Yes' : 'No'} />
-          <ReviewRow label="Heating" value={d.heating_system as string} />
-          <ReviewRow label="Kitchen" value={d.kitchen_type as string} />
-          <ReviewRow label="Energy Rating" value={d.energy_rating as string} />
+        <ReviewSection title={t('listings.create.step5.sections.propertyDetails')} stepIndex={3}>
+          <ReviewRow label={t('listings.create.step5.fields.area')} value={d.area_sqm as number} />
+          <ReviewRow label={t('listings.create.step5.fields.bedrooms')} value={d.bedrooms as number} />
+          <ReviewRow label={t('listings.create.step5.fields.bathrooms')} value={d.bathrooms as number} />
+          <ReviewRow label={t('listings.create.step5.fields.floor')} value={d.floor as number} />
+          <ReviewRow label={t('listings.create.step5.fields.yearBuilt')} value={d.year_built as number} />
+          <ReviewRow
+            label={t('listings.create.step5.fields.furnished')}
+            value={(d.furnished as boolean) ? t('listings.create.step5.yes') : t('listings.create.step5.no')}
+          />
+          <ReviewRow
+            label={t('listings.create.step5.fields.heating')}
+            value={d.heating_system ? t(`listings.heatingTypes.${d.heating_system as string}`) : null}
+          />
+          <ReviewRow
+            label={t('listings.create.step5.fields.kitchen')}
+            value={d.kitchen_type ? t(`listings.kitchenTypes.${d.kitchen_type as string}`) : null}
+          />
+          <ReviewRow label={t('listings.create.step5.fields.energyRating')} value={d.energy_rating as string} />
         </ReviewSection>
 
-        <ReviewSection title="Photos" stepIndex={4}>
+        <ReviewSection title={t('listings.create.step5.sections.photos')} stepIndex={4}>
           <View style={styles.photoCountWrap}>
             <Text style={styles.photoCountText}>
               {imageCount > 0
-                ? `${imageCount} photo${imageCount !== 1 ? 's' : ''} selected`
-                : 'No photos added'}
+                ? t('listings.create.step5.photos.selected', { count: imageCount })
+                : t('listings.create.step5.photos.none')}
             </Text>
           </View>
         </ReviewSection>
@@ -246,7 +271,7 @@ export default function CreateStep5() {
           loading={createProperty.isPending}
           size="lg"
         >
-          Submit Listing
+          {t('listings.create.step5.submit')}
         </Button>
       </View>
 
@@ -259,10 +284,8 @@ export default function CreateStep5() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Listing Quota Exhausted</Text>
-            <Text style={styles.modalBody}>
-              You have used all your free and paid listing slots. Purchase a pack to continue posting.
-            </Text>
+            <Text style={styles.modalTitle}>{t('listings.create.step5.quota.title')}</Text>
+            <Text style={styles.modalBody}>{t('listings.create.step5.quota.body')}</Text>
             <Button
               onPress={() => {
                 setShowQuotaModal(false);
@@ -270,13 +293,13 @@ export default function CreateStep5() {
               }}
               size="lg"
             >
-              Purchase a Pack
+              {t('listings.create.step5.quota.action')}
             </Button>
             <TouchableOpacity
               style={styles.modalCancel}
               onPress={() => setShowQuotaModal(false)}
             >
-              <Text style={styles.modalCancelText}>Cancel</Text>
+              <Text style={styles.modalCancelText}>{t('common.cancel')}</Text>
             </TouchableOpacity>
           </View>
         </View>

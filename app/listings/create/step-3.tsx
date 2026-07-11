@@ -8,39 +8,14 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { Button } from '@/components/ui/Button';
 import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 type TabKey = 'specs' | 'amenities' | 'description';
 
-const HEATING_OPTIONS = [
-  { value: 'central', label: 'Central' },
-  { value: 'individual', label: 'Individual' },
-  { value: 'electric', label: 'Electric' },
-  { value: 'gas', label: 'Gas' },
-  { value: 'fuel', label: 'Fuel' },
-  { value: 'heat_pump', label: 'Heat Pump' },
-  { value: 'solar', label: 'Solar' },
-  { value: 'wood', label: 'Wood' },
-  { value: 'none', label: 'None' },
-];
-
-const AC_OPTIONS = [
-  { value: 'split', label: 'Split' },
-  { value: 'central', label: 'Central' },
-  { value: 'portable', label: 'Portable' },
-  { value: 'none', label: 'None' },
-];
-
 const ENERGY_RATINGS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-
-const KITCHEN_OPTIONS = [
-  { value: 'open', label: 'Open' },
-  { value: 'closed', label: 'Closed' },
-  { value: 'semi_open', label: 'Semi-open' },
-  { value: 'american', label: 'American' },
-];
 
 function NumberInput({
   label,
@@ -209,8 +184,35 @@ const srStyles = StyleSheet.create({
 });
 
 export default function CreateStep3() {
+  const { t } = useTranslation();
   const draft = useUIStore((s) => s.createListingDraft);
   const setDraft = useUIStore((s) => s.setDraft);
+
+  const HEATING_OPTIONS = [
+    { value: 'central', label: t('listings.heatingTypes.central') },
+    { value: 'individual', label: t('listings.heatingTypes.individual') },
+    { value: 'electric', label: t('listings.heatingTypes.electric') },
+    { value: 'gas', label: t('listings.heatingTypes.gas') },
+    { value: 'fuel', label: t('listings.heatingTypes.fuel') },
+    { value: 'heat_pump', label: t('listings.heatingTypes.heat_pump') },
+    { value: 'solar', label: t('listings.heatingTypes.solar') },
+    { value: 'wood', label: t('listings.heatingTypes.wood') },
+    { value: 'none', label: t('listings.heatingTypes.none') },
+  ];
+
+  const AC_OPTIONS = [
+    { value: 'split', label: t('listings.acTypes.split') },
+    { value: 'central', label: t('listings.acTypes.central') },
+    { value: 'portable', label: t('listings.acTypes.portable') },
+    { value: 'none', label: t('listings.acTypes.none') },
+  ];
+
+  const KITCHEN_OPTIONS = [
+    { value: 'open', label: t('listings.kitchenTypes.open') },
+    { value: 'closed', label: t('listings.kitchenTypes.closed') },
+    { value: 'semi_open', label: t('listings.kitchenTypes.semi_open') },
+    { value: 'american', label: t('listings.kitchenTypes.american') },
+  ];
 
   const [activeTab, setActiveTab] = useState<TabKey>('specs');
 
@@ -304,10 +306,10 @@ export default function CreateStep3() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
-          <Text style={styles.linkText}>Back</Text>
+          <Text style={styles.linkText}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.screenTitle}>Property Details</Text>
-        <Text style={styles.stepSubtitle}>Step 3 of 5 — Specs &amp; Amenities</Text>
+        <Text style={styles.screenTitle}>{t('listings.create.step3.propertyDetails')}</Text>
+        <Text style={styles.stepSubtitle}>{t('listings.create.step3.subtitle')}</Text>
       </View>
 
       {/* Tabs */}
@@ -319,7 +321,7 @@ export default function CreateStep3() {
             style={[styles.tab, activeTab === tab && styles.tabActive]}
           >
             <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
-              {tab === 'specs' ? 'Specs' : tab === 'amenities' ? 'Amenities' : 'Description'}
+              {t(`listings.create.step3.tabs.${tab}`)}
             </Text>
           </TouchableOpacity>
         ))}
@@ -328,34 +330,34 @@ export default function CreateStep3() {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {activeTab === 'specs' && (
           <>
-            <NumberInput label="Area (m²)" value={areaSqm} onChange={setAreaSqm} />
-            <NumberInput label="Lot Size (m²)" value={lotSize} onChange={setLotSize} />
-            <NumberInput label="Number of Rooms" value={rooms} onChange={setRooms} />
-            <NumberInput label="Bedrooms" value={bedrooms} onChange={setBedrooms} />
-            <NumberInput label="Bathrooms" value={bathrooms} onChange={setBathrooms} />
-            <NumberInput label="Floor" value={floor} onChange={setFloor} />
-            <NumberInput label="Total Floors" value={totalFloors} onChange={setTotalFloors} />
-            <NumberInput label="Year Built" value={yearBuilt} onChange={setYearBuilt} />
+            <NumberInput label={t('listings.create.step3.specs.area')} value={areaSqm} onChange={setAreaSqm} />
+            <NumberInput label={t('listings.create.step3.specs.lotSize')} value={lotSize} onChange={setLotSize} />
+            <NumberInput label={t('listings.create.step3.specs.rooms')} value={rooms} onChange={setRooms} />
+            <NumberInput label={t('listings.create.step3.specs.bedrooms')} value={bedrooms} onChange={setBedrooms} />
+            <NumberInput label={t('listings.create.step3.specs.bathrooms')} value={bathrooms} onChange={setBathrooms} />
+            <NumberInput label={t('listings.create.step3.specs.floor')} value={floor} onChange={setFloor} />
+            <NumberInput label={t('listings.create.step3.specs.totalFloors')} value={totalFloors} onChange={setTotalFloors} />
+            <NumberInput label={t('listings.create.step3.specs.yearBuilt')} value={yearBuilt} onChange={setYearBuilt} />
           </>
         )}
 
         {activeTab === 'amenities' && (
           <>
-            <ToggleRow label="Furnished" value={furnished} onToggle={() => setFurnished((v) => !v)} />
-            <ToggleRow label="Swimming Pool" value={pool} onToggle={() => setPool((v) => !v)} />
-            <ToggleRow label="Garden" value={garden} onToggle={() => setGarden((v) => !v)} />
-            <ToggleRow label="Balcony" value={balcony} onToggle={() => setBalcony((v) => !v)} />
-            <ToggleRow label="Elevator" value={lift} onToggle={() => setLift((v) => !v)} />
+            <ToggleRow label={t('listings.create.step3.amenities.furnished')} value={furnished} onToggle={() => setFurnished((v) => !v)} />
+            <ToggleRow label={t('listings.create.step3.amenities.pool')} value={pool} onToggle={() => setPool((v) => !v)} />
+            <ToggleRow label={t('listings.create.step3.amenities.garden')} value={garden} onToggle={() => setGarden((v) => !v)} />
+            <ToggleRow label={t('listings.create.step3.amenities.balcony')} value={balcony} onToggle={() => setBalcony((v) => !v)} />
+            <ToggleRow label={t('listings.create.step3.amenities.elevator')} value={lift} onToggle={() => setLift((v) => !v)} />
             <View style={styles.amenityInputsWrap}>
-              <NumberInput label="Garage Spots" value={garageSpots} onChange={setGarageSpots} />
-              <NumberInput label="Parking Spots" value={parkingSpots} onChange={setParkingSpots} />
+              <NumberInput label={t('listings.create.step3.amenities.garageSpots')} value={garageSpots} onChange={setGarageSpots} />
+              <NumberInput label={t('listings.create.step3.amenities.parkingSpots')} value={parkingSpots} onChange={setParkingSpots} />
             </View>
-            <SelectRow label="Heating System" options={HEATING_OPTIONS} value={heating} onChange={setHeating} />
-            <SelectRow label="Air Conditioning" options={AC_OPTIONS} value={ac} onChange={setAc} />
-            <SelectRow label="Kitchen Type" options={KITCHEN_OPTIONS} value={kitchenType} onChange={setKitchenType} />
+            <SelectRow label={t('listings.create.step3.amenities.heatingSystem')} options={HEATING_OPTIONS} value={heating} onChange={setHeating} />
+            <SelectRow label={t('listings.create.step3.amenities.airConditioning')} options={AC_OPTIONS} value={ac} onChange={setAc} />
+            <SelectRow label={t('listings.create.step3.amenities.kitchenType')} options={KITCHEN_OPTIONS} value={kitchenType} onChange={setKitchenType} />
 
             {/* Energy Rating */}
-            <Text style={styles.energyLabel}>Energy Rating</Text>
+            <Text style={styles.energyLabel}>{t('listings.create.step3.amenities.energyRating')}</Text>
             <View style={styles.energyRow}>
               {ENERGY_RATINGS.map((r) => (
                 <TouchableOpacity
@@ -385,12 +387,12 @@ export default function CreateStep3() {
         {activeTab === 'description' && (
           <>
             <Text style={styles.descLabel}>
-              Description ({description.length}/5000)
+              {t('listings.create.step3.description.label', { count: description.length })}
             </Text>
             <TextInput
               value={description}
               onChangeText={(v) => v.length <= 5000 && setDescription(v)}
-              placeholder="Describe the property..."
+              placeholder={t('listings.create.step3.description.placeholder')}
               placeholderTextColor={colors.textTertiary}
               multiline
               numberOfLines={10}
@@ -406,7 +408,7 @@ export default function CreateStep3() {
       {/* Footer */}
       <View style={styles.footer}>
         <Button onPress={handleNext} size="lg">
-          Next: Photos
+          {t('listings.create.step3.next')}
         </Button>
       </View>
     </View>

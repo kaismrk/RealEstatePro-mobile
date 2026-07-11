@@ -11,6 +11,7 @@ import {
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useAgentDashboard, type PropertyWithStats } from '@/hooks/useAgentDashboard';
 import { useAgentLeads } from '@/hooks/useAgentLeads';
 import { PublishStatusBadge } from '@/components/property/PublishStatusBadge';
@@ -21,6 +22,7 @@ import type { PublishStatus } from '@/lib/types/property';
 import type { MessageResponse } from '@/lib/types/message';
 
 function ListingStatCard({ item }: { item: PropertyWithStats }) {
+  const { t } = useTranslation();
   const cover = item.image_urls?.[0];
 
   return (
@@ -36,7 +38,7 @@ function ListingStatCard({ item }: { item: PropertyWithStats }) {
             source={{ uri: cover }}
             style={styles.listingImage}
             resizeMode="cover"
-            accessibilityLabel="Property photo"
+            accessibilityLabel={t('myListings.photoAlt')}
           />
         ) : (
           <View style={styles.listingImagePlaceholder}>
@@ -54,8 +56,8 @@ function ListingStatCard({ item }: { item: PropertyWithStats }) {
           {item.title}
         </Text>
         <View style={styles.listingStats}>
-          <Text style={styles.listingStatText}>{item.inquiry_count} inquiries</Text>
-          <Text style={styles.listingStatText}>{item.favorite_count} saves</Text>
+          <Text style={styles.listingStatText}>{t('agent.dashboard.inquiriesCount', { count: item.inquiry_count })}</Text>
+          <Text style={styles.listingStatText}>{t('agent.dashboard.savesCount', { count: item.favorite_count })}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -88,6 +90,7 @@ function LeadRow({ item }: { item: MessageResponse }) {
 }
 
 export default function AgentDashboardScreen() {
+  const { t } = useTranslation();
   const {
     data: dashboard,
     isLoading: dashLoading,
@@ -118,7 +121,7 @@ export default function AgentDashboardScreen() {
           You need to register as an agent to access the dashboard.
         </Text>
         <Button onPress={() => router.push('/agent/register')} size="lg">
-          Register as Agent
+          {t('agent.dashboard.registerAsAgent')}
         </Button>
       </View>
     );
@@ -137,10 +140,10 @@ export default function AgentDashboardScreen() {
   }
 
   const stats = [
-    { label: 'Listings', value: dashboard?.total ?? 0 },
-    { label: 'Inquiries', value: totalInquiries },
-    { label: 'Saves', value: totalFavorites },
-    { label: 'Views', value: totalViews },
+    { label: t('agent.dashboard.stats.listings'), value: dashboard?.total ?? 0 },
+    { label: t('agent.dashboard.stats.inquiries'), value: totalInquiries },
+    { label: t('agent.dashboard.stats.saves'), value: totalFavorites },
+    { label: t('agent.dashboard.stats.views'), value: totalViews },
   ];
 
   return (
@@ -155,9 +158,9 @@ export default function AgentDashboardScreen() {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBack}>
           <Icon name="chevron-left" size={18} color={colors.primary} />
-          <Text style={styles.headerBackText}>Back</Text>
+          <Text style={styles.headerBackText}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Agent Dashboard</Text>
+        <Text style={styles.headerTitle}>{t('agent.dashboard.title')}</Text>
       </View>
 
       {/* Stats row */}
@@ -173,9 +176,9 @@ export default function AgentDashboardScreen() {
       {/* Listings horizontal scroll */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>My Listings</Text>
+          <Text style={styles.sectionTitle}>{t('agent.dashboard.sections.myListings')}</Text>
           <TouchableOpacity onPress={() => router.push('/listings/my-listings')}>
-            <Text style={styles.sectionLink}>View all</Text>
+            <Text style={styles.sectionLink}>{t('agent.dashboard.viewAll')}</Text>
           </TouchableOpacity>
         </View>
         {dashboard && dashboard.items.length > 0 ? (
@@ -191,12 +194,12 @@ export default function AgentDashboardScreen() {
           />
         ) : (
           <View style={styles.emptyListings}>
-            <Text style={styles.emptyListingsText}>No listings yet.</Text>
+            <Text style={styles.emptyListingsText}>{t('agent.dashboard.empty.listings')}</Text>
             <TouchableOpacity
               style={styles.emptyListingsLink}
               onPress={() => router.push('/listings/create/step-1')}
             >
-              <Text style={styles.emptyListingsLinkText}>Create your first listing</Text>
+              <Text style={styles.emptyListingsLinkText}>{t('agent.dashboard.empty.createFirst')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -205,9 +208,9 @@ export default function AgentDashboardScreen() {
       {/* Recent Leads */}
       <View style={styles.leadsSection}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Leads</Text>
+          <Text style={styles.sectionTitle}>{t('agent.dashboard.sections.recentLeads')}</Text>
           <TouchableOpacity onPress={() => router.push('/agent/leads')}>
-            <Text style={styles.sectionLink}>View all</Text>
+            <Text style={styles.sectionLink}>{t('agent.dashboard.viewAll')}</Text>
           </TouchableOpacity>
         </View>
         {leadsLoading ? (
@@ -216,7 +219,7 @@ export default function AgentDashboardScreen() {
           recentLeads.map((lead) => <LeadRow key={lead.id} item={lead} />)
         ) : (
           <View style={styles.emptyLeads}>
-            <Text style={styles.emptyLeadsText}>No leads yet.</Text>
+            <Text style={styles.emptyLeadsText}>{t('agent.dashboard.empty.leads')}</Text>
           </View>
         )}
       </View>

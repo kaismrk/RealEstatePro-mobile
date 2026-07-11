@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, Text, ScrollView, Switch, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { AuthGate } from '@/components/auth/AuthGate';
 import { colors, fontWeight, radius } from '@/constants/theme';
@@ -37,6 +38,7 @@ function NotificationToggle({
 }
 
 function NotificationsContent() {
+  const { t } = useTranslation();
   const [matchingListings, setMatchingListings] = useState(false);
   const [inquiries, setInquiries] = useState(false);
   const [priceChanges, setPriceChanges] = useState(false);
@@ -48,44 +50,44 @@ function NotificationsContent() {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Icon name="chevron-left" size={20} color={colors.primary} />
-          <Text style={styles.backText}>Back</Text>
+          <Text style={styles.backText}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notifications</Text>
+        <Text style={styles.headerTitle}>{t('notifications.header.title')}</Text>
       </View>
 
       {/* Coming soon banner */}
       <View style={styles.banner}>
-        <Text style={styles.bannerTitle}>Coming soon</Text>
+        <Text style={styles.bannerTitle}>{t('notifications.banner.title')}</Text>
         <Text style={styles.bannerSubtitle}>
-          Push notification preferences will be available in a future update.
+          {t('notifications.banner.subtitle')}
         </Text>
       </View>
 
       {/* Toggles */}
       <View style={styles.section}>
-        <Text style={styles.sectionLabel}>Push Notifications</Text>
+        <Text style={styles.sectionLabel}>{t('notifications.section.push')}</Text>
         <View style={styles.sectionBody}>
           <NotificationToggle
-            label="New matching listings"
-            description="Alerts when new listings match your saved searches"
+            label={t('notifications.items.matchingListings.label')}
+            description={t('notifications.items.matchingListings.description')}
             value={matchingListings}
             onValueChange={setMatchingListings}
           />
           <NotificationToggle
-            label="New inquiries on your listings"
-            description="When someone contacts you about a listing"
+            label={t('notifications.items.inquiries.label')}
+            description={t('notifications.items.inquiries.description')}
             value={inquiries}
             onValueChange={setInquiries}
           />
           <NotificationToggle
-            label="Price changes on saved homes"
-            description="When a price drops on a property you saved"
+            label={t('notifications.items.priceChanges.label')}
+            description={t('notifications.items.priceChanges.description')}
             value={priceChanges}
             onValueChange={setPriceChanges}
           />
           <NotificationToggle
-            label="App news & updates"
-            description="Feature announcements and tips"
+            label={t('notifications.items.appNews.label')}
+            description={t('notifications.items.appNews.description')}
             value={appNews}
             onValueChange={setAppNews}
           />
@@ -95,7 +97,7 @@ function NotificationsContent() {
       {/* Static email note */}
       <View style={styles.emailNote}>
         <Text style={styles.emailNoteText}>
-          Email notifications for saved search alerts are already active.
+          {t('notifications.emailNote')}
         </Text>
       </View>
     </ScrollView>

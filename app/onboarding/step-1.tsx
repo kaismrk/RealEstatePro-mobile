@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { useUIStore, type OnboardingDraft } from '@/lib/stores/ui.store';
 import { haptic } from '@/lib/utils/haptics';
@@ -13,15 +14,16 @@ interface IntentOption {
   description: string;
 }
 
-const OPTIONS: IntentOption[] = [
-  { id: 'buy', label: 'Buy', description: 'Find your dream home' },
-  { id: 'rent', label: 'Rent', description: 'Find a rental property' },
-  { id: 'sell', label: 'Sell', description: 'List your property' },
-  { id: 'browse', label: 'Just browse', description: "I'm exploring options" },
-];
-
 export default function OnboardingStep1() {
+  const { t } = useTranslation();
   const setOnboardingDraft = useUIStore((s) => s.setOnboardingDraft);
+
+  const OPTIONS: IntentOption[] = [
+    { id: 'buy', label: t('onboarding.step1.options.buy.label'), description: t('onboarding.step1.options.buy.description') },
+    { id: 'rent', label: t('onboarding.step1.options.rent.label'), description: t('onboarding.step1.options.rent.description') },
+    { id: 'sell', label: t('onboarding.step1.options.sell.label'), description: t('onboarding.step1.options.sell.description') },
+    { id: 'browse', label: t('onboarding.step1.options.browse.label'), description: t('onboarding.step1.options.browse.description') },
+  ];
 
   function handleSelect(intent: Intent) {
     void haptic.light();
@@ -32,9 +34,9 @@ export default function OnboardingStep1() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>Where would you like to start?</Text>
+        <Text style={styles.title}>{t('onboarding.step1.title')}</Text>
         <Text style={styles.subtitle}>
-          Tell us what you are looking for so we can personalise your experience.
+          {t('onboarding.step1.subtitle')}
         </Text>
 
         <View style={styles.optionsList}>

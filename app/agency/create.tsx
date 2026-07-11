@@ -12,6 +12,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useCreateAgency } from '@/hooks/useAgencies';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { Icon } from '@/components/ui/Icon';
@@ -56,6 +57,7 @@ function Field({
 }
 
 export default function CreateAgencyScreen() {
+  const { t } = useTranslation();
   const countryCode = useAuthStore((s) => s.countryCode);
   const create = useCreateAgency();
 
@@ -69,7 +71,7 @@ export default function CreateAgencyScreen() {
 
   function handleSubmit() {
     if (!name.trim()) {
-      Alert.alert('Validation', 'Agency name is required.');
+      Alert.alert('Validation', t('agency.create.validation.nameRequired'));
       return;
     }
 
@@ -94,7 +96,7 @@ export default function CreateAgencyScreen() {
         onError: (err: unknown) => {
           const msg =
             (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail ??
-            'Failed to create agency. Please try again.';
+            t('agency.create.error');
           Alert.alert('Error', msg);
         },
       }
@@ -115,61 +117,61 @@ export default function CreateAgencyScreen() {
           style={styles.headerBack}
         >
           <Icon name="chevron-left" size={18} color={colors.primary} />
-          <Text style={styles.headerBackText}>Back</Text>
+          <Text style={styles.headerBackText}>{t('common.back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Create Agency</Text>
+        <Text style={styles.headerTitle}>{t('agency.create.title')}</Text>
       </View>
 
       <ScrollView style={styles.scrollContent} keyboardShouldPersistTaps="handled">
         <Field
-          label="Agency Name"
+          label={t('agency.create.fields.name.label')}
           value={name}
           onChangeText={setName}
-          placeholder="Your Real Estate Agency"
+          placeholder={t('agency.create.fields.name.placeholder')}
           required
         />
         <Field
-          label="Logo URL"
+          label={t('agency.create.fields.logoUrl.label')}
           value={logoUrl}
           onChangeText={setLogoUrl}
-          placeholder="https://example.com/logo.png"
+          placeholder={t('agency.create.fields.logoUrl.placeholder')}
           keyboardType="url"
         />
         <Field
-          label="Description"
+          label={t('agency.create.fields.description.label')}
           value={description}
           onChangeText={setDescription}
-          placeholder="Tell potential clients about your agency…"
+          placeholder={t('agency.create.fields.description.placeholder')}
           multiline
         />
 
-        <Text style={styles.sectionLabel}>Social Links</Text>
+        <Text style={styles.sectionLabel}>{t('agency.create.fields.socialLinks')}</Text>
         <Field
-          label="Website"
+          label={t('agency.create.fields.website.label')}
           value={website}
           onChangeText={setWebsite}
-          placeholder="https://your-website.com"
+          placeholder={t('agency.create.fields.website.placeholder')}
           keyboardType="url"
         />
         <Field
-          label="Facebook"
+          label={t('agency.create.fields.facebook.label')}
           value={facebook}
           onChangeText={setFacebook}
-          placeholder="https://facebook.com/yourpage"
+          placeholder={t('agency.create.fields.facebook.placeholder')}
           keyboardType="url"
         />
         <Field
-          label="Instagram"
+          label={t('agency.create.fields.instagram.label')}
           value={instagram}
           onChangeText={setInstagram}
-          placeholder="https://instagram.com/youraccount"
+          placeholder={t('agency.create.fields.instagram.placeholder')}
           keyboardType="url"
         />
         <Field
-          label="Twitter / X"
+          label={t('agency.create.fields.twitter.label')}
           value={twitter}
           onChangeText={setTwitter}
-          placeholder="https://x.com/youraccount"
+          placeholder={t('agency.create.fields.twitter.placeholder')}
           keyboardType="url"
         />
 
@@ -184,7 +186,7 @@ export default function CreateAgencyScreen() {
           {create.isPending ? (
             <ActivityIndicator size="small" color={colors.textOnBrand} />
           ) : (
-            <Text style={styles.submitBtnText}>Create Agency</Text>
+            <Text style={styles.submitBtnText}>{t('agency.create.submit')}</Text>
           )}
         </TouchableOpacity>
       </ScrollView>

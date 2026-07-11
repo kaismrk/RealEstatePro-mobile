@@ -12,12 +12,14 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Eye, EyeOff } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useLogin } from '@/hooks/useAuth';
 import { colors, fontWeight, radius } from '@/constants/theme';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const { email: prefillEmail } = useLocalSearchParams<{ email?: string }>();
   const [email, setEmail]       = useState(prefillEmail ?? '');
   const [password, setPassword] = useState('');
@@ -28,19 +30,19 @@ export default function LoginScreen() {
 
   useEffect(() => {
     if (countdown <= 0) return;
-    const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
   }, [countdown]);
 
   function handleSignIn() {
-    if (!email.trim() || !password) { setError('Please enter your email and password'); return; }
+    if (!email.trim() || !password) { setError(t('login.errors.emailAndPassword')); return; }
     setError(undefined);
     login.mutate({ email: email.trim(), password }, {
       onError: (err: unknown) => {
         const status = (err as { response?: { status?: number } }).response?.status;
-        if (status === 400 || status === 401) setError('Incorrect email or password');
+        if (status === 400 || status === 401) setError(t('login.errors.incorrectCredentials'));
         else if (status === 429) setCountdown(60);
-        else setError('Something went wrong. Please try again.');
+        else setError(t('common.errors.generic'));
       },
     });
   }
@@ -52,13 +54,13 @@ export default function LoginScreen() {
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView style={styles.flex} contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.content}>
-            <Text style={styles.heading}>Welcome back</Text>
+            <Text style={styles.heading}>{t('login.title')}</Text>
 
             <Input
-              label="Email address"
+              label={t('login.email.label')}
               value={email}
-              onChangeText={(t) => { setEmail(t); if (error) setError(undefined); }}
-              placeholder="you@example.com"
+              onChangeText={(v) => { setEmail(v); if (error) setError(undefined); }}
+              placeholder={t('login.email.placeholder')}
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
@@ -67,12 +69,12 @@ export default function LoginScreen() {
 
             <View style={styles.pwWrap}>
               <Input
-                label="Password"
+                label={t('login.password.label')}
                 value={password}
-                onChangeText={(t) => { setPassword(t); if (error) setError(undefined); }}
+                onChangeText={(v) => { setPassword(v); if (error) setError(undefined); }}
                 error={error}
                 secureTextEntry={!showPw}
-                placeholder="Your password"
+                placeholder={t('login.password.placeholder')}
                 returnKeyType="go"
                 onSubmitEditing={handleSignIn}
               />
@@ -88,26 +90,26 @@ export default function LoginScreen() {
             </View>
 
             <TouchableOpacity style={styles.forgotWrap} onPress={() => Alert.alert('Forgot Password', 'Password reset is not yet available. Please contact support.')}>
-              <Text style={styles.forgotText}>Forgot password?</Text>
+              <Text style={styles.forgotText}>{t('login.password.forgot')}</Text>
             </TouchableOpacity>
 
             {rateLimited && (
               <View style={styles.rateBanner}>
-                <Text style={styles.rateText}>Too many attempts. Please wait {countdown}s before trying again.</Text>
+                <Text style={styles.rateText}>{t('common.errors.rateLimited', { countdown })}</Text>
               </View>
             )}
 
             <Button onPress={handleSignIn} size="lg" style={styles.btnFull} loading={login.isPending} disabled={rateLimited || login.isPending}>
-              Sign In
+              {t('common.signIn')}
             </Button>
             <Button variant="secondary" onPress={() => Alert.alert('Google Sign In', 'Google OAuth flow not yet configured')} size="lg" style={[styles.btnFull, styles.btnMt]}>
-              Continue with Google
+              {t('auth.googleSignIn')}
             </Button>
 
             <View style={styles.registerRow}>
-              <Text style={styles.registerPrompt}>New here? </Text>
+              <Text style={styles.registerPrompt}>{t('login.register.prompt')}</Text>
               <TouchableOpacity onPress={() => router.push('/(auth)/welcome')}>
-                <Text style={styles.registerLink}>Create an account</Text>
+                <Text style={styles.registerLink}>{t('login.register.link')}</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -10,11 +10,13 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 
 export default function RegisterScreen() {
+  const { t } = useTranslation();
   const { email } = useLocalSearchParams<{ email: string }>();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -24,13 +26,13 @@ export default function RegisterScreen() {
   function handleNext() {
     let valid = true;
     if (!firstName.trim()) {
-      setFirstNameError('First name is required');
+      setFirstNameError(t('register.firstName.error'));
       valid = false;
     } else {
       setFirstNameError(undefined);
     }
     if (!lastName.trim()) {
-      setLastNameError('Last name is required');
+      setLastNameError(t('register.lastName.error'));
       valid = false;
     } else {
       setLastNameError(undefined);
@@ -59,57 +61,57 @@ export default function RegisterScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.inner}>
-            <Text style={styles.title}>Create your account</Text>
+            <Text style={styles.title}>{t('register.title')}</Text>
 
             {/* Email display */}
             <View style={styles.emailRow}>
               <Text style={styles.emailText}>{email}</Text>
               <TouchableOpacity onPress={() => router.back()} accessibilityLabel="Change email">
-                <Text style={styles.changeLink}>Change</Text>
+                <Text style={styles.changeLink}>{t('register.changeEmail')}</Text>
               </TouchableOpacity>
             </View>
 
             <Input
-              label="First name"
+              label={t('register.firstName.label')}
               value={firstName}
               onChangeText={(text) => {
                 setFirstName(text);
                 if (firstNameError) setFirstNameError(undefined);
               }}
               error={firstNameError}
-              placeholder="Jane"
+              placeholder={t('register.firstName.placeholder')}
               autoCapitalize="words"
               returnKeyType="next"
             />
 
             <Input
-              label="Last name"
+              label={t('register.lastName.label')}
               value={lastName}
               onChangeText={(text) => {
                 setLastName(text);
                 if (lastNameError) setLastNameError(undefined);
               }}
               error={lastNameError}
-              placeholder="Smith"
+              placeholder={t('register.lastName.placeholder')}
               autoCapitalize="words"
               returnKeyType="go"
               onSubmitEditing={handleNext}
             />
 
             <Button onPress={handleNext} size="lg" style={styles.nextButton}>
-              Next
+              {t('common.next')}
             </Button>
 
             {/* Sign in link */}
             <View style={styles.signInRow}>
-              <Text style={styles.signInText}>Already have an account? </Text>
+              <Text style={styles.signInText}>{t('register.signIn.prompt')}</Text>
               <TouchableOpacity
                 onPress={() =>
                   router.replace({ pathname: '/(auth)/login', params: { email } })
                 }
                 accessibilityLabel="Sign in"
               >
-                <Text style={styles.signInLink}>Sign In</Text>
+                <Text style={styles.signInLink}>{t('common.signIn')}</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -8,41 +8,43 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { Button } from '@/components/ui/Button';
 import { colors, radius, fontWeight, fontSize } from '@/constants/theme';
 import type { ListingType, PropertyType } from '@/lib/types/property';
 
-const LISTING_TYPES: { value: ListingType; label: string }[] = [
-  { value: 'sale', label: 'For Sale' },
-  { value: 'rent', label: 'For Rent' },
-  { value: 'commercial', label: 'Commercial' },
-  { value: 'land', label: 'Land' },
-];
-
-const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
-  { value: 'apartment', label: 'Apartment' },
-  { value: 'villa', label: 'Villa' },
-  { value: 'house', label: 'House' },
-  { value: 'studio', label: 'Studio' },
-  { value: 'land', label: 'Land' },
-  { value: 'commercial', label: 'Commercial' },
-  { value: 'office', label: 'Office' },
-  { value: 'shop', label: 'Shop' },
-  { value: 'warehouse', label: 'Warehouse' },
-  { value: 'farmhouse', label: 'Farmhouse' },
-  { value: 'chalet', label: 'Chalet' },
-  { value: 'penthouse', label: 'Penthouse' },
-  { value: 'duplex', label: 'Duplex' },
-  { value: 'townhouse', label: 'Townhouse' },
-  { value: 'building', label: 'Building' },
-];
-
 export default function CreateStep1() {
+  const { t } = useTranslation();
   const draft = useUIStore((s) => s.createListingDraft);
   const setDraft = useUIStore((s) => s.setDraft);
   const countryCode = useAuthStore((s) => s.countryCode);
+
+  const LISTING_TYPES: { value: ListingType; label: string }[] = [
+    { value: 'sale', label: t('listings.listingTypes.sale') },
+    { value: 'rent', label: t('listings.listingTypes.rent') },
+    { value: 'commercial', label: t('listings.listingTypes.commercial') },
+    { value: 'land', label: t('listings.listingTypes.land') },
+  ];
+
+  const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
+    { value: 'apartment', label: t('listings.propertyTypes.apartment') },
+    { value: 'villa', label: t('listings.propertyTypes.villa') },
+    { value: 'house', label: t('listings.propertyTypes.house') },
+    { value: 'studio', label: t('listings.propertyTypes.studio') },
+    { value: 'land', label: t('listings.propertyTypes.land') },
+    { value: 'commercial', label: t('listings.propertyTypes.commercial') },
+    { value: 'office', label: t('listings.propertyTypes.office') },
+    { value: 'shop', label: t('listings.propertyTypes.shop') },
+    { value: 'warehouse', label: t('listings.propertyTypes.warehouse') },
+    { value: 'farmhouse', label: t('listings.propertyTypes.farmhouse') },
+    { value: 'chalet', label: t('listings.propertyTypes.chalet') },
+    { value: 'penthouse', label: t('listings.propertyTypes.penthouse') },
+    { value: 'duplex', label: t('listings.propertyTypes.duplex') },
+    { value: 'townhouse', label: t('listings.propertyTypes.townhouse') },
+    { value: 'building', label: t('listings.propertyTypes.building') },
+  ];
 
   const [listingType, setListingType] = useState<ListingType>(
     (draft?.listing_type as ListingType) ?? 'sale'
@@ -58,10 +60,10 @@ export default function CreateStep1() {
 
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
-    if (!title.trim()) newErrors.title = 'Title is required';
+    if (!title.trim()) newErrors.title = t('listings.create.step1.title.error');
     if (!price || isNaN(Number(price)) || Number(price) <= 0)
-      newErrors.price = 'A valid price is required';
-    if (!propertyType) newErrors.property_type = 'Select a property type';
+      newErrors.price = t('listings.create.step1.price.error');
+    if (!propertyType) newErrors.property_type = t('listings.create.step1.propertyType.error');
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -83,16 +85,16 @@ export default function CreateStep1() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBackBtn}>
-          <Text style={styles.linkText}>Cancel</Text>
+          <Text style={styles.linkText}>{t('common.cancel')}</Text>
         </TouchableOpacity>
-        <Text style={styles.screenTitle}>Create Listing</Text>
-        <Text style={styles.stepSubtitle}>Step 1 of 5 — Basic Info</Text>
+        <Text style={styles.screenTitle}>{t('listings.create.header.title')}</Text>
+        <Text style={styles.stepSubtitle}>{t('listings.create.step1.subtitle')}</Text>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Listing Type */}
         <Text style={styles.sectionLabel}>
-          Listing Type <Text style={styles.required}>*</Text>
+          {t('listings.create.step1.listingType.label')} <Text style={styles.required}>*</Text>
         </Text>
         <View style={styles.chipRow}>
           {LISTING_TYPES.map((lt) => (
@@ -120,7 +122,7 @@ export default function CreateStep1() {
 
         {/* Property Type */}
         <Text style={styles.sectionLabel}>
-          Property Type <Text style={styles.required}>*</Text>
+          {t('listings.create.step1.propertyType.label')} <Text style={styles.required}>*</Text>
         </Text>
         <View style={styles.chipRow}>
           {PROPERTY_TYPES.map((pt) => (
@@ -153,7 +155,7 @@ export default function CreateStep1() {
 
         {/* Title */}
         <Text style={styles.fieldLabel}>
-          Title <Text style={styles.required}>*</Text>
+          {t('listings.create.step1.title.label')} <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           value={title}
@@ -171,7 +173,7 @@ export default function CreateStep1() {
 
         {/* Price */}
         <Text style={styles.fieldLabel}>
-          Price <Text style={styles.required}>*</Text>
+          {t('listings.create.step1.price.label')} <Text style={styles.required}>*</Text>
         </Text>
         <TextInput
           value={price}
@@ -194,7 +196,7 @@ export default function CreateStep1() {
       {/* Footer */}
       <View style={styles.footer}>
         <Button onPress={handleNext} size="lg">
-          Next: Location
+          {t('listings.create.step1.next')}
         </Button>
       </View>
     </View>

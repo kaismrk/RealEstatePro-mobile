@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Bell } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { useSavedSearches } from '@/hooks/useSavedSearches';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useSearchStore } from '@/lib/stores/search.store';
@@ -21,7 +22,7 @@ import { Icon } from '@/components/ui/Icon';
 import { colors, radius, fontWeight, shadows } from '@/constants/theme';
 import type { SavedSearchResponse } from '@/lib/types/saved_search';
 
-function buildFilterSummary(filters: Record<string, unknown>): string {
+function buildFilterSummary(filters: Record<string, unknown>, allPropertiesLabel: string): string {
   const parts: string[] = [];
   if (filters.city) parts.push(String(filters.city));
   if (filters.listing_type) parts.push(String(filters.listing_type));
@@ -34,10 +35,11 @@ function buildFilterSummary(filters: Record<string, unknown>): string {
   if (filters.min_bedrooms != null) {
     parts.push(`${String(filters.min_bedrooms)}+ beds`);
   }
-  return parts.length > 0 ? parts.join(' · ') : 'All properties';
+  return parts.length > 0 ? parts.join(' · ') : allPropertiesLabel;
 }
 
 export default function UpdatesScreen() {
+  const { t } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
   const setFilters = useSearchStore((s) => s.setFilters);
   const { list, remove } = useSavedSearches();
@@ -48,17 +50,17 @@ export default function UpdatesScreen() {
     return (
       <SafeAreaView style={styles.authGate}>
         <Icon name="bell" size={40} color={colors.textTertiary} />
-        <Text style={styles.authTitle}>Sign in to view saved searches</Text>
+        <Text style={styles.authTitle}>{t('updates.guest.title')}</Text>
         <Text style={styles.authSubtitle}>
-          Save your searches and get notified when new homes match.
+          {t('updates.guest.subtitle')}
         </Text>
         <TouchableOpacity
           style={styles.authButton}
           onPress={() => router.push('/(auth)/welcome')}
           accessibilityRole="button"
-          accessibilityLabel="Sign in"
+          accessibilityLabel={t('common.signIn')}
         >
-          <Text style={styles.authButtonText}>Sign In</Text>
+          <Text style={styles.authButtonText}>{t('common.signIn')}</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -73,7 +75,7 @@ export default function UpdatesScreen() {
 
   function renderItem({ item }: ListRenderItemInfo<SavedSearchResponse>) {
     const filters = item.filters as Record<string, unknown>;
-    const summary = buildFilterSummary(filters);
+    const summary = buildFilterSummary(filters, t('updates.allProperties'));
 
     return (
       <TouchableOpacity
@@ -121,7 +123,7 @@ export default function UpdatesScreen() {
     <SafeAreaView style={styles.root}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Saved Searches</Text>
+        <Text style={styles.headerTitle}>{t('updates.header.title')}</Text>
         <TouchableOpacity
           onPress={() => setSheetVisible(true)}
           style={styles.newButton}
@@ -129,7 +131,7 @@ export default function UpdatesScreen() {
           accessibilityLabel="Save new search"
         >
           <Icon name="plus" size={16} color={colors.textOnBrand} />
-          <Text style={styles.newButtonText}>New</Text>
+          <Text style={styles.newButtonText}>{t('updates.newButton')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -140,11 +142,11 @@ export default function UpdatesScreen() {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <EmptyState
-            title="No saved searches yet"
-            subtitle="Save your current search to get notified when new homes match."
+            title={t('updates.empty.title')}
+            subtitle={t('updates.empty.subtitle')}
             icon={<Bell size={48} color={colors.textTertiary} />}
             action={{
-              label: 'Go to Search',
+              label: t('updates.empty.action'),
               onPress: () => router.push('/(tabs)/search'),
             }}
           />

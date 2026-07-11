@@ -11,6 +11,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@/components/ui/Icon';
 import { useUIStore } from '@/lib/stores/ui.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
@@ -36,6 +37,7 @@ function formatCurrency(value: string, currency: string) {
 }
 
 export default function OnboardingStep3() {
+  const { t } = useTranslation();
   const countryCode = useAuthStore((s) => s.countryCode);
   const onboardingDraft = useUIStore((s) => s.onboardingDraft);
   const setOnboardingDraft = useUIStore((s) => s.setOnboardingDraft);
@@ -81,9 +83,9 @@ export default function OnboardingStep3() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.content}>
-            <Text style={styles.title}>What is your budget?</Text>
+            <Text style={styles.title}>{t('onboarding.step3.title')}</Text>
             <Text style={styles.subtitle}>
-              Set a price range to find matching properties.
+              {t('onboarding.step3.subtitle')}
             </Text>
 
             {/* Preset ranges */}
@@ -115,7 +117,7 @@ export default function OnboardingStep3() {
             {/* Min / Max price inputs */}
             <View style={styles.inputsContainer}>
               <View>
-                <Text style={styles.inputLabel}>Minimum price ({currency})</Text>
+                <Text style={styles.inputLabel}>{t('onboarding.step3.minPrice', { currency })}</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder="e.g. 100,000"
@@ -137,7 +139,7 @@ export default function OnboardingStep3() {
               </View>
 
               <View>
-                <Text style={styles.inputLabel}>Maximum price ({currency})</Text>
+                <Text style={styles.inputLabel}>{t('onboarding.step3.maxPrice', { currency })}</Text>
                 <TextInput
                   style={styles.textInput}
                   placeholder="e.g. 500,000"
@@ -177,7 +179,7 @@ export default function OnboardingStep3() {
             accessibilityRole="button"
             accessibilityLabel="Skip this step"
           >
-            <Text style={styles.skipButtonText}>Skip</Text>
+            <Text style={styles.skipButtonText}>{t('common.skip')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleNext}
@@ -185,7 +187,7 @@ export default function OnboardingStep3() {
             accessibilityRole="button"
             accessibilityLabel="Next step"
           >
-            <Text style={styles.nextButtonText}>Next</Text>
+            <Text style={styles.nextButtonText}>{t('common.next')}</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

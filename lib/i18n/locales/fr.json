@@ -1,0 +1,674 @@
+{
+  "common": {
+    "back": "Retour",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "next": "Suivant",
+    "continue": "Continuer",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "reset": "Réinitialiser",
+    "skip": "Passer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "tryAgain": "Réessayer",
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "remove": "Retirer",
+    "phone": "Téléphone",
+    "viewAll": "Voir tout",
+    "errors": {
+      "generic": "Une erreur est survenue. Veuillez réessayer.",
+      "rateLimited": "Trop de tentatives. Veuillez attendre {{countdown}}s avant de réessayer."
+    }
+  },
+  "auth": {
+    "googleSignIn": "Continuer avec Google"
+  },
+  "tabs": {
+    "search": "Recherche",
+    "updates": "Alertes",
+    "saved": "Favoris",
+    "loans": "Prêts",
+    "profile": "Profil"
+  },
+  "login": {
+    "title": "Bienvenue",
+    "email": {
+      "label": "Adresse e-mail",
+      "placeholder": "vous@exemple.com"
+    },
+    "password": {
+      "label": "Mot de passe",
+      "placeholder": "Votre mot de passe",
+      "forgot": "Mot de passe oublié ?"
+    },
+    "errors": {
+      "emailAndPassword": "Veuillez saisir votre e-mail et mot de passe",
+      "incorrectCredentials": "E-mail ou mot de passe incorrect"
+    },
+    "register": {
+      "prompt": "Nouveau ici ? ",
+      "link": "Créer un compte"
+    }
+  },
+  "welcome": {
+    "title": "Trouvez votre logement idéal",
+    "subtitle": "Parcourez plus de 200 000 annonces en Tunisie. Sauvegardez vos favoris, contactez des agents, et planifiez des visites — tout en un seul endroit.",
+    "errors": {
+      "required": "Veuillez saisir votre adresse e-mail",
+      "invalid": "Veuillez saisir une adresse e-mail valide"
+    },
+    "browseAsGuest": "Parcourir en tant qu'invité"
+  },
+  "register": {
+    "title": "Créer votre compte",
+    "changeEmail": "Modifier",
+    "firstName": {
+      "label": "Prénom",
+      "placeholder": "Fatima",
+      "error": "Le prénom est obligatoire"
+    },
+    "lastName": {
+      "label": "Nom",
+      "placeholder": "Ben Ali",
+      "error": "Le nom est obligatoire"
+    },
+    "signIn": {
+      "prompt": "Vous avez déjà un compte ? "
+    }
+  },
+  "passwordCreate": {
+    "title": "Créer un mot de passe",
+    "subtitle": "Choisissez un mot de passe sécurisé pour protéger votre compte.",
+    "password": {
+      "label": "Mot de passe",
+      "placeholder": "Entrez votre mot de passe"
+    },
+    "confirmPassword": {
+      "label": "Confirmer le mot de passe",
+      "placeholder": "Ressaisissez votre mot de passe"
+    },
+    "errors": {
+      "passwordRequired": "Le mot de passe est obligatoire",
+      "confirmRequired": "Veuillez confirmer votre mot de passe",
+      "mismatch": "Les mots de passe ne correspondent pas"
+    },
+    "submit": "Créer un compte"
+  },
+  "profile": {
+    "guest": {
+      "title": "Votre profil",
+      "subtitle": "Connectez-vous pour accéder à votre profil, vos annonces et vos paramètres."
+    },
+    "header": {
+      "title": "Profil"
+    },
+    "sections": {
+      "account": "Compte",
+      "activity": "Activité",
+      "settings": "Paramètres",
+      "accountActions": "Actions du compte"
+    },
+    "account": {
+      "editProfile": "Modifier le profil",
+      "changePassword": "Changer le mot de passe",
+      "myListings": "Mes annonces",
+      "listingQuota": "Quota d'annonces",
+      "listingPacks": "Packs d'annonces",
+      "agentDashboard": "Tableau de bord agent",
+      "becomeAgent": "Devenir agent",
+      "myAgency": "Mon agence",
+      "agencySubscription": "Abonnement agence",
+      "createAgency": "Créer une agence"
+    },
+    "activity": {
+      "messages": "Messages",
+      "savedHomes": "Biens sauvegardés",
+      "savedSearches": "Recherches sauvegardées"
+    },
+    "settings": {
+      "notifications": "Notifications",
+      "appSettings": "Paramètres de l'app",
+      "helpFeedback": "Aide & commentaires",
+      "privacy": "Confidentialité"
+    },
+    "signOut": "Se déconnecter",
+    "signOutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?"
+  },
+  "settings": {
+    "header": {
+      "title": "Paramètres de l'app"
+    },
+    "section": {
+      "region": "Région",
+      "about": "À propos",
+      "accountActions": "Actions du compte"
+    },
+    "country": "Pays",
+    "language": "Langue",
+    "theme": "Thème",
+    "themeValue": "Clair",
+    "appVersion": "Version de l'app",
+    "legal": {
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité",
+      "licenses": "Licences open-source"
+    },
+    "picker": {
+      "title": "Choisir la langue",
+      "close": "Fermer",
+      "languages": {
+        "fr": "Français",
+        "en": "English"
+      }
+    }
+  },
+  "editProfile": {
+    "header": {
+      "title": "Modifier le profil"
+    },
+    "firstName": {
+      "label": "Prénom",
+      "placeholder": "Entrez votre prénom"
+    },
+    "lastName": {
+      "label": "Nom",
+      "placeholder": "Entrez votre nom"
+    },
+    "email": {
+      "label": "E-mail",
+      "placeholder": "votre@email.com",
+      "error": "Saisissez une adresse e-mail valide"
+    },
+    "country": {
+      "label": "Pays",
+      "hint": "Le pays ne peut être modifié que dans les paramètres de l'app."
+    },
+    "submit": "Enregistrer les modifications",
+    "success": "Profil mis à jour avec succès.",
+    "error": "Impossible de mettre à jour le profil. Veuillez réessayer.",
+    "loading": "Chargement..."
+  },
+  "changePassword": {
+    "header": {
+      "title": "Changer le mot de passe"
+    },
+    "hint": "Après avoir modifié votre mot de passe, vous serez déconnecté et invité à vous reconnecter.",
+    "currentPassword": {
+      "label": "Mot de passe actuel",
+      "placeholder": "Votre mot de passe actuel"
+    },
+    "newPassword": {
+      "label": "Nouveau mot de passe",
+      "placeholder": "Nouveau mot de passe"
+    },
+    "confirmPassword": {
+      "label": "Confirmer le nouveau mot de passe",
+      "placeholder": "Confirmer le nouveau mot de passe"
+    },
+    "errors": {
+      "currentRequired": "Veuillez saisir votre mot de passe actuel",
+      "newRequired": "Veuillez saisir un nouveau mot de passe",
+      "policy": "Le mot de passe doit contenir 8+ caractères avec majuscules, minuscules et un chiffre",
+      "confirmRequired": "Veuillez confirmer votre nouveau mot de passe",
+      "mismatch": "Les mots de passe ne correspondent pas",
+      "currentIncorrect": "Le mot de passe actuel est incorrect"
+    },
+    "submit": "Changer le mot de passe",
+    "success": {
+      "title": "Mot de passe modifié",
+      "body": "Votre mot de passe a été modifié. Veuillez vous reconnecter."
+    },
+    "error": "Impossible de changer le mot de passe. Veuillez réessayer."
+  },
+  "notifications": {
+    "header": {
+      "title": "Notifications"
+    },
+    "banner": {
+      "title": "Bientôt disponible",
+      "subtitle": "Les préférences de notifications push seront disponibles dans une prochaine mise à jour."
+    },
+    "section": {
+      "push": "Notifications push"
+    },
+    "items": {
+      "matchingListings": {
+        "label": "Nouvelles annonces correspondantes",
+        "description": "Alertes lorsque de nouvelles annonces correspondent à vos recherches sauvegardées"
+      },
+      "inquiries": {
+        "label": "Nouvelles demandes sur vos annonces",
+        "description": "Lorsqu'une personne vous contacte au sujet d'une annonce"
+      },
+      "priceChanges": {
+        "label": "Changements de prix sur les biens sauvegardés",
+        "description": "Lorsque le prix d'un bien que vous avez sauvegardé baisse"
+      },
+      "appNews": {
+        "label": "Actualités et mises à jour de l'app",
+        "description": "Annonces de fonctionnalités et conseils"
+      }
+    },
+    "emailNote": "Les notifications par e-mail pour les alertes de recherche sauvegardée sont déjà actives."
+  },
+  "saved": {
+    "guest": {
+      "title": "Connectez-vous pour voir vos biens sauvegardés",
+      "subtitle": "Sauvegardez les biens qui vous plaisent et accédez-y à tout moment."
+    },
+    "header": {
+      "title": "Biens sauvegardés"
+    },
+    "compare": {
+      "button": "Comparer",
+      "compareCount": "Comparer {{count}}",
+      "hint": "Sélectionnez 2 à 5 biens à comparer. {{count}} sélectionné(s)."
+    },
+    "removeLabel": "Retirer des favoris",
+    "removeButton": "Retirer",
+    "empty": {
+      "title": "Aucun bien sauvegardé",
+      "subtitle": "Appuyez sur le cœur d'une annonce pour la sauvegarder ici",
+      "action": "Commencer à chercher"
+    }
+  },
+  "updates": {
+    "guest": {
+      "title": "Connectez-vous pour voir vos recherches sauvegardées",
+      "subtitle": "Sauvegardez vos recherches et recevez des alertes pour les nouveaux biens correspondants."
+    },
+    "header": {
+      "title": "Recherches sauvegardées"
+    },
+    "newButton": "Nouveau",
+    "allProperties": "Tous les biens",
+    "empty": {
+      "title": "Aucune recherche sauvegardée",
+      "subtitle": "Sauvegardez votre recherche actuelle pour être alerté des nouveaux biens correspondants.",
+      "action": "Aller à la recherche"
+    }
+  },
+  "search": {
+    "saveButton": "Sauvegarder",
+    "mapButton": "Carte",
+    "saveSearchLabel": "Sauvegarder la recherche",
+    "mapViewLabel": "Vue carte",
+    "empty": {
+      "title": "Aucun bien trouvé",
+      "subtitle": "Essayez d'ajuster vos filtres"
+    }
+  },
+  "filters": {
+    "transactionType": "Type de transaction",
+    "priceRange": "Fourchette de prix",
+    "minPrice": "Prix min",
+    "maxPrice": "Prix max",
+    "bedrooms": "Chambres",
+    "min": "Min",
+    "max": "Max",
+    "area": "Surface (m²)",
+    "minArea": "Surface min",
+    "maxArea": "Surface max",
+    "propertyType": "Type de bien",
+    "amenities": "Équipements",
+    "amenityItems": {
+      "pool": "Piscine",
+      "garden": "Jardin",
+      "balcony": "Balcon",
+      "elevator": "Ascenseur",
+      "parking": "Parking",
+      "garage": "Garage"
+    },
+    "energyRating": "Classe énergétique",
+    "apply": "Appliquer les filtres"
+  },
+  "map": {
+    "listView": "Liste",
+    "results": "{{count}} résultats"
+  },
+  "messaging": {
+    "inbox": {
+      "title": "Messages"
+    },
+    "chat": {
+      "title": "Message",
+      "replyButton": "Répondre"
+    }
+  },
+  "myListings": {
+    "header": {
+      "title": "Mes annonces"
+    },
+    "authGate": {
+      "title": "Connexion requise"
+    },
+    "quota": {
+      "title": "Quota épuisé",
+      "body": "Il ne vous reste plus d'emplacements d'annonces. Achetez un pack pour créer plus d'annonces.",
+      "action": "Acheter un pack",
+      "remaining": "{{free}} gratuit(s) + {{paid}} payant(s) restants"
+    },
+    "rejection": {
+      "title": "Motif de refus",
+      "noReason": "Aucun motif fourni."
+    },
+    "boosted": "Boosté",
+    "boost": "Booster",
+    "photoAlt": "Photo du bien",
+    "newButton": "+ Nouveau",
+    "createLabel": "Créer une nouvelle annonce",
+    "error": "Impossible de charger vos annonces.",
+    "empty": {
+      "title": "Aucune annonce pour l'instant",
+      "subtitle": "Créez votre première annonce pour commencer à vendre ou louer.",
+      "createListing": "Créer une annonce"
+    },
+    "deleteAlert": {
+      "title": "Supprimer l'annonce",
+      "body": "Êtes-vous sûr de vouloir supprimer \"{{title}}\" ? Cette action est irréversible."
+    }
+  },
+  "loans": {
+    "title": "Prêts immobiliers"
+  },
+  "quota": {
+    "header": {
+      "title": "Quota d'annonces"
+    },
+    "loading": "Chargement du quota...",
+    "error": "Impossible de charger le quota. Veuillez réessayer.",
+    "totalSlots": {
+      "heading": "Emplacements disponibles",
+      "subtext": "annonces que vous pouvez publier maintenant"
+    },
+    "freeSlots": {
+      "heading": "Emplacements gratuits",
+      "remaining": "{{used}} / {{total}} restants",
+      "note": "{{used}} sur {{total}} emplacements gratuits utilisés"
+    },
+    "paidSlots": {
+      "heading": "Emplacements payants",
+      "remaining": "{{count}} restant(s)",
+      "note": "Les packs d'annonces achetés apparaissent ici"
+    },
+    "cta": "Acheter un pack d'annonces",
+    "lastUpdated": "Dernière mise à jour : {{date}}"
+  },
+  "listings": {
+    "create": {
+      "header": {
+        "title": "Créer une annonce"
+      },
+      "step1": {
+        "subtitle": "Étape 1 sur 5 — Informations de base",
+        "listingType": { "label": "Type d'annonce" },
+        "propertyType": { "label": "Type de bien", "error": "Sélectionnez un type de bien" },
+        "title": { "label": "Titre", "error": "Le titre est obligatoire" },
+        "price": { "label": "Prix", "error": "Un prix valide est requis" },
+        "next": "Suivant : Localisation"
+      },
+      "step2": {
+        "subtitle": "Étape 2 sur 5 — Localisation",
+        "locationTitle": "Localisation",
+        "useLocation": "Utiliser ma position actuelle",
+        "city": { "label": "Ville", "error": "La ville est obligatoire" },
+        "address": { "label": "Adresse", "error": "L'adresse est obligatoire" },
+        "zipCode": { "label": "Code postal" },
+        "addressVisibility": {
+          "label": "Visibilité de l'adresse",
+          "exact": "Adresse exacte (affichée sur la carte)",
+          "approximate": "Emplacement approximatif",
+          "cityOnly": "Ville uniquement"
+        },
+        "next": "Suivant : Détails du bien",
+        "locationError": "Impossible de récupérer la localisation. Veuillez saisir manuellement.",
+        "locationDenied": "L'autorisation de localisation est requise pour utiliser cette fonctionnalité."
+      },
+      "step3": {
+        "subtitle": "Étape 3 sur 5 — Caractéristiques et équipements",
+        "propertyDetails": "Détails du bien",
+        "tabs": {
+          "specs": "Caractéristiques",
+          "amenities": "Équipements",
+          "description": "Description"
+        },
+        "specs": {
+          "area": "Surface (m²)",
+          "lotSize": "Surface du terrain (m²)",
+          "rooms": "Nombre de pièces",
+          "bedrooms": "Chambres",
+          "bathrooms": "Salles de bain",
+          "floor": "Étage",
+          "totalFloors": "Nombre d'étages",
+          "yearBuilt": "Année de construction"
+        },
+        "amenities": {
+          "furnished": "Meublé",
+          "pool": "Piscine",
+          "garden": "Jardin",
+          "balcony": "Balcon",
+          "elevator": "Ascenseur",
+          "garageSpots": "Places de garage",
+          "parkingSpots": "Places de parking",
+          "heatingSystem": "Système de chauffage",
+          "airConditioning": "Climatisation",
+          "kitchenType": "Type de cuisine",
+          "energyRating": "Classe énergétique"
+        },
+        "description": {
+          "label": "Description ({{count}}/5000)",
+          "placeholder": "Décrivez le bien..."
+        },
+        "next": "Suivant : Photos"
+      },
+      "step4": {
+        "photosTitle": "Photos",
+        "addPhotos": "Ajouter des photos",
+        "uploadSubtitle": "Jusqu'à {{max}} photos. Appuyez pour sélectionner.",
+        "selectedPhotos": "Photos sélectionnées — la première photo est la couverture",
+        "coverBadge": "Couverture",
+        "photoAlt": "Photo {{index}}",
+        "removePhotoLabel": "Retirer la photo {{index}}",
+        "next": "Suivant : Vérification",
+        "limitReached": "Vous pouvez télécharger au maximum {{max}} photos.",
+        "permissionDenied": "L'accès à la bibliothèque de médias est nécessaire pour choisir des photos.",
+        "photoCount": "Étape 4 sur 5 — Photos ({{count}}/{{max}})"
+      },
+      "step5": {
+        "subtitle": "Étape 5 sur 5 — Vérification et envoi",
+        "reviewTitle": "Vérification",
+        "sections": {
+          "basicInfo": "Informations de base",
+          "location": "Localisation",
+          "propertyDetails": "Détails du bien",
+          "photos": "Photos"
+        },
+        "fields": {
+          "title": "Titre",
+          "listingType": "Type d'annonce",
+          "propertyType": "Type de bien",
+          "price": "Prix",
+          "city": "Ville",
+          "address": "Adresse",
+          "zipCode": "Code postal",
+          "visibility": "Visibilité",
+          "area": "Surface (m²)",
+          "bedrooms": "Chambres",
+          "bathrooms": "Salles de bain",
+          "floor": "Étage",
+          "yearBuilt": "Année de construction",
+          "furnished": "Meublé",
+          "heating": "Chauffage",
+          "kitchen": "Cuisine",
+          "energyRating": "Classe énergétique"
+        },
+        "photos": {
+          "selected_one": "{{count}} photo sélectionnée",
+          "selected_other": "{{count}} photos sélectionnées",
+          "none": "Aucune photo ajoutée"
+        },
+        "editLink": "Modifier",
+        "yes": "Oui",
+        "no": "Non",
+        "submit": "Publier l'annonce",
+        "errors": { "title": "Veuillez corriger ces problèmes :" },
+        "success": {
+          "title": "Succès",
+          "body": "Votre annonce a été soumise pour examen !",
+          "viewMyListings": "Voir mes annonces"
+        },
+        "quota": {
+          "title": "Quota d'annonces épuisé",
+          "body": "Vous avez utilisé tous vos emplacements d'annonces gratuits et payants. Achetez un pack pour continuer à publier.",
+          "action": "Acheter un pack"
+        },
+        "error": "Impossible de créer l'annonce. Veuillez réessayer."
+      }
+    },
+    "listingTypes": {
+      "sale": "À vendre",
+      "rent": "À louer",
+      "commercial": "Commercial",
+      "land": "Terrain"
+    },
+    "propertyTypes": {
+      "apartment": "Appartement",
+      "villa": "Villa",
+      "house": "Maison",
+      "studio": "Studio",
+      "land": "Terrain",
+      "commercial": "Commercial",
+      "office": "Bureau",
+      "shop": "Boutique",
+      "warehouse": "Entrepôt",
+      "farmhouse": "Ferme",
+      "chalet": "Chalet",
+      "penthouse": "Penthouse",
+      "duplex": "Duplex",
+      "townhouse": "Maison de ville",
+      "building": "Immeuble"
+    },
+    "heatingTypes": {
+      "central": "Central",
+      "individual": "Individuel",
+      "electric": "Électrique",
+      "gas": "Gaz",
+      "fuel": "Fioul",
+      "heat_pump": "Pompe à chaleur",
+      "solar": "Solaire",
+      "wood": "Bois",
+      "none": "Aucun"
+    },
+    "acTypes": {
+      "split": "Split",
+      "central": "Central",
+      "portable": "Portable",
+      "none": "Aucun"
+    },
+    "kitchenTypes": {
+      "open": "Ouverte",
+      "closed": "Fermée",
+      "semi_open": "Semi-ouverte",
+      "american": "Américaine"
+    },
+    "disclosureLevels": {
+      "exact": "Adresse exacte (affichée sur la carte)",
+      "approximate": "Emplacement approximatif",
+      "city_only": "Ville uniquement"
+    }
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Par où souhaitez-vous commencer ?",
+      "subtitle": "Dites-nous ce que vous cherchez pour personnaliser votre expérience.",
+      "options": {
+        "buy": { "label": "Acheter", "description": "Trouvez le logement de vos rêves" },
+        "rent": { "label": "Louer", "description": "Trouvez un bien en location" },
+        "sell": { "label": "Vendre", "description": "Publiez votre bien" },
+        "browse": { "label": "Parcourir", "description": "J'explore les options" }
+      }
+    },
+    "step2": {
+      "title": "Où cherchez-vous ?",
+      "subtitle": "Choisissez une région pour affiner votre recherche.",
+      "searchPlaceholder": "Tapez une région ou une ville…",
+      "useLocation": "Utiliser ma position actuelle",
+      "gettingLocation": "Localisation en cours…",
+      "locationDenied": "Autorisation de localisation refusée. Vous pouvez taper une ville à la place.",
+      "locationError": "Impossible d'obtenir votre position. Veuillez taper une ville.",
+      "noRegions": "Aucune région trouvée"
+    },
+    "step3": {
+      "title": "Quel est votre budget ?",
+      "subtitle": "Définissez une fourchette de prix pour trouver des biens correspondants.",
+      "minPrice": "Prix minimum ({{currency}})",
+      "maxPrice": "Prix maximum ({{currency}})"
+    }
+  },
+  "agent": {
+    "register": {
+      "title": "Devenir agent",
+      "benefits": {
+        "title": "Avantages agent",
+        "body": "En tant qu'agent, vous accédez à un tableau de bord complet, le suivi des prospects, des statistiques par annonce, et la possibilité de lier votre profil à une agence."
+      },
+      "bio": {
+        "label": "Biographie",
+        "placeholder": "Parlez de vous aux acheteurs et locataires..."
+      },
+      "footNote": "L'affiliation à une agence peut être définie après l'inscription depuis votre profil agent.",
+      "submit": "S'inscrire comme agent",
+      "alreadyRegistered": {
+        "title": "Déjà inscrit",
+        "body": "Vous avez déjà un profil agent. Redirection en cours..."
+      }
+    },
+    "dashboard": {
+      "title": "Tableau de bord agent",
+      "noProfile": {
+        "title": "Aucun profil agent",
+        "body": "Vous devez vous inscrire en tant qu'agent pour accéder au tableau de bord."
+      },
+      "stats": {
+        "listings": "Annonces",
+        "inquiries": "Demandes",
+        "saves": "Favoris",
+        "views": "Vues"
+      },
+      "sections": {
+        "myListings": "Mes annonces",
+        "recentLeads": "Prospects récents"
+      },
+      "empty": {
+        "listings": "Aucune annonce pour l'instant.",
+        "createFirst": "Créez votre première annonce",
+        "leads": "Aucun prospect pour l'instant."
+      },
+      "inquiriesCount": "{{count}} demandes",
+      "savesCount": "{{count}} favoris",
+      "registerAsAgent": "S'inscrire comme agent"
+    }
+  },
+  "agency": {
+    "create": {
+      "title": "Créer une agence",
+      "fields": {
+        "name": { "label": "Nom de l'agence", "placeholder": "Votre agence immobilière" },
+        "logoUrl": { "label": "URL du logo", "placeholder": "https://exemple.com/logo.png" },
+        "description": { "label": "Description", "placeholder": "Décrivez votre agence aux clients potentiels…" },
+        "socialLinks": "Réseaux sociaux",
+        "website": { "label": "Site web", "placeholder": "https://votre-site.com" },
+        "facebook": { "label": "Facebook", "placeholder": "https://facebook.com/votrepage" },
+        "instagram": { "label": "Instagram", "placeholder": "https://instagram.com/votrecompte" },
+        "twitter": { "label": "Twitter / X", "placeholder": "https://x.com/votrecompte" }
+      },
+      "submit": "Créer l'agence",
+      "validation": { "nameRequired": "Le nom de l'agence est obligatoire." },
+      "error": "Impossible de créer l'agence. Veuillez réessayer."
+    }
+  }
+}

@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { colors, fontWeight } from '@/constants/theme';
 
 export default function LoansScreen() {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home Loans</Text>
+      <Text style={styles.title}>{t('loans.title')}</Text>
     </View>
   );
 }

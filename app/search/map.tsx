@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { ChevronLeft, List } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import type MapView from 'react-native-maps';
 import type { Region } from 'react-native-maps';
 import { useSearchStore } from '@/lib/stores/search.store';
@@ -26,6 +27,7 @@ import type { PropertySchema } from '@/lib/types/property';
 const DEBOUNCE_MS = 500;
 
 export default function MapScreen() {
+  const { t } = useTranslation();
   const mapRef = useRef<MapView | null>(null);
 
   const setMapRegion = useSearchStore((s) => s.setMapRegion);
@@ -171,7 +173,7 @@ export default function MapScreen() {
           {/* Result count badge */}
           {totalCount > 0 && (
             <View style={styles.countBadge} testID="result-count-badge">
-              <Text style={styles.countText}>{totalCount} results</Text>
+              <Text style={styles.countText}>{t('map.results', { count: totalCount })}</Text>
             </View>
           )}
 
@@ -184,7 +186,7 @@ export default function MapScreen() {
             testID="list-toggle"
           >
             <List size={14} color="#111827" />
-            <Text style={styles.listToggleText}>List</Text>
+            <Text style={styles.listToggleText}>{t('map.listView')}</Text>
           </TouchableOpacity>
         </View>
 

@@ -13,6 +13,7 @@ import {
   type ListRenderItemInfo,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useMyListings } from '@/hooks/useMyListings';
 import { useDeleteProperty } from '@/hooks/useDeleteProperty';
 import { useListingQuota } from '@/hooks/useUser';
@@ -33,14 +34,13 @@ function QuotaExhaustedModal({
   visible: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalCard}>
-          <Text style={styles.modalTitle}>Quota Exhausted</Text>
-          <Text style={styles.modalBody}>
-            You have no remaining listing slots. Purchase a pack to create more listings.
-          </Text>
+          <Text style={styles.modalTitle}>{t('myListings.quota.title')}</Text>
+          <Text style={styles.modalBody}>{t('myListings.quota.body')}</Text>
           <Button
             onPress={() => {
               onClose();
@@ -48,10 +48,10 @@ function QuotaExhaustedModal({
             }}
             size="lg"
           >
-            Purchase a Pack
+            {t('myListings.quota.action')}
           </Button>
           <TouchableOpacity style={styles.modalCancel} onPress={onClose}>
-            <Text style={styles.modalCancelText}>Cancel</Text>
+            <Text style={styles.modalCancelText}>{t('common.cancel')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -68,14 +68,15 @@ function RejectionModal({
   reason: string | null;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.sheetOverlay}>
         <View style={styles.sheetCard}>
-          <Text style={styles.sheetTitle}>Rejection Reason</Text>
-          <Text style={styles.sheetBody}>{reason ?? 'No reason provided.'}</Text>
+          <Text style={styles.sheetTitle}>{t('myListings.rejection.title')}</Text>
+          <Text style={styles.sheetBody}>{reason ?? t('myListings.rejection.noReason')}</Text>
           <Button onPress={onClose} variant="secondary">
-            Close
+            {t('common.close')}
           </Button>
         </View>
       </View>
@@ -98,6 +99,7 @@ function ListingCard({
   onBoost: () => void;
   onViewRejection: () => void;
 }) {
+  const { t } = useTranslation();
   const coverImage = item.image_urls?.[0];
 
   return (
@@ -114,7 +116,7 @@ function ListingCard({
             source={{ uri: coverImage }}
             style={styles.cardImageFill}
             resizeMode="cover"
-            accessibilityLabel="Property photo"
+            accessibilityLabel={t('myListings.photoAlt')}
           />
         ) : (
           <View style={styles.cardImagePlaceholder}>
@@ -137,7 +139,7 @@ function ListingCard({
           ) : null}
           {item.is_boosted && (
             <View style={styles.boostedBadge}>
-              <Text style={styles.boostedBadgeText}>Boosted</Text>
+              <Text style={styles.boostedBadgeText}>{t('myListings.boosted')}</Text>
             </View>
           )}
         </View>
@@ -160,7 +162,7 @@ function ListingCard({
             accessibilityRole="button"
             accessibilityLabel="Edit listing"
           >
-            <Text style={styles.actionBtnNeutralText}>Edit</Text>
+            <Text style={styles.actionBtnNeutralText}>{t('common.edit')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionBtnDanger}
@@ -168,7 +170,7 @@ function ListingCard({
             accessibilityRole="button"
             accessibilityLabel="Delete listing"
           >
-            <Text style={styles.actionBtnDangerText}>Delete</Text>
+            <Text style={styles.actionBtnDangerText}>{t('common.delete')}</Text>
           </TouchableOpacity>
           {item.publish_status === 'published' && (
             <TouchableOpacity
@@ -177,7 +179,7 @@ function ListingCard({
               accessibilityRole="button"
               accessibilityLabel="Boost listing"
             >
-              <Text style={styles.actionBtnBrandText}>Boost</Text>
+              <Text style={styles.actionBtnBrandText}>{t('myListings.boost')}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -187,6 +189,7 @@ function ListingCard({
 }
 
 export default function MyListingsScreen() {
+  const { t } = useTranslation();
   const accessToken = useAuthStore((s) => s.accessToken);
   const countryCode = useAuthStore((s) => s.countryCode);
   const { data, isLoading, isRefetching, isError, refetch } = useMyListings();
@@ -205,9 +208,9 @@ export default function MyListingsScreen() {
   if (!accessToken) {
     return (
       <View style={styles.gateContainer}>
-        <Text style={styles.gateTitle}>Sign in required</Text>
+        <Text style={styles.gateTitle}>{t('myListings.authGate.title')}</Text>
         <Button onPress={() => router.push('/(auth)/welcome')} size="lg">
-          Sign In
+          {t('common.signIn')}
         </Button>
       </View>
     );
@@ -225,12 +228,12 @@ export default function MyListingsScreen() {
   function handleDelete(id: number, title: string) {
     void haptic.warning();
     Alert.alert(
-      'Delete Listing',
-      `Are you sure you want to delete "${title}"? This cannot be undone.`,
+      t('myListings.deleteAlert.title'),
+      t('myListings.deleteAlert.body', { title }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => deleteProperty.mutate(id),
         },
@@ -255,21 +258,24 @@ export default function MyListingsScreen() {
 
   return (
     <View style={styles.container}>
-      <ScreenHeader title="My Listings" back />
+      <ScreenHeader title={t('myListings.header.title')} back />
       {/* Quota subtitle + New button row */}
       <View style={styles.pageSubHeader}>
         {quota && (
           <Text style={styles.quotaSubtitle}>
-            {quota.free_remaining} free + {quota.paid_remaining} paid slots remaining
+            {t('myListings.quota.remaining', {
+              free: quota.free_remaining,
+              paid: quota.paid_remaining,
+            })}
           </Text>
         )}
         <TouchableOpacity
           onPress={handleCreate}
           style={styles.newBtn}
           accessibilityRole="button"
-          accessibilityLabel="Create new listing"
+          accessibilityLabel={t('myListings.createLabel')}
         >
-          <Text style={styles.newBtnText}>+ New</Text>
+          <Text style={styles.newBtnText}>{t('myListings.newButton')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -281,9 +287,9 @@ export default function MyListingsScreen() {
 
       {isError && (
         <View style={styles.centeredFillPadded}>
-          <Text style={styles.errorMsg}>Failed to load your listings.</Text>
+          <Text style={styles.errorMsg}>{t('myListings.error')}</Text>
           <Button onPress={() => refetch()} variant="secondary">
-            Try Again
+            {t('common.tryAgain')}
           </Button>
         </View>
       )}
@@ -303,12 +309,10 @@ export default function MyListingsScreen() {
           ListEmptyComponent={
             <View style={styles.emptyState}>
               <Icon name="home" size={48} color={colors.textTertiary} />
-              <Text style={styles.emptyTitle}>No listings yet</Text>
-              <Text style={styles.emptySubtitle}>
-                Create your first listing to start selling or renting.
-              </Text>
+              <Text style={styles.emptyTitle}>{t('myListings.empty.title')}</Text>
+              <Text style={styles.emptySubtitle}>{t('myListings.empty.subtitle')}</Text>
               <Button onPress={handleCreate} size="lg">
-                Create Listing
+                {t('myListings.empty.createListing')}
               </Button>
             </View>
           }

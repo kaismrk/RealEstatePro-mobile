@@ -1,0 +1,674 @@
+{
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "close": "Close",
+    "next": "Next",
+    "continue": "Continue",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reset": "Reset",
+    "skip": "Skip",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "tryAgain": "Try Again",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "remove": "Remove",
+    "phone": "Phone",
+    "viewAll": "View all",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "rateLimited": "Too many attempts. Please wait {{countdown}}s before trying again."
+    }
+  },
+  "auth": {
+    "googleSignIn": "Continue with Google"
+  },
+  "tabs": {
+    "search": "Search",
+    "updates": "Updates",
+    "saved": "Saved",
+    "loans": "Loans",
+    "profile": "Profile"
+  },
+  "login": {
+    "title": "Welcome back",
+    "email": {
+      "label": "Email address",
+      "placeholder": "you@example.com"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Your password",
+      "forgot": "Forgot password?"
+    },
+    "errors": {
+      "emailAndPassword": "Please enter your email and password",
+      "incorrectCredentials": "Incorrect email or password"
+    },
+    "register": {
+      "prompt": "New here? ",
+      "link": "Create an account"
+    }
+  },
+  "welcome": {
+    "title": "Find your perfect home",
+    "subtitle": "Browse 200,000+ listings across Tunisia. Save favorites, message agents, and book tours — all in one place.",
+    "errors": {
+      "required": "Please enter your email address",
+      "invalid": "Please enter a valid email address"
+    },
+    "browseAsGuest": "Browse as guest"
+  },
+  "register": {
+    "title": "Create your account",
+    "changeEmail": "Change",
+    "firstName": {
+      "label": "First name",
+      "placeholder": "Jane",
+      "error": "First name is required"
+    },
+    "lastName": {
+      "label": "Last name",
+      "placeholder": "Smith",
+      "error": "Last name is required"
+    },
+    "signIn": {
+      "prompt": "Already have an account? "
+    }
+  },
+  "passwordCreate": {
+    "title": "Create a password",
+    "subtitle": "Choose a strong password to protect your account.",
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your password"
+    },
+    "confirmPassword": {
+      "label": "Confirm password",
+      "placeholder": "Re-enter your password"
+    },
+    "errors": {
+      "passwordRequired": "Password is required",
+      "confirmRequired": "Please confirm your password",
+      "mismatch": "Passwords do not match"
+    },
+    "submit": "Create Account"
+  },
+  "profile": {
+    "guest": {
+      "title": "Your Profile",
+      "subtitle": "Sign in to access your profile, listings, and settings."
+    },
+    "header": {
+      "title": "Profile"
+    },
+    "sections": {
+      "account": "Account",
+      "activity": "Activity",
+      "settings": "Settings",
+      "accountActions": "Account Actions"
+    },
+    "account": {
+      "editProfile": "Edit Profile",
+      "changePassword": "Change Password",
+      "myListings": "My Listings",
+      "listingQuota": "Listing Quota",
+      "listingPacks": "Listing Packs",
+      "agentDashboard": "Agent Dashboard",
+      "becomeAgent": "Become an Agent",
+      "myAgency": "My Agency",
+      "agencySubscription": "Agency Subscription",
+      "createAgency": "Create Agency"
+    },
+    "activity": {
+      "messages": "Messages",
+      "savedHomes": "Saved Homes",
+      "savedSearches": "Saved Searches"
+    },
+    "settings": {
+      "notifications": "Notifications",
+      "appSettings": "App Settings",
+      "helpFeedback": "Help & Feedback",
+      "privacy": "Privacy"
+    },
+    "signOut": "Sign Out",
+    "signOutConfirm": "Are you sure you want to sign out?"
+  },
+  "settings": {
+    "header": {
+      "title": "App Settings"
+    },
+    "section": {
+      "region": "Region",
+      "about": "About",
+      "accountActions": "Account Actions"
+    },
+    "country": "Country",
+    "language": "Language",
+    "theme": "Theme",
+    "themeValue": "Light",
+    "appVersion": "App Version",
+    "legal": {
+      "terms": "Terms of Use",
+      "privacy": "Privacy Policy",
+      "licenses": "Open-Source Licenses"
+    },
+    "picker": {
+      "title": "Select Language",
+      "close": "Close",
+      "languages": {
+        "fr": "Français",
+        "en": "English"
+      }
+    }
+  },
+  "editProfile": {
+    "header": {
+      "title": "Edit Profile"
+    },
+    "firstName": {
+      "label": "First Name",
+      "placeholder": "Enter your first name"
+    },
+    "lastName": {
+      "label": "Last Name",
+      "placeholder": "Enter your last name"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "your@email.com",
+      "error": "Enter a valid email address"
+    },
+    "country": {
+      "label": "Country",
+      "hint": "Country can only be changed in App Settings."
+    },
+    "submit": "Save Changes",
+    "success": "Profile updated successfully.",
+    "error": "Failed to update profile. Please try again.",
+    "loading": "Loading..."
+  },
+  "changePassword": {
+    "header": {
+      "title": "Change Password"
+    },
+    "hint": "After changing your password you will be signed out and asked to sign in again.",
+    "currentPassword": {
+      "label": "Current Password",
+      "placeholder": "Your current password"
+    },
+    "newPassword": {
+      "label": "New Password",
+      "placeholder": "New password"
+    },
+    "confirmPassword": {
+      "label": "Confirm New Password",
+      "placeholder": "Confirm new password"
+    },
+    "errors": {
+      "currentRequired": "Please enter your current password",
+      "newRequired": "Please enter a new password",
+      "policy": "Password must be 8+ chars with uppercase, lowercase, and a number",
+      "confirmRequired": "Please confirm your new password",
+      "mismatch": "Passwords do not match",
+      "currentIncorrect": "Current password is incorrect"
+    },
+    "submit": "Change Password",
+    "success": {
+      "title": "Password Changed",
+      "body": "Your password has been changed. Please sign in again."
+    },
+    "error": "Failed to change password. Please try again."
+  },
+  "notifications": {
+    "header": {
+      "title": "Notifications"
+    },
+    "banner": {
+      "title": "Coming soon",
+      "subtitle": "Push notification preferences will be available in a future update."
+    },
+    "section": {
+      "push": "Push Notifications"
+    },
+    "items": {
+      "matchingListings": {
+        "label": "New matching listings",
+        "description": "Alerts when new listings match your saved searches"
+      },
+      "inquiries": {
+        "label": "New inquiries on your listings",
+        "description": "When someone contacts you about a listing"
+      },
+      "priceChanges": {
+        "label": "Price changes on saved homes",
+        "description": "When a price drops on a property you saved"
+      },
+      "appNews": {
+        "label": "App news & updates",
+        "description": "Feature announcements and tips"
+      }
+    },
+    "emailNote": "Email notifications for saved search alerts are already active."
+  },
+  "saved": {
+    "guest": {
+      "title": "Sign in to view saved homes",
+      "subtitle": "Save properties you love and access them anytime."
+    },
+    "header": {
+      "title": "Saved Homes"
+    },
+    "compare": {
+      "button": "Compare",
+      "compareCount": "Compare {{count}}",
+      "hint": "Select 2–5 properties to compare. {{count}} selected."
+    },
+    "removeLabel": "Remove from saved",
+    "removeButton": "Remove",
+    "empty": {
+      "title": "No saved homes yet",
+      "subtitle": "Tap the heart on any listing to save it here",
+      "action": "Start searching"
+    }
+  },
+  "updates": {
+    "guest": {
+      "title": "Sign in to view saved searches",
+      "subtitle": "Save your searches and get notified when new homes match."
+    },
+    "header": {
+      "title": "Saved Searches"
+    },
+    "newButton": "New",
+    "allProperties": "All properties",
+    "empty": {
+      "title": "No saved searches yet",
+      "subtitle": "Save your current search to get notified when new homes match.",
+      "action": "Go to Search"
+    }
+  },
+  "search": {
+    "saveButton": "Save",
+    "mapButton": "Map",
+    "saveSearchLabel": "Save search",
+    "mapViewLabel": "Map view",
+    "empty": {
+      "title": "No properties found",
+      "subtitle": "Try adjusting your filters"
+    }
+  },
+  "filters": {
+    "transactionType": "Transaction Type",
+    "priceRange": "Price Range",
+    "minPrice": "Min price",
+    "maxPrice": "Max price",
+    "bedrooms": "Bedrooms",
+    "min": "Min",
+    "max": "Max",
+    "area": "Area (m²)",
+    "minArea": "Min area",
+    "maxArea": "Max area",
+    "propertyType": "Property Type",
+    "amenities": "Amenities",
+    "amenityItems": {
+      "pool": "Pool",
+      "garden": "Garden",
+      "balcony": "Balcony",
+      "elevator": "Elevator",
+      "parking": "Parking",
+      "garage": "Garage"
+    },
+    "energyRating": "Energy Rating",
+    "apply": "Apply Filters"
+  },
+  "map": {
+    "listView": "List",
+    "results": "{{count}} results"
+  },
+  "messaging": {
+    "inbox": {
+      "title": "Messages"
+    },
+    "chat": {
+      "title": "Message",
+      "replyButton": "Reply"
+    }
+  },
+  "myListings": {
+    "header": {
+      "title": "My Listings"
+    },
+    "authGate": {
+      "title": "Sign in required"
+    },
+    "quota": {
+      "title": "Quota Exhausted",
+      "body": "You have no remaining listing slots. Purchase a pack to create more listings.",
+      "action": "Purchase a Pack",
+      "remaining": "{{free}} free + {{paid}} paid slots remaining"
+    },
+    "rejection": {
+      "title": "Rejection Reason",
+      "noReason": "No reason provided."
+    },
+    "boosted": "Boosted",
+    "boost": "Boost",
+    "photoAlt": "Property photo",
+    "newButton": "+ New",
+    "createLabel": "Create new listing",
+    "error": "Failed to load your listings.",
+    "empty": {
+      "title": "No listings yet",
+      "subtitle": "Create your first listing to start selling or renting.",
+      "createListing": "Create Listing"
+    },
+    "deleteAlert": {
+      "title": "Delete Listing",
+      "body": "Are you sure you want to delete \"{{title}}\"? This cannot be undone."
+    }
+  },
+  "loans": {
+    "title": "Home Loans"
+  },
+  "quota": {
+    "header": {
+      "title": "Listing Quota"
+    },
+    "loading": "Loading quota...",
+    "error": "Failed to load quota. Please try again.",
+    "totalSlots": {
+      "heading": "Total Available Slots",
+      "subtext": "listings you can publish right now"
+    },
+    "freeSlots": {
+      "heading": "Free Slots",
+      "remaining": "{{used}} / {{total}} remaining",
+      "note": "{{used}} of {{total}} free slots used"
+    },
+    "paidSlots": {
+      "heading": "Paid Slots",
+      "remaining": "{{count}} remaining",
+      "note": "Purchased listing packs appear here"
+    },
+    "cta": "Buy Listing Pack",
+    "lastUpdated": "Last updated: {{date}}"
+  },
+  "listings": {
+    "create": {
+      "header": {
+        "title": "Create Listing"
+      },
+      "step1": {
+        "subtitle": "Step 1 of 5 — Basic Info",
+        "listingType": { "label": "Listing Type" },
+        "propertyType": { "label": "Property Type", "error": "Select a property type" },
+        "title": { "label": "Title", "error": "Title is required" },
+        "price": { "label": "Price", "error": "A valid price is required" },
+        "next": "Next: Location"
+      },
+      "step2": {
+        "subtitle": "Step 2 of 5 — Location",
+        "locationTitle": "Location",
+        "useLocation": "Use my current location",
+        "city": { "label": "City", "error": "City is required" },
+        "address": { "label": "Address", "error": "Address is required" },
+        "zipCode": { "label": "Zip Code" },
+        "addressVisibility": {
+          "label": "Address Visibility",
+          "exact": "Exact address (shown on map)",
+          "approximate": "Approximate location",
+          "cityOnly": "City only"
+        },
+        "next": "Next: Property Details",
+        "locationError": "Could not retrieve location. Please enter manually.",
+        "locationDenied": "Location permission is required to use this feature."
+      },
+      "step3": {
+        "subtitle": "Step 3 of 5 — Specs & Amenities",
+        "propertyDetails": "Property Details",
+        "tabs": {
+          "specs": "Specs",
+          "amenities": "Amenities",
+          "description": "Description"
+        },
+        "specs": {
+          "area": "Area (m²)",
+          "lotSize": "Lot Size (m²)",
+          "rooms": "Number of Rooms",
+          "bedrooms": "Bedrooms",
+          "bathrooms": "Bathrooms",
+          "floor": "Floor",
+          "totalFloors": "Total Floors",
+          "yearBuilt": "Year Built"
+        },
+        "amenities": {
+          "furnished": "Furnished",
+          "pool": "Swimming Pool",
+          "garden": "Garden",
+          "balcony": "Balcony",
+          "elevator": "Elevator",
+          "garageSpots": "Garage Spots",
+          "parkingSpots": "Parking Spots",
+          "heatingSystem": "Heating System",
+          "airConditioning": "Air Conditioning",
+          "kitchenType": "Kitchen Type",
+          "energyRating": "Energy Rating"
+        },
+        "description": {
+          "label": "Description ({{count}}/5000)",
+          "placeholder": "Describe the property..."
+        },
+        "next": "Next: Photos"
+      },
+      "step4": {
+        "photosTitle": "Photos",
+        "addPhotos": "Add Photos",
+        "uploadSubtitle": "Up to {{max}} photos. Tap to select.",
+        "selectedPhotos": "Selected photos — first photo is the cover",
+        "coverBadge": "Cover",
+        "photoAlt": "Photo {{index}}",
+        "removePhotoLabel": "Remove photo {{index}}",
+        "next": "Next: Review",
+        "limitReached": "You can upload at most {{max}} photos.",
+        "permissionDenied": "Media library access is required to pick photos.",
+        "photoCount": "Step 4 of 5 — Photos ({{count}}/{{max}})"
+      },
+      "step5": {
+        "subtitle": "Step 5 of 5 — Review & Submit",
+        "reviewTitle": "Review",
+        "sections": {
+          "basicInfo": "Basic Info",
+          "location": "Location",
+          "propertyDetails": "Property Details",
+          "photos": "Photos"
+        },
+        "fields": {
+          "title": "Title",
+          "listingType": "Listing Type",
+          "propertyType": "Property Type",
+          "price": "Price",
+          "city": "City",
+          "address": "Address",
+          "zipCode": "Zip Code",
+          "visibility": "Visibility",
+          "area": "Area (m²)",
+          "bedrooms": "Bedrooms",
+          "bathrooms": "Bathrooms",
+          "floor": "Floor",
+          "yearBuilt": "Year Built",
+          "furnished": "Furnished",
+          "heating": "Heating",
+          "kitchen": "Kitchen",
+          "energyRating": "Energy Rating"
+        },
+        "photos": {
+          "selected_one": "{{count}} photo selected",
+          "selected_other": "{{count}} photos selected",
+          "none": "No photos added"
+        },
+        "editLink": "Edit",
+        "yes": "Yes",
+        "no": "No",
+        "submit": "Submit Listing",
+        "errors": { "title": "Please fix these issues:" },
+        "success": {
+          "title": "Success",
+          "body": "Your listing has been submitted for review!",
+          "viewMyListings": "View My Listings"
+        },
+        "quota": {
+          "title": "Listing Quota Exhausted",
+          "body": "You have used all your free and paid listing slots. Purchase a pack to continue posting.",
+          "action": "Purchase a Pack"
+        },
+        "error": "Failed to create listing. Please try again."
+      }
+    },
+    "listingTypes": {
+      "sale": "For Sale",
+      "rent": "For Rent",
+      "commercial": "Commercial",
+      "land": "Land"
+    },
+    "propertyTypes": {
+      "apartment": "Apartment",
+      "villa": "Villa",
+      "house": "House",
+      "studio": "Studio",
+      "land": "Land",
+      "commercial": "Commercial",
+      "office": "Office",
+      "shop": "Shop",
+      "warehouse": "Warehouse",
+      "farmhouse": "Farmhouse",
+      "chalet": "Chalet",
+      "penthouse": "Penthouse",
+      "duplex": "Duplex",
+      "townhouse": "Townhouse",
+      "building": "Building"
+    },
+    "heatingTypes": {
+      "central": "Central",
+      "individual": "Individual",
+      "electric": "Electric",
+      "gas": "Gas",
+      "fuel": "Fuel",
+      "heat_pump": "Heat Pump",
+      "solar": "Solar",
+      "wood": "Wood",
+      "none": "None"
+    },
+    "acTypes": {
+      "split": "Split",
+      "central": "Central",
+      "portable": "Portable",
+      "none": "None"
+    },
+    "kitchenTypes": {
+      "open": "Open",
+      "closed": "Closed",
+      "semi_open": "Semi-open",
+      "american": "American"
+    },
+    "disclosureLevels": {
+      "exact": "Exact address (shown on map)",
+      "approximate": "Approximate location",
+      "city_only": "City only"
+    }
+  },
+  "onboarding": {
+    "step1": {
+      "title": "Where would you like to start?",
+      "subtitle": "Tell us what you are looking for so we can personalise your experience.",
+      "options": {
+        "buy": { "label": "Buy", "description": "Find your dream home" },
+        "rent": { "label": "Rent", "description": "Find a rental property" },
+        "sell": { "label": "Sell", "description": "List your property" },
+        "browse": { "label": "Just browse", "description": "I'm exploring options" }
+      }
+    },
+    "step2": {
+      "title": "Where are you looking?",
+      "subtitle": "Choose a region to focus your search.",
+      "searchPlaceholder": "Type a region or city…",
+      "useLocation": "Use my current location",
+      "gettingLocation": "Getting location…",
+      "locationDenied": "Location permission denied. You can type a city instead.",
+      "locationError": "Could not get your location. Please try typing a city.",
+      "noRegions": "No regions found"
+    },
+    "step3": {
+      "title": "What is your budget?",
+      "subtitle": "Set a price range to find matching properties.",
+      "minPrice": "Minimum price ({{currency}})",
+      "maxPrice": "Maximum price ({{currency}})"
+    }
+  },
+  "agent": {
+    "register": {
+      "title": "Become an Agent",
+      "benefits": {
+        "title": "Agent Benefits",
+        "body": "As an agent, you get access to a full dashboard, lead tracking, per-listing statistics, and the ability to link your profile to an agency."
+      },
+      "bio": {
+        "label": "Bio",
+        "placeholder": "Tell buyers and renters about yourself..."
+      },
+      "footNote": "Agency affiliation can be set after registration from your agent profile.",
+      "submit": "Register as Agent",
+      "alreadyRegistered": {
+        "title": "Already registered",
+        "body": "You already have an agent profile. Redirecting..."
+      }
+    },
+    "dashboard": {
+      "title": "Agent Dashboard",
+      "noProfile": {
+        "title": "No agent profile",
+        "body": "You need to register as an agent to access the dashboard."
+      },
+      "stats": {
+        "listings": "Listings",
+        "inquiries": "Inquiries",
+        "saves": "Saves",
+        "views": "Views"
+      },
+      "sections": {
+        "myListings": "My Listings",
+        "recentLeads": "Recent Leads"
+      },
+      "empty": {
+        "listings": "No listings yet.",
+        "createFirst": "Create your first listing",
+        "leads": "No leads yet."
+      },
+      "inquiriesCount": "{{count}} inquiries",
+      "savesCount": "{{count}} saves",
+      "registerAsAgent": "Register as Agent"
+    }
+  },
+  "agency": {
+    "create": {
+      "title": "Create Agency",
+      "fields": {
+        "name": { "label": "Agency Name", "placeholder": "Your Real Estate Agency" },
+        "logoUrl": { "label": "Logo URL", "placeholder": "https://example.com/logo.png" },
+        "description": { "label": "Description", "placeholder": "Tell potential clients about your agency…" },
+        "socialLinks": "Social Links",
+        "website": { "label": "Website", "placeholder": "https://your-website.com" },
+        "facebook": { "label": "Facebook", "placeholder": "https://facebook.com/yourpage" },
+        "instagram": { "label": "Instagram", "placeholder": "https://instagram.com/youraccount" },
+        "twitter": { "label": "Twitter / X", "placeholder": "https://x.com/youraccount" }
+      },
+      "submit": "Create Agency",
+      "validation": { "nameRequired": "Agency name is required." },
+      "error": "Failed to create agency. Please try again."
+    }
+  }
+}

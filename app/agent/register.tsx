@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useRegisterAgent } from '@/hooks/useAgentProfile';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -15,6 +16,7 @@ import { Icon } from '@/components/ui/Icon';
 import { colors, radius, fontWeight } from '@/constants/theme';
 
 export default function AgentRegisterScreen() {
+  const { t } = useTranslation();
   const registerAgent = useRegisterAgent();
 
   const [bio, setBio] = useState('');
@@ -35,9 +37,9 @@ export default function AgentRegisterScreen() {
           // 400 means profile already exists
           if (anyErr?.response?.status === 400) {
             Alert.alert(
-              'Already registered',
-              'You already have an agent profile. Redirecting...',
-              [{ text: 'OK', onPress: () => router.replace('/agent/profile') }]
+              t('agent.register.alreadyRegistered.title'),
+              t('agent.register.alreadyRegistered.body'),
+              [{ text: t('common.close'), onPress: () => router.replace('/agent/profile') }]
             );
             return;
           }
@@ -53,26 +55,25 @@ export default function AgentRegisterScreen() {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBack}>
           <Icon name="chevron-left" size={18} color={colors.primary} />
-          <Text style={styles.headerBackText}>Cancel</Text>
+          <Text style={styles.headerBackText}>{t('common.cancel')}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Become an Agent</Text>
+        <Text style={styles.headerTitle}>{t('agent.register.title')}</Text>
       </View>
 
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.benefitsBanner}>
-          <Text style={styles.benefitsTitle}>Agent Benefits</Text>
+          <Text style={styles.benefitsTitle}>{t('agent.register.benefits.title')}</Text>
           <Text style={styles.benefitsBody}>
-            As an agent, you get access to a full dashboard, lead tracking, per-listing
-            statistics, and the ability to link your profile to an agency.
+            {t('agent.register.benefits.body')}
           </Text>
         </View>
 
-        <Text style={styles.fieldLabel}>Bio</Text>
+        <Text style={styles.fieldLabel}>{t('agent.register.bio.label')}</Text>
         <View style={styles.bioWrapper}>
           <Input
             value={bio}
             onChangeText={setBio}
-            placeholder="Tell buyers and renters about yourself..."
+            placeholder={t('agent.register.bio.placeholder')}
             multiline
             numberOfLines={4}
             style={{ minHeight: 100, textAlignVertical: 'top' }}
@@ -80,7 +81,7 @@ export default function AgentRegisterScreen() {
         </View>
 
         <Input
-          label="Phone"
+          label={t('common.phone')}
           value={phone}
           onChangeText={setPhone}
           placeholder="+216 XX XXX XXX"
@@ -88,7 +89,7 @@ export default function AgentRegisterScreen() {
         />
 
         <Text style={styles.footNote}>
-          Agency affiliation can be set after registration from your agent profile.
+          {t('agent.register.footNote')}
         </Text>
 
         <View style={styles.scrollPadBottom} />
@@ -97,7 +98,7 @@ export default function AgentRegisterScreen() {
       {/* Footer */}
       <View style={styles.footer}>
         <Button onPress={handleSubmit} loading={registerAgent.isPending} size="lg">
-          Register as Agent
+          {t('agent.register.submit')}
         </Button>
       </View>
     </View>
