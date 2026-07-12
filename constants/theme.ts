@@ -6,7 +6,9 @@
 import { StyleSheet } from 'react-native';
 
 // ── Palette type (shared shape for light + dark) ───────────────────────────
-export type Palette = typeof lightPalette;
+// Mapped type: same keys as lightPalette but values widened to string so that
+// darkPalette can supply different hex values without TS2322 literal errors.
+export type Palette = { readonly [K in keyof typeof lightPalette]: string };
 
 // ── Light palette (Homy design bundle) ────────────────────────────────────
 export const lightPalette = {
@@ -68,6 +70,10 @@ export const lightPalette = {
   warningText:  '#92400e',  // amber-800 — text inside warning banners
   errorBorder:  '#fecaca',  // red-200 — light red border on error states
   accentBg:     '#fdf0e8',  // warm tint — accent-variant badge background
+
+  // Primary scale deep end — used for cost segment in loan breakdown bar
+  // Maps to CSS var(--primary-900) in the Homy design system (#1c0250)
+  primary900:   '#1c0250',
 } as const;
 
 // ── Dark palette (conservative defaults — not in Homy bundle) ─────────────
@@ -130,6 +136,9 @@ export const darkPalette: Palette = {
   warningText:  '#fcd34d',  // amber-300 — readable on dark backgrounds
   errorBorder:  '#7f1d1d',  // red-900 — dark red border on dark surfaces
   accentBg:     '#2d1a0e',  // warm dark — accent-variant badge background
+
+  // Primary scale deep end — dark variant of primary900 (slightly lighter for visibility)
+  primary900:   '#3a0699',
 } as const;
 
 // ── Backward-compat alias — light palette (all existing imports continue to work)

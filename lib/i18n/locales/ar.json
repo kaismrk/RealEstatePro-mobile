@@ -34,6 +34,60 @@
   "login": {
     "title": "مرحباً بعودتك"
   },
+  "loans": {
+    "title": "",
+    "tmmBanner": "",
+    "adPlaceholder": "",
+    "inputs": {
+      "price": "",
+      "downPayment": "",
+      "duration": "",
+      "yearsValue": "",
+      "interestRate": "",
+      "rateFormula": "",
+      "txCosts": "",
+      "txSubtitle": "",
+      "txMoreDetails": "",
+      "propType": "",
+      "propLand": "",
+      "propFlat": "",
+      "newPromoter": "",
+      "abroad": "",
+      "yes": "",
+      "no": "",
+      "registrationTax": "",
+      "notaryFee": "",
+      "agencyFee": "",
+      "txNote": ""
+    },
+    "results": {
+      "label": "",
+      "perMonth": "",
+      "principal": "",
+      "interest": "",
+      "txCosts": "",
+      "total": "",
+      "disclaimer": ""
+    },
+    "eligibility": {
+      "title": "",
+      "netIncome": "",
+      "otherLoans": "",
+      "debtRatio": "",
+      "ratioInfo": "",
+      "eligible": "",
+      "ineligible": ""
+    },
+    "save": {
+      "button": ""
+    },
+    "savedSims": {
+      "title": "",
+      "hint": "",
+      "empty": "",
+      "justNow": ""
+    }
+  },
   "help": {
     "title": "",
     "contact": {

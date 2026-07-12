@@ -395,7 +395,58 @@
     }
   },
   "loans": {
-    "title": "Prêts immobiliers"
+    "title": "Simulateur de prêt",
+    "tmmBanner": "Indexé sur le TMM {{tmm}}% (BCT · {{date}}) + {{margin}}% marge bancaire",
+    "adPlaceholder": "Espace publicitaire banque",
+    "inputs": {
+      "price": "Prix du bien",
+      "downPayment": "Apport personnel",
+      "duration": "Durée",
+      "yearsValue": "{{count}} ans",
+      "interestRate": "Taux d'intérêt",
+      "rateFormula": "= TMM {{tmm}}% + {{margin}}%",
+      "txCosts": "Frais de transaction",
+      "txSubtitle": "≈ {{amount}} {{currency}} sur ce prix",
+      "txMoreDetails": "Plus de détails pour une estimation plus précise",
+      "propType": "Type de bien",
+      "propLand": "Terrain",
+      "propFlat": "Appartement / Maison",
+      "newPromoter": "Neuf chez promoteur",
+      "abroad": "Tunisien résident à l'étranger",
+      "yes": "Oui",
+      "no": "Non",
+      "registrationTax": "Droits d'enregistrement",
+      "notaryFee": "Frais de notaire / avocat",
+      "agencyFee": "Commission agence immobilière",
+      "txNote": "Les droits d'enregistrement sont pré-remplis selon vos choix — ajustez si vous connaissez le montant exact."
+    },
+    "results": {
+      "label": "MENSUALITÉ ESTIMÉE",
+      "perMonth": "{{currency}} / mois",
+      "principal": "Capital {{amount}} {{currency}}",
+      "interest": "Intérêts {{amount}} {{currency}}",
+      "txCosts": "Frais de transaction {{amount}} {{currency}}",
+      "total": "Coût total {{amount}} {{currency}} sur {{years}} ans, frais inclus",
+      "disclaimer": "Estimation indicative — les taux, taxes et frais réels dépendent de votre banque et de la transaction."
+    },
+    "eligibility": {
+      "title": "VÉRIFIER L'ÉLIGIBILITÉ",
+      "netIncome": "Revenu net",
+      "otherLoans": "Autres mensualités de crédit en cours",
+      "debtRatio": "Taux d'endettement",
+      "ratioInfo": "Le taux d'endettement doit être inférieur à 40% et idéalement à 33%. Pour le réduire : baisser le prix, allonger la durée ou augmenter l'apport.",
+      "eligible": "Éligible",
+      "ineligible": "Non éligible"
+    },
+    "save": {
+      "button": "Enregistrer la simulation"
+    },
+    "savedSims": {
+      "title": "Simulations sauvegardées",
+      "hint": "Glisser à gauche pour supprimer",
+      "empty": "Aucune simulation sauvegardée — enregistrez-en une pour comparer.",
+      "justNow": "sauvegardé à l'instant"
+    }
   },
   "quota": {
     "header": {

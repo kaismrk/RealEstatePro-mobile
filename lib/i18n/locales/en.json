@@ -395,7 +395,58 @@
     }
   },
   "loans": {
-    "title": "Home Loans"
+    "title": "Loan Simulator",
+    "tmmBanner": "Indexed on TMM {{tmm}}% (BCT · {{date}}) + {{margin}}% bank margin",
+    "adPlaceholder": "Bank ad placeholder",
+    "inputs": {
+      "price": "Property price",
+      "downPayment": "Down payment",
+      "duration": "Duration",
+      "yearsValue": "{{count}} years",
+      "interestRate": "Interest rate",
+      "rateFormula": "= TMM {{tmm}}% + {{margin}}%",
+      "txCosts": "Transaction costs",
+      "txSubtitle": "≈ {{amount}} {{currency}} on this price",
+      "txMoreDetails": "More details for a more accurate estimate",
+      "propType": "Property type",
+      "propLand": "Land",
+      "propFlat": "Flat / House",
+      "newPromoter": "New from promoter",
+      "abroad": "Tunisian resident abroad",
+      "yes": "Yes",
+      "no": "No",
+      "registrationTax": "Registration tax",
+      "notaryFee": "Lawyer / notary fee",
+      "agencyFee": "Real estate agency fee",
+      "txNote": "Registration tax is pre-filled from your selections — adjust any value if you know it."
+    },
+    "results": {
+      "label": "ESTIMATED MONTHLY PAYMENT",
+      "perMonth": "{{currency}} / mo",
+      "principal": "Principal {{amount}} {{currency}}",
+      "interest": "Interest {{amount}} {{currency}}",
+      "txCosts": "Transaction costs {{amount}} {{currency}}",
+      "total": "Total cost {{amount}} {{currency}} over {{years}} years, incl. transaction costs",
+      "disclaimer": "This is an estimation only — actual rates, taxes and fees depend on your bank and transaction."
+    },
+    "eligibility": {
+      "title": "CHECK ELIGIBILITY",
+      "netIncome": "Net income",
+      "otherLoans": "Other mortgage or loan monthly payments",
+      "debtRatio": "Debt ratio",
+      "ratioInfo": "Debt ratio should be below 40% and ideally below 33%. The following can reduce your debt ratio: a reduction of the price, an extension of the maturity, or an increase of your down payment.",
+      "eligible": "Eligible",
+      "ineligible": "Uneligible"
+    },
+    "save": {
+      "button": "Save Simulation"
+    },
+    "savedSims": {
+      "title": "Saved Simulations",
+      "hint": "Swipe left to delete",
+      "empty": "No saved simulations yet — save one to compare later.",
+      "justNow": "saved just now"
+    }
   },
   "quota": {
     "header": {
