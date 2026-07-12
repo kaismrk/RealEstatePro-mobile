@@ -398,6 +398,17 @@
     "title": "Simulateur de prêt",
     "tmmBanner": "Indexé sur le TMM {{tmm}}% (BCT · {{date}}) + {{margin}}% marge bancaire",
     "adPlaceholder": "Espace publicitaire banque",
+    "propertyType": {
+      "title": "Type de bien",
+      "new": "Neuf (promoteur)",
+      "secondary": "Occasion"
+    },
+    "costs": {
+      "notary": "Frais de notaire",
+      "agency": "Commission d'agence",
+      "cpf": "Taxe CPF",
+      "registration": "Droits d'enregistrement + taxe complémentaire"
+    },
     "inputs": {
       "price": "Prix du bien",
       "downPayment": "Apport personnel",
@@ -407,18 +418,8 @@
       "rateFormula": "= TMM {{tmm}}% + {{margin}}%",
       "txCosts": "Frais de transaction",
       "txSubtitle": "≈ {{amount}} {{currency}} sur ce prix",
-      "txMoreDetails": "Plus de détails pour une estimation plus précise",
-      "propType": "Type de bien",
-      "propLand": "Terrain",
-      "propFlat": "Appartement / Maison",
-      "newPromoter": "Neuf chez promoteur",
-      "abroad": "Tunisien résident à l'étranger",
-      "yes": "Oui",
-      "no": "Non",
-      "registrationTax": "Droits d'enregistrement",
-      "notaryFee": "Frais de notaire / avocat",
-      "agencyFee": "Commission agence immobilière",
-      "txNote": "Les droits d'enregistrement sont pré-remplis selon vos choix — ajustez si vous connaissez le montant exact."
+      "txMoreDetails": "Voir le détail des frais",
+      "txNote": "Les frais sont calculés automatiquement selon le type de bien et le prix."
     },
     "results": {
       "label": "MENSUALITÉ ESTIMÉE",

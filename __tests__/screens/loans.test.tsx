@@ -59,21 +59,30 @@ const mockTNConfig = {
   maxDownPaymentPercent: 100,
   defaultDownPaymentPercent: 20,
   transactionCosts: [
-    { key: 'notary', labelKey: 'loans.inputs.notaryFee', type: 'percentOfPrice' as const, value: 1.0 },
-    { key: 'agency', labelKey: 'loans.inputs.agencyFee', type: 'percentOfPrice' as const, value: 3.0 },
+    {
+      kind: 'flat' as const,
+      key: 'notary',
+      labelKey: 'loans.costs.notary',
+      component: { kind: 'percentOfPrice' as const, value: 1.0 },
+    },
+    {
+      kind: 'flat' as const,
+      key: 'agency',
+      labelKey: 'loans.costs.agency',
+      component: { kind: 'percentOfPrice' as const, value: 2.0 },
+      appliesTo: ['secondary' as const],
+    },
+    {
+      kind: 'flat' as const,
+      key: 'cpf',
+      labelKey: 'loans.costs.cpf',
+      component: { kind: 'percentOfPrice' as const, value: 1.0 },
+    },
   ],
-  registrationTaxMatrix: {
-    newResident: 1.0,
-    newAbroad: 0.0,
-    resaleResident: 5.0,
-    resaleAbroad: 5.0,
-  },
   eligibility: {
     maxDebtToIncomeRatio: 0.40,
     warnDebtToIncomeRatio: 0.33,
     minMonthlyIncome: 800,
-    minAge: 21,
-    maxAge: 65,
   },
 };
 

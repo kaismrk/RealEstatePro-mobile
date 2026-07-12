@@ -5,14 +5,35 @@
 // Hook indirection is already in place via hooks/useLoanConfig.ts — no UI code needs to change
 // when the backend endpoint is implemented.
 
-export type LoanCostRate = {
-  key: string;             // e.g. 'notary', 'registration', 'agency'
-  labelKey: string;        // i18n key for display name
-  type: 'percentOfPrice' | 'percentOfLoan' | 'fixed';
-  value: number;
-  minValue?: number;
-  maxValue?: number;
-};
+export type PropertyType = 'new' | 'secondary';
+
+// A single cost component that computes to a currency amount given price + loanAmount
+export type CostComponent =
+  | { kind: 'fixed'; amount: number }
+  | { kind: 'percentOfPrice'; value: number }
+  | { kind: 'percentOfLoan'; value: number }
+  | { kind: 'percentOfPriceAboveThreshold'; threshold: number; value: number };
+
+// A cost item can be either flat (notary, agency) or tiered-by-price-and-property-type (registration)
+export type LoanCostRate =
+  | {
+      kind: 'flat';
+      key: string;
+      labelKey: string;
+      component: CostComponent;
+      /** If omitted the cost applies to all property types. */
+      appliesTo?: PropertyType[];
+    }
+  | {
+      kind: 'tiered';
+      key: string;
+      labelKey: string;
+      tiers: {
+        propertyType: PropertyType;
+        /** Sorted by maxPrice ascending; last entry uses Number.POSITIVE_INFINITY. */
+        bands: { maxPrice: number; components: CostComponent[] }[];
+      }[];
+    };
 
 export type LoanCountryConfig = {
   currency: string;              // e.g. 'TND', 'EUR'
@@ -35,36 +56,27 @@ export type LoanCountryConfig = {
   minDownPaymentPercent: number;
   maxDownPaymentPercent: number;
   defaultDownPaymentPercent: number;
-  /** Static transaction cost rates (notary, agency). Registration handled via registrationTaxMatrix. */
+  /** Transaction cost entries — see computeCost() in math.ts. */
   transactionCosts: LoanCostRate[];
-  /** Dynamic registration tax matrix (TN-specific; optional for other countries). */
-  registrationTaxMatrix?: {
-    newResident: number;    // new from promoter, local resident
-    newAbroad: number;      // new from promoter, Tunisian Resident Abroad (TRE) — often exempt
-    resaleResident: number; // resale, local resident
-    resaleAbroad: number;   // resale, TRE
-  };
   eligibility: {
     maxDebtToIncomeRatio: number;     // hard limit, e.g. 0.40
     warnDebtToIncomeRatio: number;    // warn threshold (green→amber), e.g. 0.33
     minMonthlyIncome: number;
-    minAge: number;
-    maxAge: number;
   };
 };
 
 // ── Tunisia ──────────────────────────────────────────────────────────────────
 // Sources:
-//  - BCT TMM (Taux du Marché Monétaire): 7.5 % as of 30 Jun 2026
-//  - Default bank margin: 1.0 % → total default rate = 8.5 %
+//  - BCT TMM (Taux du Marché Monétaire): 7.5% as of 30 Jun 2026
+//  - Default bank margin: 1.0% → total default rate = 8.5%
 //  - Max loan term: BCT circular 2021-01 caps residential at 25 years
-//  - Max debt-to-income: BCT prudential standard 40 %
-//  - Registration tax (Direction Générale des Impôts):
-//      · Resale (droits d'enregistrement + timbre): ~5 % of price
-//      · New from promoter (resident): 1 % (reduced rate)
-//      · New from promoter (TRE): 0 % (exempt under investment code)
-//  - Notary / lawyer fee: ~1 % (standard professional tariff)
-//  - Agency commission: ~3 % (market convention, buyer-side)
+//  - Max debt-to-income: BCT prudential standard 40%
+//  - Registration costs (droits d'enregistrement + taxe complémentaire):
+//      Source: bigdatis.com/droits-enregistrement-bien-immobilier-tunisie-2026
+//              century21.tn/les-droits-denregistrement-dun-bien-immobilier-en-tunisie-en-2024
+//  - Notary / lawyer fee: ~1% (standard professional tariff)
+//  - Agency commission: ~2% buyer-side (source: century21.tn)
+//  - CPF (Contribution à la Promotion du Foncier): 1% flat
 
 export const TN_CONFIG: LoanCountryConfig = {
   currency: 'TND',
@@ -82,35 +94,72 @@ export const TN_CONFIG: LoanCountryConfig = {
   maxDownPaymentPercent: 100,
   defaultDownPaymentPercent: 20,
   transactionCosts: [
+    // Notary fees — flat, applies to all property types
     {
+      kind: 'flat',
       key: 'notary',
-      labelKey: 'loans.inputs.notaryFee',
-      type: 'percentOfPrice',
-      value: 1.0,
-      minValue: 0,
-      maxValue: 10,
+      labelKey: 'loans.costs.notary',
+      component: { kind: 'percentOfPrice', value: 1 },
     },
+    // Agency commission — 2% for secondary; not applicable for new (buyer buys direct from promoter)
     {
+      kind: 'flat',
       key: 'agency',
-      labelKey: 'loans.inputs.agencyFee',
-      type: 'percentOfPrice',
-      value: 3.0,
-      minValue: 0,
-      maxValue: 10,
+      labelKey: 'loans.costs.agency',
+      component: { kind: 'percentOfPrice', value: 2 },
+      appliesTo: ['secondary'],
+    },
+    // CPF tax — 1% flat, applies to all property types
+    {
+      kind: 'flat',
+      key: 'cpf',
+      labelKey: 'loans.costs.cpf',
+      component: { kind: 'percentOfPrice', value: 1 },
+    },
+    // Registration + complementary tax — tiered, differs by property type
+    {
+      kind: 'tiered',
+      key: 'registration',
+      labelKey: 'loans.costs.registration',
+      tiers: [
+        {
+          propertyType: 'new',
+          bands: [
+            // < 500k TND: ~30 TND/page registration fee — negligible; modelled as 0 for simplicity
+            { maxPrice: 500_000, components: [{ kind: 'fixed', amount: 0 }] },
+            // 500k–999,999: 3% on excess above 500k + 2% complementary tax on total
+            {
+              maxPrice: 1_000_000,
+              components: [
+                { kind: 'percentOfPriceAboveThreshold', threshold: 500_000, value: 3 },
+                { kind: 'percentOfPrice', value: 2 },
+              ],
+            },
+            // >= 1M: 3% on excess above 500k + 4% complementary tax on total
+            {
+              maxPrice: Number.POSITIVE_INFINITY,
+              components: [
+                { kind: 'percentOfPriceAboveThreshold', threshold: 500_000, value: 3 },
+                { kind: 'percentOfPrice', value: 4 },
+              ],
+            },
+          ],
+        },
+        {
+          propertyType: 'secondary',
+          bands: [
+            { maxPrice: 500_000, components: [{ kind: 'percentOfPrice', value: 6 }] },
+            { maxPrice: 1_000_000, components: [{ kind: 'percentOfPrice', value: 8 }] },
+            { maxPrice: Number.POSITIVE_INFINITY, components: [{ kind: 'percentOfPrice', value: 10 }] },
+          ],
+        },
+      ],
     },
   ],
-  registrationTaxMatrix: {
-    newResident: 1.0,
-    newAbroad: 0.0,
-    resaleResident: 5.0,
-    resaleAbroad: 5.0,
-  },
   eligibility: {
     maxDebtToIncomeRatio: 0.40,
     warnDebtToIncomeRatio: 0.33,
     minMonthlyIncome: 800,
-    minAge: 21,
-    maxAge: 65,
   },
 };
 
@@ -131,16 +180,11 @@ export const FR_CONFIG: LoanCountryConfig = {
   minDownPaymentPercent: 10,
   maxDownPaymentPercent: 100,
   defaultDownPaymentPercent: 20,
-  transactionCosts: [
-    { key: 'notary', labelKey: 'loans.inputs.notaryFee', type: 'percentOfPrice', value: 7.0, minValue: 0, maxValue: 15 },
-    { key: 'agency', labelKey: 'loans.inputs.agencyFee', type: 'percentOfPrice', value: 3.0, minValue: 0, maxValue: 10 },
-  ],
+  transactionCosts: [],
   eligibility: {
     maxDebtToIncomeRatio: 0.35,
     warnDebtToIncomeRatio: 0.30,
     minMonthlyIncome: 1200,
-    minAge: 18,
-    maxAge: 75,
   },
 };
 
@@ -161,16 +205,11 @@ export const MA_CONFIG: LoanCountryConfig = {
   minDownPaymentPercent: 10,
   maxDownPaymentPercent: 100,
   defaultDownPaymentPercent: 20,
-  transactionCosts: [
-    { key: 'notary', labelKey: 'loans.inputs.notaryFee', type: 'percentOfPrice', value: 1.5, minValue: 0, maxValue: 10 },
-    { key: 'agency', labelKey: 'loans.inputs.agencyFee', type: 'percentOfPrice', value: 3.0, minValue: 0, maxValue: 10 },
-  ],
+  transactionCosts: [],
   eligibility: {
     maxDebtToIncomeRatio: 0.40,
     warnDebtToIncomeRatio: 0.33,
     minMonthlyIncome: 3000,
-    minAge: 20,
-    maxAge: 65,
   },
 };
 
@@ -191,16 +230,11 @@ export const DZ_CONFIG: LoanCountryConfig = {
   minDownPaymentPercent: 10,
   maxDownPaymentPercent: 100,
   defaultDownPaymentPercent: 20,
-  transactionCosts: [
-    { key: 'notary', labelKey: 'loans.inputs.notaryFee', type: 'percentOfPrice', value: 2.0, minValue: 0, maxValue: 10 },
-    { key: 'agency', labelKey: 'loans.inputs.agencyFee', type: 'percentOfPrice', value: 2.0, minValue: 0, maxValue: 10 },
-  ],
+  transactionCosts: [],
   eligibility: {
     maxDebtToIncomeRatio: 0.40,
     warnDebtToIncomeRatio: 0.33,
     minMonthlyIncome: 20000,
-    minAge: 21,
-    maxAge: 65,
   },
 };
 

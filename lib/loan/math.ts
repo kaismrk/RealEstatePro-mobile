@@ -2,7 +2,7 @@
 // Pure math helpers for the loan simulator.
 // All functions are side-effect-free and exported for unit testing.
 
-import type { LoanCostRate } from './config';
+import type { CostComponent, LoanCostRate, PropertyType } from './config';
 
 /**
  * Standard annuity (equal-payment) formula.
@@ -37,20 +37,76 @@ export function calculateTotalInterest(
   return Math.max(0, monthlyPayment * termYears * 12 - loanAmount);
 }
 
+/** Evaluate a single CostComponent to a currency amount. Not exported — use computeCost. */
+function computeComponent(comp: CostComponent, price: number, loanAmount: number): number {
+  switch (comp.kind) {
+    case 'fixed':
+      return comp.amount;
+    case 'percentOfPrice':
+      return (price * comp.value) / 100;
+    case 'percentOfLoan':
+      return (loanAmount * comp.value) / 100;
+    case 'percentOfPriceAboveThreshold':
+      return (Math.max(0, price - comp.threshold) * comp.value) / 100;
+  }
+}
+
 /**
- * Calculate the combined transaction cost from an array of LoanCostRate entries.
- * Each entry can be a percentage of price, a percentage of loan, or a fixed amount.
+ * Compute the TND amount for a single LoanCostRate entry.
+ *
+ * For 'flat' costs: evaluates the single component.
+ * For 'tiered' costs:
+ *   - Finds the tier matching propertyType.
+ *   - Finds the first band where price < band.maxPrice (bands must be sorted ascending,
+ *     last band uses Number.POSITIVE_INFINITY).
+ *   - Sums all components in that band.
+ *
+ * Does NOT apply the 'appliesTo' filter — callers must do that before calling.
+ * Use calculateTransactionCosts() for the full filtered sum.
+ */
+export function computeCost(
+  cost: LoanCostRate,
+  price: number,
+  loanAmount: number,
+  propertyType: PropertyType,
+): number {
+  if (cost.kind === 'flat') {
+    return computeComponent(cost.component, price, loanAmount);
+  }
+  // tiered: find tier for this property type
+  const tier = cost.tiers.find((t) => t.propertyType === propertyType);
+  if (!tier) return 0;
+  // find the first band where price < band.maxPrice
+  const band = tier.bands.find((b) => price < b.maxPrice);
+  if (!band) return 0; // should not happen if last band has Infinity
+  return band.components.reduce(
+    (sum, comp) => sum + computeComponent(comp, price, loanAmount),
+    0,
+  );
+}
+
+/**
+ * Sum all applicable transaction costs for the given price, loan amount and property type.
+ *
+ * A flat cost is skipped when its appliesTo array is present and does not include
+ * the selected propertyType (e.g. agency commission is secondary-only for TN).
+ * Tiered costs always apply — tier selection inside computeCost handles the variance.
  */
 export function calculateTransactionCosts(
   price: number,
   loanAmount: number,
-  costs: LoanCostRate[]
+  costs: LoanCostRate[],
+  propertyType: PropertyType,
 ): number {
-  return costs.reduce((sum, c) => {
-    if (c.type === 'percentOfPrice') return sum + (price * c.value) / 100;
-    if (c.type === 'percentOfLoan') return sum + (loanAmount * c.value) / 100;
-    if (c.type === 'fixed') return sum + c.value;
-    return sum;
+  return costs.reduce((sum, cost) => {
+    if (
+      cost.kind === 'flat' &&
+      cost.appliesTo !== undefined &&
+      !cost.appliesTo.includes(propertyType)
+    ) {
+      return sum;
+    }
+    return sum + computeCost(cost, price, loanAmount, propertyType);
   }, 0);
 }
 
@@ -58,7 +114,7 @@ export function calculateTransactionCosts(
 export function fmt(n: number): string {
   return Math.round(n)
     .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
 /** Format to 2 decimal places. */

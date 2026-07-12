@@ -74,17 +74,43 @@ describe('TN_CONFIG', () => {
     expect(TN_CONFIG.eligibility.minMonthlyIncome).toBe(800);
   });
 
-  it('has transactionCosts with notary and agency entries', () => {
-    const keys = TN_CONFIG.transactionCosts.map(c => c.key);
-    expect(keys).toContain('notary');
-    expect(keys).toContain('agency');
+  it('does not include age eligibility (no minAge / maxAge)', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((TN_CONFIG.eligibility as any).minAge).toBeUndefined();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((TN_CONFIG.eligibility as any).maxAge).toBeUndefined();
   });
 
-  it('has registrationTaxMatrix with all four scenarios', () => {
-    expect(TN_CONFIG.registrationTaxMatrix).toBeDefined();
-    const m = TN_CONFIG.registrationTaxMatrix!;
-    expect(m.newAbroad).toBe(0.0);     // TRE exempt
-    expect(m.newResident).toBe(1.0);   // new resident
-    expect(m.resaleResident).toBe(5.0); // resale resident
+  it('has transactionCosts with notary, agency, cpf and registration entries', () => {
+    const keys = TN_CONFIG.transactionCosts.map((c) => c.key);
+    expect(keys).toContain('notary');
+    expect(keys).toContain('agency');
+    expect(keys).toContain('cpf');
+    expect(keys).toContain('registration');
+  });
+
+  it('agency cost applies only to secondary market', () => {
+    const agency = TN_CONFIG.transactionCosts.find((c) => c.key === 'agency');
+    expect(agency).toBeDefined();
+    expect(agency!.kind).toBe('flat');
+    if (agency!.kind === 'flat') {
+      expect(agency!.appliesTo).toEqual(['secondary']);
+    }
+  });
+
+  it('registration cost is tiered with two property-type tiers', () => {
+    const reg = TN_CONFIG.transactionCosts.find((c) => c.key === 'registration');
+    expect(reg).toBeDefined();
+    expect(reg!.kind).toBe('tiered');
+    if (reg!.kind === 'tiered') {
+      const types = reg!.tiers.map((t) => t.propertyType);
+      expect(types).toContain('new');
+      expect(types).toContain('secondary');
+    }
+  });
+
+  it('does not have a registrationTaxMatrix (replaced by tiered transactionCosts)', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((TN_CONFIG as any).registrationTaxMatrix).toBeUndefined();
   });
 });

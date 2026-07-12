@@ -398,6 +398,17 @@
     "title": "Loan Simulator",
     "tmmBanner": "Indexed on TMM {{tmm}}% (BCT · {{date}}) + {{margin}}% bank margin",
     "adPlaceholder": "Bank ad placeholder",
+    "propertyType": {
+      "title": "Property type",
+      "new": "New (from developer)",
+      "secondary": "Secondary market"
+    },
+    "costs": {
+      "notary": "Notary fees",
+      "agency": "Agency commission",
+      "cpf": "CPF tax",
+      "registration": "Registration + complementary tax"
+    },
     "inputs": {
       "price": "Property price",
       "downPayment": "Down payment",
@@ -407,18 +418,8 @@
       "rateFormula": "= TMM {{tmm}}% + {{margin}}%",
       "txCosts": "Transaction costs",
       "txSubtitle": "≈ {{amount}} {{currency}} on this price",
-      "txMoreDetails": "More details for a more accurate estimate",
-      "propType": "Property type",
-      "propLand": "Land",
-      "propFlat": "Flat / House",
-      "newPromoter": "New from promoter",
-      "abroad": "Tunisian resident abroad",
-      "yes": "Yes",
-      "no": "No",
-      "registrationTax": "Registration tax",
-      "notaryFee": "Lawyer / notary fee",
-      "agencyFee": "Real estate agency fee",
-      "txNote": "Registration tax is pre-filled from your selections — adjust any value if you know it."
+      "txMoreDetails": "See cost breakdown",
+      "txNote": "Costs are automatically computed based on the selected property type and price."
     },
     "results": {
       "label": "ESTIMATED MONTHLY PAYMENT",

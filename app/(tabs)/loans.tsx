@@ -39,10 +39,12 @@ import { useLoanConfig } from '@/hooks/useLoanConfig';
 import {
   calculateMonthlyPayment,
   calculateTotalInterest,
+  calculateTransactionCosts,
+  computeCost,
   fmt,
   fmt2,
 } from '@/lib/loan/math';
-import type { LoanCountryConfig } from '@/lib/loan/config';
+import type { LoanCountryConfig, PropertyType } from '@/lib/loan/config';
 import { useTheme } from '@/lib/theme';
 import type { Palette } from '@/constants/theme';
 import { secureStorage } from '@/lib/utils/secureStorage';
@@ -67,13 +69,7 @@ interface PersistedState {
   rateOverride: number | null;
   netIncome: number;
   otherLoans: number;
-  propType: 'land' | 'flat';
-  isNew: boolean;
-  isAbroad: boolean;
-  txOverride: number | null;
-  regTaxOverride: number | null;
-  notaryPct: number;
-  agencyPct: number;
+  marketType: PropertyType;
   savedSims: SavedSim[];
 }
 
@@ -409,7 +405,7 @@ const adStyles = StyleSheet.create({
   },
 });
 
-// ── Segment selector (Land/Flat, Yes/No) ──────────────────────────────────────
+// ── Segment selector ──────────────────────────────────────────────────────────
 
 function SegmentControl({
   options,
@@ -545,64 +541,6 @@ const inputStyles = StyleSheet.create({
   },
 });
 
-// ── Small input (for % fields in More details) ────────────────────────────────
-
-function SmallPctInput({
-  value,
-  onChangeText,
-  palette,
-  testID,
-}: {
-  value: string;
-  onChangeText: (text: string) => void;
-  palette: Palette;
-  testID?: string;
-}) {
-  return (
-    <View
-      style={[
-        smallInputStyles.row,
-        {
-          borderColor: palette.borderStrong,
-          backgroundColor: palette.surface,
-          borderRadius: radius.sm,
-        },
-      ]}
-    >
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        keyboardType="decimal-pad"
-        style={[smallInputStyles.field, { color: palette.textPrimary }]}
-        testID={testID}
-        selectTextOnFocus
-      />
-      <Text style={[smallInputStyles.pct, { color: palette.textTertiary }]}>%</Text>
-    </View>
-  );
-}
-
-const smallInputStyles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    width: 70,
-  },
-  field: {
-    flex: 1,
-    paddingVertical: 7,
-    fontSize: 13.5,
-    fontWeight: fontWeight.bold,
-    textAlign: 'right',
-  },
-  pct: {
-    fontSize: 11.5,
-    marginLeft: 3,
-  },
-});
-
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 export default function LoansScreen() {
@@ -618,13 +556,7 @@ export default function LoansScreen() {
   const [rateOverride, setRateOverride] = useState<number | null>(null);
   const [netIncome, setNetIncome] = useState(4500);
   const [otherLoans, setOtherLoans] = useState(0);
-  const [propType, setPropType] = useState<'land' | 'flat'>('flat');
-  const [isNew, setIsNew] = useState(false);
-  const [isAbroad, setIsAbroad] = useState(false);
-  const [txOverride, setTxOverride] = useState<number | null>(null);
-  const [regTaxOverride, setRegTaxOverride] = useState<number | null>(null);
-  const [notaryPct, setNotaryPct] = useState(1.0);
-  const [agencyPct, setAgencyPct] = useState(3.0);
+  const [marketType, setMarketType] = useState<PropertyType>('secondary');
   const [moreOpen, setMoreOpen] = useState(false);
   const [discOpen, setDiscOpen] = useState(false);
   const [ratioInfoOpen, setRatioInfoOpen] = useState(false);
@@ -639,22 +571,12 @@ export default function LoansScreen() {
   const totalLoanCost = monthlyPayment * years * 12;
   const totalInterest = calculateTotalInterest(loanAmount, monthlyPayment, years);
 
-  // Registration tax (dynamic from matrix)
-  const regDefault = useMemo(() => {
-    if (!config.registrationTaxMatrix) return 5.0;
-    if (isNew) {
-      return isAbroad
-        ? config.registrationTaxMatrix.newAbroad
-        : config.registrationTaxMatrix.newResident;
-    }
-    return isAbroad
-      ? config.registrationTaxMatrix.resaleAbroad
-      : config.registrationTaxMatrix.resaleResident;
-  }, [config, isNew, isAbroad]);
+  // Transaction costs — computed from config, filtered by marketType
+  const txAmount = useMemo(
+    () => calculateTransactionCosts(price, loanAmount, config.transactionCosts, marketType),
+    [price, loanAmount, config.transactionCosts, marketType],
+  );
 
-  const regTax = regTaxOverride ?? regDefault;
-  const txPct = txOverride ?? +(regTax + notaryPct + agencyPct).toFixed(2);
-  const txAmount = price * txPct / 100;
   const grandTotal = totalLoanCost + txAmount;
 
   // Breakdown bar widths
@@ -703,13 +625,9 @@ export default function LoansScreen() {
         if (stored.rateOverride !== undefined) setRateOverride(stored.rateOverride);
         if (typeof stored.netIncome === 'number') setNetIncome(stored.netIncome);
         if (typeof stored.otherLoans === 'number') setOtherLoans(stored.otherLoans);
-        if (stored.propType === 'land' || stored.propType === 'flat') setPropType(stored.propType);
-        if (typeof stored.isNew === 'boolean') setIsNew(stored.isNew);
-        if (typeof stored.isAbroad === 'boolean') setIsAbroad(stored.isAbroad);
-        if (stored.txOverride !== undefined) setTxOverride(stored.txOverride);
-        if (stored.regTaxOverride !== undefined) setRegTaxOverride(stored.regTaxOverride);
-        if (typeof stored.notaryPct === 'number') setNotaryPct(stored.notaryPct);
-        if (typeof stored.agencyPct === 'number') setAgencyPct(stored.agencyPct);
+        if (stored.marketType === 'new' || stored.marketType === 'secondary') {
+          setMarketType(stored.marketType);
+        }
         if (Array.isArray(stored.savedSims)) setSavedSims(stored.savedSims);
       } catch {
         // malformed — start fresh
@@ -730,16 +648,14 @@ export default function LoansScreen() {
     saveTimerRef.current = setTimeout(() => {
       const state: PersistedState = {
         price, downPct, years, rateOverride,
-        netIncome, otherLoans, propType, isNew, isAbroad,
-        txOverride, regTaxOverride, notaryPct, agencyPct, savedSims,
+        netIncome, otherLoans, marketType, savedSims,
       };
       void secureStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }, 600);
     return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
   }, [
     hydrated, price, downPct, years, rateOverride,
-    netIncome, otherLoans, propType, isNew, isAbroad,
-    txOverride, regTaxOverride, notaryPct, agencyPct, savedSims,
+    netIncome, otherLoans, marketType, savedSims,
   ]);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
@@ -758,25 +674,9 @@ export default function LoansScreen() {
     });
   }, [config]);
 
-  const clearTx = useCallback(() => setTxOverride(null), []);
-
-  const handlePropType = useCallback((i: number) => {
-    setPropType(i === 0 ? 'land' : 'flat');
-    setRegTaxOverride(null);
-    clearTx();
-  }, [clearTx]);
-
-  const handleIsNew = useCallback((i: number) => {
-    setIsNew(i === 0);
-    setRegTaxOverride(null);
-    clearTx();
-  }, [clearTx]);
-
-  const handleIsAbroad = useCallback((i: number) => {
-    setIsAbroad(i === 0);
-    setRegTaxOverride(null);
-    clearTx();
-  }, [clearTx]);
+  const handleMarketType = useCallback((i: number) => {
+    setMarketType(i === 0 ? 'new' : 'secondary');
+  }, []);
 
   const handleSaveSim = useCallback(() => {
     const newSim: SavedSim = {
@@ -796,23 +696,11 @@ export default function LoansScreen() {
   const [priceText, setPriceText] = useState(String(price));
   const [netIncomeText, setNetIncomeText] = useState(String(netIncome));
   const [otherLoansText, setOtherLoansText] = useState(String(otherLoans));
-  const [txPctText, setTxPctText] = useState(String(txPct));
-  const [regTaxText, setRegTaxText] = useState(String(regTax));
-  const [notaryText, setNotaryText] = useState(String(notaryPct));
-  const [agencyText, setAgencyText] = useState(String(agencyPct));
 
   // Sync text when numeric state changes externally (e.g. hydration)
   useEffect(() => { if (hydrated) setPriceText(String(price)); }, [price, hydrated]);
   useEffect(() => { if (hydrated) setNetIncomeText(String(netIncome)); }, [netIncome, hydrated]);
   useEffect(() => { if (hydrated) setOtherLoansText(String(otherLoans)); }, [otherLoans, hydrated]);
-  useEffect(() => { setTxPctText(fmt2(txPct)); }, [txPct]);
-  useEffect(() => { setRegTaxText(fmt2(regTax)); }, [regTax]);
-
-  const parsePct = (text: string, min = 0, max = 100): number => {
-    const v = parseFloat(text.replace(/[^\d.]/g, ''));
-    if (Number.isNaN(v)) return min;
-    return Math.min(max, Math.max(min, v));
-  };
 
   const parseAmount = (text: string): number => {
     const v = parseFloat(text.replace(/[^\d.]/g, ''));
@@ -955,38 +843,28 @@ export default function LoansScreen() {
             </View>
           </View>
 
+          {/* Property type (New / Secondary) */}
+          <View style={[s.fieldGroup, s.borderTop]}>
+            <Text style={s.fieldLabel}>{t('loans.propertyType.title')}</Text>
+            <SegmentControl
+              options={[t('loans.propertyType.new'), t('loans.propertyType.secondary')]}
+              activeIndex={marketType === 'new' ? 0 : 1}
+              onSelect={handleMarketType}
+              palette={palette}
+              testIDPrefix="market-type-seg"
+            />
+          </View>
+
           {/* Transaction costs */}
           <View style={s.txSection}>
-            <View style={s.txHeader}>
-              <View style={s.txLabels}>
-                <Text style={s.fieldLabel}>{t('loans.inputs.txCosts')}</Text>
-                <Text style={s.rateFormula} testID="tx-subtitle">
-                  {t('loans.inputs.txSubtitle', {
-                    amount: fmt(txAmount),
-                    currency: config.currency,
-                  })}
-                </Text>
-              </View>
-              <View
-                style={[
-                  s.txPctBox,
-                  { borderColor: palette.borderStrong, backgroundColor: palette.neutral100, borderRadius: radius.sm },
-                ]}
-              >
-                <TextInput
-                  value={txPctText}
-                  onChangeText={(text) => {
-                    setTxPctText(text);
-                    const v = parsePct(text, 0, 30);
-                    setTxOverride(v);
-                  }}
-                  keyboardType="decimal-pad"
-                  style={[s.txPctInput, { color: palette.textPrimary }]}
-                  testID="tx-pct-input"
-                  selectTextOnFocus
-                />
-                <Text style={[s.txPctSuffix, { color: palette.textTertiary }]}>%</Text>
-              </View>
+            <View style={s.txLabels}>
+              <Text style={s.fieldLabel}>{t('loans.inputs.txCosts')}</Text>
+              <Text style={s.rateFormula} testID="tx-subtitle">
+                {t('loans.inputs.txSubtitle', {
+                  amount: fmt(txAmount),
+                  currency: config.currency,
+                })}
+              </Text>
             </View>
 
             {/* Toggle "More details" */}
@@ -1007,7 +885,7 @@ export default function LoansScreen() {
               </Text>
             </TouchableOpacity>
 
-            {/* More details panel */}
+            {/* More details — cost breakdown */}
             {moreOpen && (
               <View
                 style={[
@@ -1019,99 +897,30 @@ export default function LoansScreen() {
                   },
                 ]}
               >
-                {/* Property type */}
-                <View style={s.detailFieldGroup}>
-                  <Text style={s.detailLabel}>{t('loans.inputs.propType')}</Text>
-                  <SegmentControl
-                    options={[t('loans.inputs.propLand'), t('loans.inputs.propFlat')]}
-                    activeIndex={propType === 'land' ? 0 : 1}
-                    onSelect={handlePropType}
-                    palette={palette}
-                    testIDPrefix="prop-type-seg"
-                  />
-                </View>
-
-                {/* New from promoter */}
-                <View style={s.detailFieldGroup}>
-                  <Text style={s.detailLabel}>{t('loans.inputs.newPromoter')}</Text>
-                  <SegmentControl
-                    options={[t('loans.inputs.yes'), t('loans.inputs.no')]}
-                    activeIndex={isNew ? 0 : 1}
-                    onSelect={handleIsNew}
-                    palette={palette}
-                    testIDPrefix="new-promoter-seg"
-                  />
-                </View>
-
-                {/* Abroad */}
-                <View style={s.detailFieldGroup}>
-                  <Text style={s.detailLabel}>{t('loans.inputs.abroad')}</Text>
-                  <SegmentControl
-                    options={[t('loans.inputs.yes'), t('loans.inputs.no')]}
-                    activeIndex={isAbroad ? 0 : 1}
-                    onSelect={handleIsAbroad}
-                    palette={palette}
-                    testIDPrefix="abroad-seg"
-                  />
-                </View>
-
-                {/* Individual tax fields */}
-                <View style={[s.taxFields, { borderTopColor: palette.border }]}>
-                  {/* Registration tax */}
-                  <View style={s.taxRow}>
-                    <Text style={[s.taxLabel, { color: palette.textPrimary }]}>
-                      {t('loans.inputs.registrationTax')}
-                    </Text>
-                    <SmallPctInput
-                      value={regTaxText}
-                      onChangeText={(text) => {
-                        setRegTaxText(text);
-                        const v = parsePct(text, 0, 15);
-                        setRegTaxOverride(v);
-                        clearTx();
-                      }}
-                      palette={palette}
-                      testID="reg-tax-input"
-                    />
-                  </View>
-                  {/* Notary fee */}
-                  <View style={s.taxRow}>
-                    <Text style={[s.taxLabel, { color: palette.textPrimary }]}>
-                      {t('loans.inputs.notaryFee')}
-                    </Text>
-                    <SmallPctInput
-                      value={notaryText}
-                      onChangeText={(text) => {
-                        setNotaryText(text);
-                        const v = parsePct(text, 0, 10);
-                        setNotaryPct(v);
-                        clearTx();
-                      }}
-                      palette={palette}
-                      testID="notary-input"
-                    />
-                  </View>
-                  {/* Agency fee */}
-                  <View style={s.taxRow}>
-                    <Text style={[s.taxLabel, { color: palette.textPrimary }]}>
-                      {t('loans.inputs.agencyFee')}
-                    </Text>
-                    <SmallPctInput
-                      value={agencyText}
-                      onChangeText={(text) => {
-                        setAgencyText(text);
-                        const v = parsePct(text, 0, 10);
-                        setAgencyPct(v);
-                        clearTx();
-                      }}
-                      palette={palette}
-                      testID="agency-input"
-                    />
-                  </View>
-                  <Text style={[s.taxNote, { color: palette.textTertiary }]}>
-                    {t('loans.inputs.txNote')}
-                  </Text>
-                </View>
+                {config.transactionCosts.map((cost) => {
+                  // Hide flat costs whose appliesTo excludes current market type
+                  if (
+                    cost.kind === 'flat' &&
+                    cost.appliesTo !== undefined &&
+                    !cost.appliesTo.includes(marketType)
+                  ) {
+                    return null;
+                  }
+                  const amount = computeCost(cost, price, loanAmount, marketType);
+                  return (
+                    <View key={cost.key} style={s.taxRow}>
+                      <Text style={[s.taxLabel, { color: palette.textPrimary }]}>
+                        {t(cost.labelKey)}
+                      </Text>
+                      <Text style={[s.taxValue, { color: palette.textSecondary }]}>
+                        {fmt(amount)} {config.currency}
+                      </Text>
+                    </View>
+                  );
+                })}
+                <Text style={[s.taxNote, { color: palette.textTertiary }]}>
+                  {t('loans.inputs.txNote')}
+                </Text>
               </View>
             )}
           </View>
@@ -1459,6 +1268,11 @@ function makeStyles(palette: Palette) {
     fieldGroup: {
       gap: 6,
     },
+    borderTop: {
+      borderTopWidth: 1,
+      borderTopColor: palette.neutral100,
+      paddingTop: 14,
+    },
     fieldLabel: {
       fontSize: 13.5,
       fontWeight: fontWeight.semibold,
@@ -1525,32 +1339,8 @@ function makeStyles(palette: Palette) {
       borderTopColor: palette.neutral100,
       paddingTop: 14,
     },
-    txHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 12,
-    },
     txLabels: {
-      flex: 1,
       gap: 1,
-    },
-    txPctBox: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderWidth: 1,
-      paddingHorizontal: 10,
-      width: 76,
-    },
-    txPctInput: {
-      flex: 1,
-      paddingVertical: 8,
-      fontSize: 14,
-      fontWeight: fontWeight.bold,
-      textAlign: 'right',
-    },
-    txPctSuffix: {
-      fontSize: 12,
-      marginLeft: 3,
     },
     moreDetailsRow: {
       flexDirection: 'row',
@@ -1564,20 +1354,12 @@ function makeStyles(palette: Palette) {
     morePanel: {
       borderWidth: 1,
       padding: 14,
-      gap: 14,
-    },
-    detailFieldGroup: {
-      gap: 6,
+      gap: 10,
     },
     detailLabel: {
       fontSize: 12,
       fontWeight: fontWeight.semibold,
       color: palette.textSecondary,
-    },
-    taxFields: {
-      borderTopWidth: 1,
-      paddingTop: 12,
-      gap: 10,
     },
     taxRow: {
       flexDirection: 'row',
@@ -1589,9 +1371,16 @@ function makeStyles(palette: Palette) {
       fontSize: 13,
       flex: 1,
     },
+    taxValue: {
+      fontSize: 13,
+      fontWeight: fontWeight.semibold,
+    },
     taxNote: {
       fontSize: 11,
       lineHeight: 16,
+      borderTopWidth: 1,
+      borderTopColor: palette.border,
+      paddingTop: 8,
     },
     resultCard: {
       borderWidth: 1,
