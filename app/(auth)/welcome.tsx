@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
   StyleSheet,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -15,12 +14,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useGoogleSignIn } from '@/hooks/useGoogleSignIn';
+import { useAppleSignIn } from '@/hooks/useAppleSignIn';
 import { colors, fontWeight, radius } from '@/constants/theme';
 
 export default function WelcomeScreen() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState<string | undefined>();
+  const google = useGoogleSignIn();
+  const apple  = useAppleSignIn();
 
   function validateEmail(value: string) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -31,10 +34,6 @@ export default function WelcomeScreen() {
     if (!validateEmail(email.trim())) { setEmailError(t('welcome.errors.invalid')); return; }
     setEmailError(undefined);
     router.push({ pathname: '/(auth)/register', params: { email: email.trim() } });
-  }
-
-  function handleGoogleOAuth() {
-    Alert.alert('Google Sign In', 'Google OAuth flow not yet configured in app.json');
   }
 
   return (
@@ -87,14 +86,40 @@ export default function WelcomeScreen() {
                 {t('common.continue')}
               </Button>
 
-              <Button
-                variant="secondary"
-                onPress={handleGoogleOAuth}
-                size="lg"
-                style={[styles.btnFull, styles.btnMt]}
-              >
-                {t('auth.googleSignIn')}
-              </Button>
+              {/* Social sign-in — always show Google; show Apple on iOS 13+ only */}
+              {google.isAvailable && (
+                <Button
+                  variant="secondary"
+                  onPress={() => void google.signIn()}
+                  size="lg"
+                  style={[styles.btnFull, styles.btnMt]}
+                  loading={google.isLoading}
+                  disabled={google.isLoading}
+                >
+                  {t('auth.social.continueWithGoogle')}
+                </Button>
+              )}
+              {apple.isAvailable && (
+                <Button
+                  variant="secondary"
+                  onPress={() => void apple.signIn()}
+                  size="lg"
+                  style={[styles.btnFull, styles.btnMt]}
+                  loading={apple.isLoading}
+                  disabled={apple.isLoading}
+                >
+                  {t('auth.social.continueWithApple')}
+                </Button>
+              )}
+
+              {/* Social error banner */}
+              {(google.error ?? apple.error) ? (
+                <View style={styles.socialErrBanner}>
+                  <Text style={styles.socialErrText}>
+                    {google.error ?? apple.error}
+                  </Text>
+                </View>
+              ) : null}
 
               <View style={styles.guestWrap}>
                 <Button variant="ghost" onPress={() => router.replace('/(tabs)/search')}>
@@ -152,4 +177,6 @@ const styles = StyleSheet.create({
   btnFull: { width: '100%' },
   btnMt:   { marginTop: 12 },
   guestWrap: { alignItems: 'center', marginTop: 12 },
+  socialErrBanner: { backgroundColor: colors.errorBg, borderRadius: radius.md, paddingHorizontal: 16, paddingVertical: 10, marginTop: 12 },
+  socialErrText:   { color: colors.error, fontSize: 13 },
 });

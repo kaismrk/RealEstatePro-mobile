@@ -5,8 +5,8 @@ import { useGoogleLogin } from '@/hooks/useAuth';
 import { colors, fontSize } from '@/constants/theme';
 
 export default function GoogleCallbackScreen() {
-  const { google_token, error: oauthError } = useLocalSearchParams<{
-    google_token?: string;
+  const { id_token, error: oauthError } = useLocalSearchParams<{
+    id_token?: string;
     error?: string;
   }>();
 
@@ -19,9 +19,9 @@ export default function GoogleCallbackScreen() {
       return;
     }
 
-    if (google_token) {
+    if (id_token) {
       googleLogin.mutate(
-        { google_token },
+        { id_token },
         {
           onError: () => {
             router.replace('/(auth)/welcome');
@@ -30,7 +30,7 @@ export default function GoogleCallbackScreen() {
       );
     } else {
       // No token and no error — something went wrong
-      router.replace('/(auth)/welcome');
+      router.replace('/(auth)/login');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -34,7 +34,15 @@
     }
   },
   "auth": {
-    "googleSignIn": "Continue with Google"
+    "googleSignIn": "Continue with Google",
+    "social": {
+      "continueWithGoogle": "Continue with Google",
+      "continueWithApple": "Continue with Apple",
+      "error": {
+        "cancelled": "Sign-in cancelled",
+        "failed": "Sign-in failed. Try again."
+      }
+    }
   },
   "tabs": {
     "search": "Search",

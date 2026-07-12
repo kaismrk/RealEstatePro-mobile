@@ -34,7 +34,15 @@
     }
   },
   "auth": {
-    "googleSignIn": "Continuer avec Google"
+    "googleSignIn": "Continuer avec Google",
+    "social": {
+      "continueWithGoogle": "Continuer avec Google",
+      "continueWithApple": "Continuer avec Apple",
+      "error": {
+        "cancelled": "Connexion annulée",
+        "failed": "Connexion échouée. Réessayez."
+      }
+    }
   },
   "tabs": {
     "search": "Recherche",

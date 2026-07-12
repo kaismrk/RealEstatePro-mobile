@@ -21,6 +21,16 @@
     "search": "بحث",
     "profile": "الملف الشخصي"
   },
+  "auth": {
+    "social": {
+      "continueWithGoogle": "",
+      "continueWithApple": "",
+      "error": {
+        "cancelled": "",
+        "failed": ""
+      }
+    }
+  },
   "login": {
     "title": "مرحباً بعودتك"
   },

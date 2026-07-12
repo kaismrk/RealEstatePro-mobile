@@ -16,6 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useLogin } from '@/hooks/useAuth';
+import { useGoogleSignIn } from '@/hooks/useGoogleSignIn';
+import { useAppleSignIn } from '@/hooks/useAppleSignIn';
 import { colors, fontWeight, radius } from '@/constants/theme';
 
 export default function LoginScreen() {
@@ -27,6 +29,8 @@ export default function LoginScreen() {
   const [error, setError]       = useState<string | undefined>();
   const [countdown, setCountdown] = useState(0);
   const login = useLogin();
+  const google = useGoogleSignIn();
+  const apple  = useAppleSignIn();
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -102,9 +106,41 @@ export default function LoginScreen() {
             <Button onPress={handleSignIn} size="lg" style={styles.btnFull} loading={login.isPending} disabled={rateLimited || login.isPending}>
               {t('common.signIn')}
             </Button>
-            <Button variant="secondary" onPress={() => Alert.alert('Google Sign In', 'Google OAuth flow not yet configured')} size="lg" style={[styles.btnFull, styles.btnMt]}>
-              {t('auth.googleSignIn')}
-            </Button>
+
+            {/* Social sign-in — always show Google; show Apple on iOS 13+ only */}
+            {google.isAvailable && (
+              <Button
+                variant="secondary"
+                onPress={() => void google.signIn()}
+                size="lg"
+                style={[styles.btnFull, styles.btnMt]}
+                loading={google.isLoading}
+                disabled={google.isLoading}
+              >
+                {t('auth.social.continueWithGoogle')}
+              </Button>
+            )}
+            {apple.isAvailable && (
+              <Button
+                variant="secondary"
+                onPress={() => void apple.signIn()}
+                size="lg"
+                style={[styles.btnFull, styles.btnMt]}
+                loading={apple.isLoading}
+                disabled={apple.isLoading}
+              >
+                {t('auth.social.continueWithApple')}
+              </Button>
+            )}
+
+            {/* Social error banner */}
+            {(google.error ?? apple.error) ? (
+              <View style={styles.socialErrBanner}>
+                <Text style={styles.socialErrText}>
+                  {google.error ?? apple.error}
+                </Text>
+              </View>
+            ) : null}
 
             <View style={styles.registerRow}>
               <Text style={styles.registerPrompt}>{t('login.register.prompt')}</Text>
@@ -136,4 +172,6 @@ const styles = StyleSheet.create({
   registerRow: { flexDirection: 'row', justifyContent: 'center', marginTop: 28 },
   registerPrompt: { fontSize: 15, color: colors.textSecondary },
   registerLink:   { fontSize: 15, color: colors.primary, fontWeight: fontWeight.semibold },
+  socialErrBanner: { backgroundColor: colors.errorBg, borderRadius: radius.md, paddingHorizontal: 16, paddingVertical: 10, marginTop: 12 },
+  socialErrText:   { color: colors.error, fontSize: 13 },
 });

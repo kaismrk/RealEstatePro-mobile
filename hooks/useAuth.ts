@@ -111,13 +111,15 @@ export function useLogout() {
   });
 }
 
+// useGoogleLogin is kept for the legacy google-callback.tsx redirect screen.
+// New sign-in flows use hooks/useGoogleSignIn.ts and hooks/useAppleSignIn.ts instead.
 export function useGoogleLogin() {
-  return useMutation<void, Error, { google_token: string }>({
-    mutationFn: async ({ google_token }) => {
+  return useMutation<void, Error, { id_token: string }>({
+    mutationFn: async ({ id_token }) => {
       const { setTokens, setUser } = useAuthStore.getState();
 
-      const tokenRes = await api.post<TokenResponse>('/auth/login/google', {
-        google_token,
+      const tokenRes = await api.post<TokenResponse>('/auth/oauth/google', {
+        id_token,
       });
 
       await setTokens(tokenRes.data.access_token, tokenRes.data.refresh_token);
