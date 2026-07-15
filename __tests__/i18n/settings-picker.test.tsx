@@ -102,6 +102,7 @@ describe('Settings language picker', () => {
     // Verify the picker strings are correctly defined for EN and FR
     expect(i18n.t('settings.picker.languages.fr')).toBe('Français');
     expect(i18n.t('settings.picker.languages.en')).toBe('English');
+    expect(i18n.t('settings.picker.languages.ar')).toBe('العربية');
   });
 
   it('matches snapshot of the settings screen', () => {

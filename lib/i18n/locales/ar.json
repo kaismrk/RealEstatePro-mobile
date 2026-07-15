@@ -2,10 +2,21 @@
   "common": {
     "back": "رجوع",
     "cancel": "إلغاء",
-    "signIn": "تسجيل الدخول",
+    "close": "إغلاق",
+    "next": "التالي",
+    "continue": "متابعة",
+    "save": "حفظ",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "reset": "إعادة تعيين",
+    "skip": "تخطي",
     "loading": "جار التحميل...",
     "error": "خطأ",
-    "success": "نجح",
+    "success": "نجاح",
+    "tryAgain": "حاول مرة أخرى",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "remove": "إزالة",
     "phone": {
       "label": "رقم الهاتف",
       "placeholder": "+216 12 345 678",
@@ -15,104 +26,755 @@
         "title": "أضف رقم هاتفك",
         "body": "يجب التحقق من رقم هاتفك قبل نشر إعلان."
       }
+    },
+    "viewAll": "عرض الكل",
+    "errors": {
+      "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+      "rateLimited": "محاولات كثيرة جداً. يرجى الانتظار {{countdown}} ثانية قبل المحاولة مرة أخرى."
+    }
+  },
+  "auth": {
+    "googleSignIn": "المتابعة باستخدام Google",
+    "social": {
+      "continueWithGoogle": "المتابعة باستخدام Google",
+      "continueWithApple": "المتابعة باستخدام Apple",
+      "error": {
+        "cancelled": "تم إلغاء تسجيل الدخول",
+        "failed": "فشل تسجيل الدخول. حاول مرة أخرى."
+      }
     }
   },
   "tabs": {
     "search": "بحث",
+    "updates": "التنبيهات",
+    "saved": "المحفوظات",
+    "loans": "القروض",
     "profile": "الملف الشخصي"
   },
-  "auth": {
-    "social": {
-      "continueWithGoogle": "",
-      "continueWithApple": "",
-      "error": {
-        "cancelled": "",
-        "failed": ""
-      }
+  "login": {
+    "title": "مرحباً بعودتك",
+    "email": {
+      "label": "البريد الإلكتروني",
+      "placeholder": "you@example.com"
+    },
+    "password": {
+      "label": "كلمة المرور",
+      "placeholder": "كلمة المرور الخاصة بك",
+      "forgot": "نسيت كلمة المرور؟"
+    },
+    "errors": {
+      "emailAndPassword": "يرجى إدخال بريدك الإلكتروني وكلمة المرور",
+      "incorrectCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+    },
+    "register": {
+      "prompt": "جديد هنا؟ ",
+      "link": "إنشاء حساب"
     }
   },
-  "login": {
-    "title": "مرحباً بعودتك"
+  "welcome": {
+    "title": "اعثر على منزلك المثالي",
+    "subtitle": "تصفح أكثر من 200,000 إعلان في تونس. احفظ عقاراتك المفضلة، راسل الوكلاء، واحجز زيارات — كل ذلك في مكان واحد.",
+    "errors": {
+      "required": "يرجى إدخال بريدك الإلكتروني",
+      "invalid": "يرجى إدخال بريد إلكتروني صالح"
+    },
+    "browseAsGuest": "التصفح كزائر"
+  },
+  "register": {
+    "title": "أنشئ حسابك",
+    "changeEmail": "تغيير",
+    "firstName": {
+      "label": "الاسم",
+      "placeholder": "فاطمة",
+      "error": "الاسم مطلوب"
+    },
+    "lastName": {
+      "label": "اللقب",
+      "placeholder": "بن علي",
+      "error": "اللقب مطلوب"
+    },
+    "signIn": {
+      "prompt": "لديك حساب بالفعل؟ "
+    }
+  },
+  "passwordCreate": {
+    "title": "أنشئ كلمة مرور",
+    "subtitle": "اختر كلمة مرور قوية لحماية حسابك.",
+    "password": {
+      "label": "كلمة المرور",
+      "placeholder": "أدخل كلمة المرور"
+    },
+    "confirmPassword": {
+      "label": "تأكيد كلمة المرور",
+      "placeholder": "أعد إدخال كلمة المرور"
+    },
+    "errors": {
+      "passwordRequired": "كلمة المرور مطلوبة",
+      "confirmRequired": "يرجى تأكيد كلمة المرور",
+      "mismatch": "كلمتا المرور غير متطابقتين"
+    },
+    "submit": "إنشاء حساب"
+  },
+  "profile": {
+    "guest": {
+      "title": "ملفك الشخصي",
+      "subtitle": "سجّل الدخول للوصول إلى ملفك الشخصي وإعلاناتك وإعداداتك."
+    },
+    "header": {
+      "title": "الملف الشخصي"
+    },
+    "sections": {
+      "account": "الحساب",
+      "activity": "النشاط",
+      "settings": "الإعدادات",
+      "accountActions": "إجراءات الحساب"
+    },
+    "account": {
+      "editProfile": "تعديل الملف الشخصي",
+      "changePassword": "تغيير كلمة المرور",
+      "myListings": "إعلاناتي",
+      "listingQuota": "حصة الإعلانات",
+      "listingPacks": "باقات الإعلانات",
+      "agentDashboard": "لوحة تحكم الوكيل",
+      "becomeAgent": "كن وكيلاً عقارياً",
+      "myAgency": "وكالتي",
+      "agencySubscription": "اشتراك الوكالة",
+      "createAgency": "إنشاء وكالة"
+    },
+    "activity": {
+      "messages": "الرسائل",
+      "savedHomes": "العقارات المحفوظة",
+      "savedSearches": "عمليات البحث المحفوظة"
+    },
+    "settings": {
+      "notifications": "الإشعارات",
+      "appSettings": "إعدادات التطبيق",
+      "helpFeedback": "المساعدة والملاحظات",
+      "privacy": "الخصوصية"
+    },
+    "signOut": "تسجيل الخروج",
+    "signOutConfirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟"
+  },
+  "settings": {
+    "header": {
+      "title": "إعدادات التطبيق"
+    },
+    "section": {
+      "region": "المنطقة",
+      "about": "حول التطبيق",
+      "accountActions": "إجراءات الحساب"
+    },
+    "country": "البلد",
+    "language": "اللغة",
+    "themeLabel": "المظهر",
+    "appVersion": "إصدار التطبيق",
+    "legal": {
+      "terms": "شروط الاستخدام",
+      "privacy": "سياسة الخصوصية",
+      "licenses": "تراخيص المصادر المفتوحة"
+    },
+    "picker": {
+      "title": "اختر اللغة",
+      "themeTitle": "اختر المظهر",
+      "close": "إغلاق",
+      "languages": {
+        "fr": "Français",
+        "en": "English",
+        "ar": "العربية"
+      }
+    },
+    "theme": {
+      "system": "النظام",
+      "light": "فاتح",
+      "dark": "داكن"
+    }
+  },
+  "editProfile": {
+    "header": {
+      "title": "تعديل الملف الشخصي"
+    },
+    "firstName": {
+      "label": "الاسم",
+      "placeholder": "أدخل اسمك"
+    },
+    "lastName": {
+      "label": "اللقب",
+      "placeholder": "أدخل لقبك"
+    },
+    "email": {
+      "label": "البريد الإلكتروني",
+      "placeholder": "your@email.com",
+      "error": "أدخل بريداً إلكترونياً صالحاً"
+    },
+    "country": {
+      "label": "البلد",
+      "hint": "لا يمكن تغيير البلد إلا من إعدادات التطبيق."
+    },
+    "submit": "حفظ التغييرات",
+    "success": "تم تحديث الملف الشخصي بنجاح.",
+    "error": "تعذر تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.",
+    "loading": "جار التحميل..."
+  },
+  "changePassword": {
+    "header": {
+      "title": "تغيير كلمة المرور"
+    },
+    "hint": "بعد تغيير كلمة المرور سيتم تسجيل خروجك وسيُطلب منك تسجيل الدخول من جديد.",
+    "currentPassword": {
+      "label": "كلمة المرور الحالية",
+      "placeholder": "كلمة المرور الحالية"
+    },
+    "newPassword": {
+      "label": "كلمة المرور الجديدة",
+      "placeholder": "كلمة المرور الجديدة"
+    },
+    "confirmPassword": {
+      "label": "تأكيد كلمة المرور الجديدة",
+      "placeholder": "تأكيد كلمة المرور الجديدة"
+    },
+    "errors": {
+      "currentRequired": "يرجى إدخال كلمة المرور الحالية",
+      "newRequired": "يرجى إدخال كلمة مرور جديدة",
+      "policy": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وتتضمن حرفاً كبيراً وحرفاً صغيراً ورقماً",
+      "confirmRequired": "يرجى تأكيد كلمة المرور الجديدة",
+      "mismatch": "كلمتا المرور غير متطابقتين",
+      "currentIncorrect": "كلمة المرور الحالية غير صحيحة"
+    },
+    "submit": "تغيير كلمة المرور",
+    "success": {
+      "title": "تم تغيير كلمة المرور",
+      "body": "تم تغيير كلمة المرور. يرجى تسجيل الدخول من جديد."
+    },
+    "error": "تعذر تغيير كلمة المرور. يرجى المحاولة مرة أخرى."
+  },
+  "notifications": {
+    "header": {
+      "title": "الإشعارات"
+    },
+    "banner": {
+      "title": "قريباً",
+      "subtitle": "ستتوفر تفضيلات الإشعارات الفورية في تحديث قادم."
+    },
+    "section": {
+      "push": "الإشعارات الفورية"
+    },
+    "items": {
+      "matchingListings": {
+        "label": "إعلانات جديدة مطابقة",
+        "description": "تنبيهات عند ظهور إعلانات جديدة تطابق عمليات البحث المحفوظة"
+      },
+      "inquiries": {
+        "label": "طلبات جديدة على إعلاناتك",
+        "description": "عندما يتواصل معك شخص بخصوص أحد إعلاناتك"
+      },
+      "priceChanges": {
+        "label": "تغيّرات الأسعار على العقارات المحفوظة",
+        "description": "عند انخفاض سعر عقار قمت بحفظه"
+      },
+      "appNews": {
+        "label": "أخبار التطبيق وتحديثاته",
+        "description": "إعلانات الميزات الجديدة ونصائح"
+      }
+    },
+    "emailNote": "إشعارات البريد الإلكتروني لتنبيهات البحث المحفوظ مفعّلة بالفعل."
+  },
+  "saved": {
+    "guest": {
+      "title": "سجّل الدخول لعرض العقارات المحفوظة",
+      "subtitle": "احفظ العقارات التي تعجبك وتصفحها في أي وقت."
+    },
+    "header": {
+      "title": "العقارات المحفوظة"
+    },
+    "compare": {
+      "button": "مقارنة",
+      "compareCount": "مقارنة {{count}}",
+      "hint": "اختر من 2 إلى 5 عقارات للمقارنة. تم اختيار {{count}}."
+    },
+    "removeLabel": "إزالة من المحفوظات",
+    "removeButton": "إزالة",
+    "empty": {
+      "title": "لا توجد عقارات محفوظة بعد",
+      "subtitle": "اضغط على القلب في أي إعلان لحفظه هنا",
+      "action": "ابدأ البحث"
+    }
+  },
+  "updates": {
+    "guest": {
+      "title": "سجّل الدخول لعرض عمليات البحث المحفوظة",
+      "subtitle": "احفظ عمليات بحثك واحصل على تنبيه عند ظهور عقارات جديدة مطابقة."
+    },
+    "header": {
+      "title": "عمليات البحث المحفوظة"
+    },
+    "newButton": "جديد",
+    "allProperties": "جميع العقارات",
+    "empty": {
+      "title": "لا توجد عمليات بحث محفوظة بعد",
+      "subtitle": "احفظ بحثك الحالي لتصلك تنبيهات عند ظهور عقارات جديدة مطابقة.",
+      "action": "الانتقال إلى البحث"
+    }
+  },
+  "search": {
+    "saveButton": "حفظ",
+    "mapButton": "الخريطة",
+    "saveSearchLabel": "حفظ البحث",
+    "mapViewLabel": "عرض الخريطة",
+    "empty": {
+      "title": "لم يتم العثور على عقارات",
+      "subtitle": "جرّب تعديل عوامل التصفية"
+    }
+  },
+  "filters": {
+    "transactionType": "نوع المعاملة",
+    "priceRange": "نطاق السعر",
+    "minPrice": "أدنى سعر",
+    "maxPrice": "أقصى سعر",
+    "bedrooms": "غرف النوم",
+    "min": "الأدنى",
+    "max": "الأقصى",
+    "area": "المساحة (م²)",
+    "minArea": "أدنى مساحة",
+    "maxArea": "أقصى مساحة",
+    "propertyType": "نوع العقار",
+    "amenities": "المرافق",
+    "amenityItems": {
+      "pool": "مسبح",
+      "garden": "حديقة",
+      "balcony": "شرفة",
+      "elevator": "مصعد",
+      "parking": "موقف سيارات",
+      "garage": "مرآب"
+    },
+    "energyRating": "التصنيف الطاقي",
+    "apply": "تطبيق عوامل التصفية"
+  },
+  "map": {
+    "listView": "قائمة",
+    "results": "{{count}} نتيجة"
+  },
+  "messaging": {
+    "inbox": {
+      "title": "الرسائل"
+    },
+    "chat": {
+      "title": "رسالة",
+      "replyButton": "رد"
+    }
+  },
+  "myListings": {
+    "header": {
+      "title": "إعلاناتي"
+    },
+    "authGate": {
+      "title": "تسجيل الدخول مطلوب"
+    },
+    "quota": {
+      "title": "نفدت الحصة",
+      "body": "لم يتبقَّ لديك أي أماكن لنشر إعلانات. اشترِ باقة لإنشاء المزيد من الإعلانات.",
+      "action": "شراء باقة",
+      "remaining": "{{free}} مجاني + {{paid}} مدفوع من الأماكن المتبقية"
+    },
+    "rejection": {
+      "title": "سبب الرفض",
+      "noReason": "لم يُقدَّم أي سبب."
+    },
+    "boosted": "مروَّج",
+    "boost": "ترويج",
+    "photoAlt": "صورة العقار",
+    "newButton": "+ جديد",
+    "createLabel": "إنشاء إعلان جديد",
+    "error": "تعذر تحميل إعلاناتك.",
+    "empty": {
+      "title": "لا توجد إعلانات بعد",
+      "subtitle": "أنشئ إعلانك الأول لبدء البيع أو التأجير.",
+      "createListing": "إنشاء إعلان"
+    },
+    "deleteAlert": {
+      "title": "حذف الإعلان",
+      "body": "هل أنت متأكد أنك تريد حذف \"{{title}}\"؟ لا يمكن التراجع عن هذا الإجراء."
+    }
   },
   "loans": {
-    "title": "",
-    "tmmBanner": "",
-    "adPlaceholder": "",
+    "title": "محاكي القروض",
+    "tmmBanner": "مرتبط بنسبة TMM {{tmm}}% (البنك المركزي التونسي · {{date}}) + هامش بنكي {{margin}}%",
+    "adPlaceholder": "مساحة إعلانية للبنك",
+    "propertyType": {
+      "title": "نوع العقار",
+      "new": "جديد (من باعث عقاري)",
+      "secondary": "السوق الثانوية"
+    },
+    "costs": {
+      "notary": "أتعاب الموثق",
+      "agency": "عمولة الوكالة العقارية",
+      "cpf": "معلوم الحفظ العقاري (CPF)",
+      "registration": "معلوم التسجيل + الضريبة التكميلية"
+    },
     "inputs": {
-      "price": "",
-      "downPayment": "",
-      "duration": "",
-      "yearsValue": "",
-      "interestRate": "",
-      "rateFormula": "",
-      "txCosts": "",
-      "txSubtitle": "",
-      "txMoreDetails": "",
-      "propType": "",
-      "propLand": "",
-      "propFlat": "",
-      "newPromoter": "",
-      "abroad": "",
-      "yes": "",
-      "no": "",
-      "registrationTax": "",
-      "notaryFee": "",
-      "agencyFee": "",
-      "txNote": ""
+      "price": "سعر العقار",
+      "downPayment": "التمويل الذاتي",
+      "duration": "المدة",
+      "yearsValue": "{{count}} سنة",
+      "interestRate": "نسبة الفائدة",
+      "rateFormula": "= TMM {{tmm}}% + {{margin}}%",
+      "txCosts": "مصاريف المعاملة",
+      "txSubtitle": "≈ {{amount}} {{currency}} على هذا السعر",
+      "txMoreDetails": "عرض تفاصيل المصاريف",
+      "txNote": "تُحتسب المصاريف تلقائياً حسب نوع العقار المحدد والسعر."
     },
     "results": {
-      "label": "",
-      "perMonth": "",
-      "principal": "",
-      "interest": "",
-      "txCosts": "",
-      "total": "",
-      "disclaimer": ""
+      "label": "القسط الشهري التقديري",
+      "perMonth": "{{currency}} / شهرياً",
+      "principal": "أصل القرض {{amount}} {{currency}}",
+      "interest": "الفوائد {{amount}} {{currency}}",
+      "txCosts": "مصاريف المعاملة {{amount}} {{currency}}",
+      "total": "التكلفة الإجمالية {{amount}} {{currency}} على مدى {{years}} سنة، شاملة مصاريف المعاملة",
+      "disclaimer": "هذا تقدير فقط — النسب والضرائب والمصاريف الفعلية تعتمد على البنك وعلى المعاملة."
     },
     "eligibility": {
-      "title": "",
-      "netIncome": "",
-      "otherLoans": "",
-      "debtRatio": "",
-      "ratioInfo": "",
-      "eligible": "",
-      "ineligible": ""
+      "title": "التحقق من الأهلية",
+      "netIncome": "الدخل الصافي",
+      "otherLoans": "أقساط شهرية لقروض أخرى",
+      "debtRatio": "نسبة المديونية",
+      "ratioInfo": "يجب أن تكون نسبة المديونية أقل من 40% ويُفضّل أن تكون أقل من 33%. يمكن تخفيضها عبر: خفض السعر، أو تمديد مدة القرض، أو زيادة التمويل الذاتي.",
+      "eligible": "مؤهل",
+      "ineligible": "غير مؤهل"
     },
     "save": {
-      "button": ""
+      "button": "حفظ المحاكاة"
     },
     "savedSims": {
-      "title": "",
-      "hint": "",
-      "empty": "",
-      "justNow": ""
+      "title": "عمليات المحاكاة المحفوظة",
+      "hint": "اسحب لليسار للحذف",
+      "empty": "لا توجد عمليات محاكاة محفوظة بعد — احفظ واحدة للمقارنة لاحقاً.",
+      "justNow": "حُفظت للتو"
+    }
+  },
+  "quota": {
+    "header": {
+      "title": "حصة الإعلانات"
+    },
+    "loading": "جار تحميل الحصة...",
+    "error": "تعذر تحميل الحصة. يرجى المحاولة مرة أخرى.",
+    "totalSlots": {
+      "heading": "إجمالي الأماكن المتاحة",
+      "subtext": "إعلانات يمكنك نشرها الآن"
+    },
+    "freeSlots": {
+      "heading": "الأماكن المجانية",
+      "remaining": "{{used}} / {{total}} متبقية",
+      "note": "{{used}} من {{total}} من الأماكن المجانية مستعملة"
+    },
+    "paidSlots": {
+      "heading": "الأماكن المدفوعة",
+      "remaining": "{{count}} متبقية",
+      "note": "تظهر هنا باقات الإعلانات المشتراة"
+    },
+    "cta": "شراء باقة إعلانات",
+    "lastUpdated": "آخر تحديث: {{date}}"
+  },
+  "listings": {
+    "create": {
+      "header": {
+        "title": "إنشاء إعلان"
+      },
+      "step1": {
+        "subtitle": "الخطوة 1 من 5 — معلومات أساسية",
+        "listingType": { "label": "نوع الإعلان" },
+        "propertyType": { "label": "نوع العقار", "error": "اختر نوع العقار" },
+        "title": { "label": "عنوان الإعلان", "error": "عنوان الإعلان مطلوب" },
+        "price": { "label": "السعر", "error": "يلزم إدخال سعر صالح" },
+        "next": "التالي: الموقع"
+      },
+      "step2": {
+        "subtitle": "الخطوة 2 من 5 — الموقع",
+        "locationTitle": "الموقع",
+        "useLocation": "استخدام موقعي الحالي",
+        "city": { "label": "المدينة", "error": "المدينة مطلوبة" },
+        "address": { "label": "العنوان", "error": "العنوان مطلوب" },
+        "zipCode": { "label": "الرمز البريدي" },
+        "addressVisibility": {
+          "label": "ظهور العنوان",
+          "exact": "العنوان الدقيق (يظهر على الخريطة)",
+          "approximate": "موقع تقريبي",
+          "cityOnly": "المدينة فقط"
+        },
+        "next": "التالي: تفاصيل العقار",
+        "locationError": "تعذر تحديد الموقع. يرجى الإدخال يدوياً.",
+        "locationDenied": "إذن الموقع مطلوب لاستخدام هذه الميزة."
+      },
+      "step3": {
+        "subtitle": "الخطوة 3 من 5 — المواصفات والمرافق",
+        "propertyDetails": "تفاصيل العقار",
+        "tabs": {
+          "specs": "المواصفات",
+          "amenities": "المرافق",
+          "description": "الوصف"
+        },
+        "specs": {
+          "area": "المساحة (م²)",
+          "lotSize": "مساحة الأرض (م²)",
+          "rooms": "عدد الغرف",
+          "bedrooms": "غرف النوم",
+          "bathrooms": "الحمّامات",
+          "floor": "الطابق",
+          "totalFloors": "عدد الطوابق",
+          "yearBuilt": "سنة البناء"
+        },
+        "amenities": {
+          "furnished": "مفروش",
+          "pool": "مسبح",
+          "garden": "حديقة",
+          "balcony": "شرفة",
+          "elevator": "مصعد",
+          "garageSpots": "أماكن المرآب",
+          "parkingSpots": "أماكن موقف السيارات",
+          "heatingSystem": "نظام التدفئة",
+          "airConditioning": "تكييف الهواء",
+          "kitchenType": "نوع المطبخ",
+          "energyRating": "التصنيف الطاقي"
+        },
+        "description": {
+          "label": "الوصف ({{count}}/5000)",
+          "placeholder": "صف العقار..."
+        },
+        "next": "التالي: الصور"
+      },
+      "step4": {
+        "photosTitle": "الصور",
+        "addPhotos": "إضافة صور",
+        "uploadSubtitle": "حتى {{max}} صورة. اضغط للاختيار.",
+        "selectedPhotos": "الصور المختارة — الصورة الأولى هي صورة الغلاف",
+        "coverBadge": "الغلاف",
+        "photoAlt": "الصورة {{index}}",
+        "removePhotoLabel": "إزالة الصورة {{index}}",
+        "next": "التالي: المراجعة",
+        "limitReached": "يمكنك تحميل {{max}} صورة كحد أقصى.",
+        "permissionDenied": "الوصول إلى مكتبة الوسائط مطلوب لاختيار الصور.",
+        "photoCount": "الخطوة 4 من 5 — الصور ({{count}}/{{max}})"
+      },
+      "step5": {
+        "subtitle": "الخطوة 5 من 5 — المراجعة والإرسال",
+        "reviewTitle": "المراجعة",
+        "sections": {
+          "basicInfo": "معلومات أساسية",
+          "location": "الموقع",
+          "propertyDetails": "تفاصيل العقار",
+          "photos": "الصور"
+        },
+        "fields": {
+          "title": "عنوان الإعلان",
+          "listingType": "نوع الإعلان",
+          "propertyType": "نوع العقار",
+          "price": "السعر",
+          "city": "المدينة",
+          "address": "العنوان",
+          "zipCode": "الرمز البريدي",
+          "visibility": "الظهور",
+          "area": "المساحة (م²)",
+          "bedrooms": "غرف النوم",
+          "bathrooms": "الحمّامات",
+          "floor": "الطابق",
+          "yearBuilt": "سنة البناء",
+          "furnished": "مفروش",
+          "heating": "التدفئة",
+          "kitchen": "المطبخ",
+          "energyRating": "التصنيف الطاقي"
+        },
+        "photos": {
+          "selected_zero": "لم يتم اختيار أي صورة",
+          "selected_one": "تم اختيار {{count}} صورة",
+          "selected_two": "تم اختيار صورتين",
+          "selected_few": "تم اختيار {{count}} صور",
+          "selected_many": "تم اختيار {{count}} صورة",
+          "selected_other": "تم اختيار {{count}} صورة",
+          "none": "لم تتم إضافة أي صور"
+        },
+        "editLink": "تعديل",
+        "yes": "نعم",
+        "no": "لا",
+        "submit": "نشر الإعلان",
+        "errors": { "title": "يرجى تصحيح هذه المشاكل:" },
+        "success": {
+          "title": "نجاح",
+          "body": "تم إرسال إعلانك للمراجعة!",
+          "viewMyListings": "عرض إعلاناتي"
+        },
+        "quota": {
+          "title": "نفدت حصة الإعلانات",
+          "body": "لقد استعملت جميع أماكن الإعلانات المجانية والمدفوعة. اشترِ باقة لمواصلة النشر.",
+          "action": "شراء باقة"
+        },
+        "error": "تعذر إنشاء الإعلان. يرجى المحاولة مرة أخرى."
+      }
+    },
+    "listingTypes": {
+      "sale": "للبيع",
+      "rent": "للإيجار",
+      "commercial": "تجاري",
+      "land": "أرض"
+    },
+    "propertyTypes": {
+      "apartment": "شقة",
+      "villa": "فيلا",
+      "house": "منزل",
+      "studio": "استوديو",
+      "land": "أرض",
+      "commercial": "تجاري",
+      "office": "مكتب",
+      "shop": "محل تجاري",
+      "warehouse": "مستودع",
+      "farmhouse": "منزل ريفي",
+      "chalet": "شاليه",
+      "penthouse": "بنتهاوس",
+      "duplex": "دوبلكس",
+      "townhouse": "منزل مدينة",
+      "building": "عمارة"
+    },
+    "heatingTypes": {
+      "central": "مركزي",
+      "individual": "فردي",
+      "electric": "كهربائي",
+      "gas": "غاز",
+      "fuel": "مازوت",
+      "heat_pump": "مضخة حرارية",
+      "solar": "طاقة شمسية",
+      "wood": "حطب",
+      "none": "بدون"
+    },
+    "acTypes": {
+      "split": "سبليت",
+      "central": "مركزي",
+      "portable": "متنقل",
+      "none": "بدون"
+    },
+    "kitchenTypes": {
+      "open": "مفتوح",
+      "closed": "مغلق",
+      "semi_open": "نصف مفتوح",
+      "american": "أمريكي"
+    },
+    "disclosureLevels": {
+      "exact": "العنوان الدقيق (يظهر على الخريطة)",
+      "approximate": "موقع تقريبي",
+      "city_only": "المدينة فقط"
+    }
+  },
+  "onboarding": {
+    "step1": {
+      "title": "من أين تريد أن تبدأ؟",
+      "subtitle": "أخبرنا عمّا تبحث عنه حتى نخصص تجربتك.",
+      "options": {
+        "buy": { "label": "شراء", "description": "اعثر على منزل أحلامك" },
+        "rent": { "label": "إيجار", "description": "اعثر على عقار للإيجار" },
+        "sell": { "label": "بيع", "description": "اعرض عقارك" },
+        "browse": { "label": "مجرد تصفح", "description": "أستكشف الخيارات" }
+      }
+    },
+    "step2": {
+      "title": "أين تبحث؟",
+      "subtitle": "اختر منطقة لتركيز بحثك.",
+      "searchPlaceholder": "اكتب منطقة أو مدينة…",
+      "useLocation": "استخدام موقعي الحالي",
+      "gettingLocation": "جارٍ تحديد الموقع…",
+      "locationDenied": "تم رفض إذن الموقع. يمكنك كتابة مدينة بدلاً من ذلك.",
+      "locationError": "تعذر الحصول على موقعك. يرجى كتابة مدينة.",
+      "noRegions": "لم يتم العثور على مناطق"
+    },
+    "step3": {
+      "title": "ما هي ميزانيتك؟",
+      "subtitle": "حدد نطاق سعر للعثور على عقارات مناسبة.",
+      "minPrice": "السعر الأدنى ({{currency}})",
+      "maxPrice": "السعر الأقصى ({{currency}})"
+    }
+  },
+  "agent": {
+    "register": {
+      "title": "كن وكيلاً عقارياً",
+      "benefits": {
+        "title": "مزايا الوكيل",
+        "body": "بصفتك وكيلاً، تحصل على لوحة تحكم كاملة، وتتبع العملاء المحتملين، وإحصائيات لكل إعلان، وإمكانية ربط ملفك الشخصي بوكالة عقارية."
+      },
+      "bio": {
+        "label": "نبذة تعريفية",
+        "placeholder": "عرّف المشترين والمستأجرين بنفسك..."
+      },
+      "footNote": "يمكن تحديد الانتماء إلى وكالة عقارية بعد التسجيل من ملفك الشخصي كوكيل.",
+      "submit": "التسجيل كوكيل",
+      "alreadyRegistered": {
+        "title": "مسجّل بالفعل",
+        "body": "لديك ملف وكيل بالفعل. جارٍ إعادة التوجيه..."
+      }
+    },
+    "dashboard": {
+      "title": "لوحة تحكم الوكيل",
+      "noProfile": {
+        "title": "لا يوجد ملف وكيل",
+        "body": "يجب أن تسجّل كوكيل للوصول إلى لوحة التحكم."
+      },
+      "stats": {
+        "listings": "الإعلانات",
+        "inquiries": "الطلبات",
+        "saves": "المحفوظات",
+        "views": "المشاهدات"
+      },
+      "sections": {
+        "myListings": "إعلاناتي",
+        "recentLeads": "عملاء محتملون جدد"
+      },
+      "empty": {
+        "listings": "لا توجد إعلانات بعد.",
+        "createFirst": "أنشئ إعلانك الأول",
+        "leads": "لا يوجد عملاء محتملون بعد."
+      },
+      "inquiriesCount": "{{count}} طلبات",
+      "savesCount": "{{count}} عمليات حفظ",
+      "registerAsAgent": "التسجيل كوكيل"
+    }
+  },
+  "agency": {
+    "create": {
+      "title": "إنشاء وكالة",
+      "fields": {
+        "name": { "label": "اسم الوكالة", "placeholder": "وكالتك العقارية" },
+        "logoUrl": { "label": "رابط الشعار", "placeholder": "https://example.com/logo.png" },
+        "description": { "label": "الوصف", "placeholder": "عرّف العملاء المحتملين بوكالتك…" },
+        "socialLinks": "روابط التواصل الاجتماعي",
+        "website": { "label": "الموقع الإلكتروني", "placeholder": "https://your-website.com" },
+        "facebook": { "label": "Facebook", "placeholder": "https://facebook.com/yourpage" },
+        "instagram": { "label": "Instagram", "placeholder": "https://instagram.com/youraccount" },
+        "twitter": { "label": "Twitter / X", "placeholder": "https://x.com/youraccount" }
+      },
+      "submit": "إنشاء الوكالة",
+      "validation": { "nameRequired": "اسم الوكالة مطلوب." },
+      "error": "تعذر إنشاء الوكالة. يرجى المحاولة مرة أخرى."
     }
   },
   "help": {
-    "title": "",
+    "title": "المساعدة والملاحظات",
     "contact": {
-      "title": "",
+      "title": "التواصل مع الدعم",
       "category": {
-        "label": "",
-        "bug": "",
-        "feature": "",
-        "question": "",
-        "other": ""
+        "label": "الفئة",
+        "bug": "الإبلاغ عن خلل",
+        "feature": "طلب ميزة",
+        "question": "سؤال",
+        "other": "أخرى"
       },
       "subject": {
-        "label": "",
-        "placeholder": ""
+        "label": "الموضوع",
+        "placeholder": "صف مشكلتك باختصار"
       },
       "message": {
-        "label": "",
-        "placeholder": ""
+        "label": "الرسالة",
+        "placeholder": "يرجى تقديم أكبر قدر ممكن من التفاصيل…"
       },
-      "submit": "",
-      "success": "",
-      "error": ""
+      "submit": "إرسال",
+      "success": "شكراً — سنرد عليك قريباً.",
+      "error": "تعذر الإرسال. حاول مرة أخرى لاحقاً."
     },
     "faq": {
-      "title": ""
+      "title": "الأسئلة الشائعة"
     }
   }
 }

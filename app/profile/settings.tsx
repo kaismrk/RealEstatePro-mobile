@@ -31,6 +31,7 @@ const APP_VERSION =
 const LANGUAGE_OPTIONS: Array<{ label: string; code: string }> = [
   { label: 'Français', code: 'fr' },
   { label: 'English', code: 'en' },
+  { label: 'العربية', code: 'ar' },
 ];
 
 const THEME_OPTIONS: Array<{ labelKey: string; mode: ThemeMode }> = [
