@@ -1,6 +1,8 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react-native';
 import TermsScreen from '@/app/profile/legal/terms';
+import { api } from '@/lib/api/client';
+import { markdownToHtml } from '@/components/legal/LegalDocScreen';
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
@@ -15,6 +17,26 @@ jest.mock('expo-router', () => ({
   },
 }));
 
+jest.mock('@/lib/api/client', () => ({
+  api: { get: jest.fn() },
+}));
+
+jest.mock('@/lib/theme', () => {
+  const { lightPalette } = jest.requireActual('@/constants/theme');
+  return {
+    useTheme: () => ({
+      palette: lightPalette,
+      mode: 'light',
+      setMode: jest.fn(),
+      isDark: false,
+    }),
+    ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
+    THEME_STORAGE_KEY: 'hovioo.theme.mode',
+  };
+});
+
+const mockGet = api.get as jest.Mock;
+
 // react-native-webview is auto-mocked via __mocks__/react-native-webview.js
 
 // ── Tests ──────────────────────────────────────────────────────────────────
@@ -22,6 +44,7 @@ jest.mock('expo-router', () => ({
 describe('TermsScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockGet.mockResolvedValue({ data: '# Terms\n\nSome terms body.' });
   });
 
   it('renders the "Terms of Use" title in the header', () => {
@@ -34,36 +57,55 @@ describe('TermsScreen', () => {
     expect(screen.getByLabelText('Go back')).toBeTruthy();
   });
 
-  it('renders the WebView with the correct Terms URL', () => {
+  it('fetches from the backend legal endpoint with lang + country params', async () => {
     render(<TermsScreen />);
-    expect(screen.getByTestId('webview-uri').props.children).toBe(
-      'https://admin.hovioo.com/terms'
-    );
+    await waitFor(() => expect(mockGet).toHaveBeenCalled());
+    const [path, config] = mockGet.mock.calls[0] as [string, { params: Record<string, string> }];
+    expect(path).toBe('/legal/terms');
+    // jest.setup.js forces i18n to 'en'; auth store default country is TN
+    expect(config.params['lang']).toBe('en');
+    expect(config.params['country']).toBe('TN');
   });
 
-  it('shows the WebView by default (no error state)', () => {
+  it('renders the fetched markdown as HTML in the WebView', async () => {
     render(<TermsScreen />);
-    expect(screen.getByTestId('webview-mock')).toBeTruthy();
+    const htmlEl = await screen.findByTestId('webview-html');
+    expect(String(htmlEl.props.children)).toContain('<h1>Terms</h1>');
+    expect(String(htmlEl.props.children)).toContain('<p>Some terms body.</p>');
   });
 
-  it('hides the WebView and shows fallback text after onError', () => {
-    const { getByTestId, queryByTestId, getByText } = render(<TermsScreen />);
-
-    // Simulate WebView error — find the WebView and fire its onError prop
-    const webviewEl = getByTestId('webview-mock');
-    // React Testing Library fires props via the component tree
-    // We reach into the rendered instance to call the onError prop
-    fireEvent(webviewEl, 'error');
-
-    // After error: WebView gone, fallback text present
-    expect(queryByTestId('webview-mock')).toBeNull();
-    expect(getByText(/Loading legal document/)).toBeTruthy();
-    expect(getByText(/ensure you are online/)).toBeTruthy();
+  it('shows fallback text when the fetch fails', async () => {
+    mockGet.mockRejectedValueOnce(new Error('network down'));
+    render(<TermsScreen />);
+    expect(await screen.findByText(/Loading legal document/)).toBeTruthy();
+    expect(screen.getByText(/ensure you are online/)).toBeTruthy();
+    expect(screen.queryByTestId('webview-mock')).toBeNull();
   });
 
   it('back button calls router.back() when stack is not empty', () => {
     render(<TermsScreen />);
     fireEvent.press(screen.getByLabelText('Go back'));
     expect(mockBack).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('markdownToHtml', () => {
+  it('converts headings, bold, lists and paragraphs', () => {
+    const html = markdownToHtml(
+      '# Title\n## Sub\nPlain **bold** text\n- item one\n- item two',
+    );
+    expect(html).toContain('<h1>Title</h1>');
+    expect(html).toContain('<h2>Sub</h2>');
+    expect(html).toContain('<p>Plain <strong>bold</strong> text</p>');
+    expect(html).toContain('<ul>');
+    expect(html).toContain('<li>item one</li>');
+    expect(html).toContain('<li>item two</li>');
+    expect(html).toContain('</ul>');
+  });
+
+  it('escapes raw HTML in the source markdown', () => {
+    const html = markdownToHtml('Hello <script>alert(1)</script>');
+    expect(html).not.toContain('<script>');
+    expect(html).toContain('&lt;script&gt;');
   });
 });

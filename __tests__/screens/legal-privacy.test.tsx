@@ -1,6 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react-native';
 import PrivacyScreen from '@/app/profile/legal/privacy';
+import { api } from '@/lib/api/client';
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
@@ -15,6 +16,26 @@ jest.mock('expo-router', () => ({
   },
 }));
 
+jest.mock('@/lib/api/client', () => ({
+  api: { get: jest.fn() },
+}));
+
+jest.mock('@/lib/theme', () => {
+  const { lightPalette } = jest.requireActual('@/constants/theme');
+  return {
+    useTheme: () => ({
+      palette: lightPalette,
+      mode: 'light',
+      setMode: jest.fn(),
+      isDark: false,
+    }),
+    ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
+    THEME_STORAGE_KEY: 'hovioo.theme.mode',
+  };
+});
+
+const mockGet = api.get as jest.Mock;
+
 // react-native-webview is auto-mocked via __mocks__/react-native-webview.js
 
 // ── Tests ──────────────────────────────────────────────────────────────────
@@ -22,6 +43,7 @@ jest.mock('expo-router', () => ({
 describe('PrivacyScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockGet.mockResolvedValue({ data: '# Privacy\n\nYour data matters.' });
   });
 
   it('renders the "Privacy Policy" title in the header', () => {
@@ -34,29 +56,27 @@ describe('PrivacyScreen', () => {
     expect(screen.getByLabelText('Go back')).toBeTruthy();
   });
 
-  it('renders the WebView with the correct Privacy URL', () => {
+  it('fetches from the backend legal endpoint with lang + country params', async () => {
     render(<PrivacyScreen />);
-    expect(screen.getByTestId('webview-uri').props.children).toBe(
-      'https://admin.hovioo.com/privacy'
-    );
+    await waitFor(() => expect(mockGet).toHaveBeenCalled());
+    const [path, config] = mockGet.mock.calls[0] as [string, { params: Record<string, string> }];
+    expect(path).toBe('/legal/privacy');
+    expect(config.params['lang']).toBe('en');
+    expect(config.params['country']).toBe('TN');
   });
 
-  it('shows the WebView by default (no error state)', () => {
+  it('renders the fetched markdown as HTML in the WebView', async () => {
     render(<PrivacyScreen />);
-    expect(screen.getByTestId('webview-mock')).toBeTruthy();
+    const htmlEl = await screen.findByTestId('webview-html');
+    expect(String(htmlEl.props.children)).toContain('<h1>Privacy</h1>');
+    expect(String(htmlEl.props.children)).toContain('<p>Your data matters.</p>');
   });
 
-  it('hides the WebView and shows fallback text after onError', () => {
-    const { getByTestId, queryByTestId, getByText } = render(<PrivacyScreen />);
-
-    // Simulate WebView error
-    const webviewEl = getByTestId('webview-mock');
-    fireEvent(webviewEl, 'error');
-
-    // After error: WebView gone, fallback text present
-    expect(queryByTestId('webview-mock')).toBeNull();
-    expect(getByText(/Loading legal document/)).toBeTruthy();
-    expect(getByText(/ensure you are online/)).toBeTruthy();
+  it('shows fallback text when the fetch fails', async () => {
+    mockGet.mockRejectedValueOnce(new Error('network down'));
+    render(<PrivacyScreen />);
+    expect(await screen.findByText(/Loading legal document/)).toBeTruthy();
+    expect(screen.queryByTestId('webview-mock')).toBeNull();
   });
 
   it('back button calls router.back() when stack is not empty', () => {

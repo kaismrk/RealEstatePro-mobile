@@ -12,17 +12,15 @@ const { View, Text } = require('react-native');
  *   the injected callback.
  */
 const WebView = React.forwardRef(function MockWebView(props, _ref) {
-  const { source, testID, onError, onLoad } = props;
+  const { source, testID } = props;
   const uri = (source && source.uri) ? source.uri : '';
+  const html = (source && source.html) ? source.html : '';
 
   return React.createElement(
     View,
     { testID: testID || 'webview-mock' },
-    React.createElement(
-      Text,
-      { testID: 'webview-uri' },
-      uri
-    )
+    React.createElement(Text, { testID: 'webview-uri' }, uri),
+    React.createElement(Text, { testID: 'webview-html' }, html)
   );
 });
 
