@@ -24,6 +24,8 @@ module.exports = {
     '^@gorhom/bottom-sheet$': '<rootDir>/__mocks__/gorhom-bottom-sheet-mock.js',
     // react-native-webview needs a JS mock in the test environment
     '^react-native-webview$': '<rootDir>/__mocks__/react-native-webview.js',
+    // expo-video needs a JS mock in the test environment (native module)
+    '^expo-video$': '<rootDir>/__mocks__/expo-video.js',
     // expo-localization needs a JS mock in the test environment
     '^expo-localization$': '<rootDir>/__mocks__/expo-localization.js',
     // Social auth — these modules require native code; use manual mocks in tests

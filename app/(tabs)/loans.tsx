@@ -31,6 +31,7 @@ import {
   View,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useLocalSearchParams } from 'expo-router';
 import { ChevronRight, Info, Trash2 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -548,6 +549,22 @@ export default function LoansScreen() {
   const { palette } = useTheme();
   const config: LoanCountryConfig = useLoanConfig();
 
+  // ── Route-param prefill (internal bank-ad CTAs: /loans?rate=7.9&bank=BIAT) ──
+  const searchParams = useLocalSearchParams<{ rate?: string; bank?: string }>();
+  const rawRate = Array.isArray(searchParams.rate) ? searchParams.rate[0] : searchParams.rate;
+  const rawBank = Array.isArray(searchParams.bank) ? searchParams.bank[0] : searchParams.bank;
+  const prefillRate = useMemo(() => {
+    const v = rawRate != null ? parseFloat(rawRate) : NaN;
+    if (Number.isNaN(v) || v <= 0) return null;
+    // Clamp to the country's configured rate bounds
+    return Math.min(config.maxInterestRate, Math.max(config.minInterestRate, +v.toFixed(2)));
+  }, [rawRate, config.minInterestRate, config.maxInterestRate]);
+  const prefillBank =
+    typeof rawBank === 'string' && rawBank.trim() !== '' ? rawBank.trim() : null;
+  // Read inside the one-shot hydration effect without re-running it
+  const prefillRateRef = useRef(prefillRate);
+  prefillRateRef.current = prefillRate;
+
   // ── Local state ─────────────────────────────────────────────────────────────
   const [hydrated, setHydrated] = useState(false);
   const [price, setPrice] = useState(250_000);
@@ -622,7 +639,10 @@ export default function LoansScreen() {
         if (typeof stored.price === 'number') setPrice(stored.price);
         if (typeof stored.downPct === 'number') setDownPct(stored.downPct);
         if (typeof stored.years === 'number') setYears(stored.years);
-        if (stored.rateOverride !== undefined) setRateOverride(stored.rateOverride);
+        // A bank-ad rate param takes precedence over the persisted override
+        if (stored.rateOverride !== undefined && prefillRateRef.current == null) {
+          setRateOverride(stored.rateOverride);
+        }
         if (typeof stored.netIncome === 'number') setNetIncome(stored.netIncome);
         if (typeof stored.otherLoans === 'number') setOtherLoans(stored.otherLoans);
         if (stored.marketType === 'new' || stored.marketType === 'secondary') {
@@ -638,6 +658,11 @@ export default function LoansScreen() {
     // Run once on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ── Apply bank-ad rate prefill ─────────────────────────────────────────────
+  useEffect(() => {
+    if (prefillRate != null) setRateOverride(prefillRate);
+  }, [prefillRate]);
 
   // ── SecureStore persistence ────────────────────────────────────────────────
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -819,6 +844,16 @@ export default function LoansScreen() {
                   margin: fmt2(bankMarginDisplay),
                 })}
               </Text>
+              {prefillBank != null && prefillRate != null && effectiveRate === prefillRate && (
+                <View
+                  style={[s.prefillChip, { backgroundColor: palette.primaryLight }]}
+                  testID="rate-prefill-chip"
+                >
+                  <Text style={[s.prefillChipText, { color: palette.primary }]}>
+                    {t('loans.prefill.rateFrom', { bank: prefillBank })}
+                  </Text>
+                </View>
+              )}
             </View>
             <View style={s.rateStepper}>
               <TouchableOpacity
@@ -1306,6 +1341,17 @@ function makeStyles(palette: Palette) {
     rateFormula: {
       fontSize: 11.5,
       color: palette.textTertiary,
+    },
+    prefillChip: {
+      alignSelf: 'flex-start',
+      marginTop: 4,
+      paddingHorizontal: 8,
+      paddingVertical: 3,
+      borderRadius: 999,
+    },
+    prefillChipText: {
+      fontSize: 11,
+      fontWeight: fontWeight.semibold,
     },
     rateStepper: {
       flexDirection: 'row',

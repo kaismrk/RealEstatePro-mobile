@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,14 +8,19 @@ import {
   SafeAreaView,
   StyleSheet,
   type ListRenderItemInfo,
+  type ViewToken,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Home } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { useProperties } from '@/hooks/useProperties';
+import { useAds } from '@/hooks/useAds';
+import { interleave, type FeedItem } from '@/lib/ads/interleave';
+import { trackImpression } from '@/lib/ads/tracking';
 import { useSearchStore, type PropertyFilters } from '@/lib/stores/search.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { PropertyCard } from '@/components/property/PropertyCard';
+import { AdCard } from '@/components/ads/AdCard';
 import { PropertyCardSkeleton } from '@/components/property/PropertyCardSkeleton';
 import { SearchBar } from '@/components/search/SearchBar';
 import { SortPicker } from '@/components/search/SortPicker';
@@ -47,6 +52,16 @@ const FILTER_LABELS: Partial<Record<keyof PropertyFilters, (v: unknown) => strin
   q: (v) => `"${String(v)}"`,
 };
 
+type SearchFeedItem = FeedItem<PropertySchema>;
+
+/** Stable key for both feed item kinds (ads can repeat when cycling). */
+function feedItemKey(item: SearchFeedItem, index: number): string {
+  return item.kind === 'ad' ? `ad-${item.ad.id}-${index}` : String(item.item.id);
+}
+
+// ≥50% visible for ≥1 s = a viewable impression (and drives video play/pause)
+const AD_VIEWABILITY_CONFIG = { itemVisiblePercentThreshold: 50, minimumViewTime: 1000 };
+
 export default function SearchScreen() {
   const { t } = useTranslation();
   const filters    = useSearchStore((s) => s.filters);
@@ -57,8 +72,36 @@ export default function SearchScreen() {
 
   const { data, isLoading, isFetchingNextPage, isRefetching, fetchNextPage, hasNextPage, refetch } =
     useProperties();
+  // Ads are independent + best-effort: useAds never errors (falls back to
+  // empty ads + default settings), so the property list is never blocked.
+  const { data: adsData } = useAds();
 
-  const properties = data?.pages.flatMap((p) => p.items) ?? [];
+  const properties = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
+  const feed = useMemo(
+    () => interleave(properties, adsData?.ads ?? [], adsData?.settings),
+    [properties, adsData]
+  );
+
+  // Viewability → ad impressions (deduped per session) + video play/pause.
+  // Both refs are stable across renders — FlatList requires this.
+  const [visibleAdKeys, setVisibleAdKeys] = useState<string[]>([]);
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      const adKeys: string[] = [];
+      for (const token of viewableItems) {
+        const fi = token.item as SearchFeedItem | null;
+        if (fi != null && typeof fi === 'object' && fi.kind === 'ad') {
+          if (token.key != null) adKeys.push(String(token.key));
+          trackImpression(fi.ad.id);
+        }
+      }
+      setVisibleAdKeys((prev) =>
+        prev.length === adKeys.length && prev.every((k, i) => k === adKeys[i]) ? prev : adKeys
+      );
+    }
+  ).current;
+  const viewabilityConfig = useRef(AD_VIEWABILITY_CONFIG).current;
+
   const activeFilters = (Object.entries(filters) as [keyof PropertyFilters, unknown][]).filter(
     ([, v]) => v != null && v !== '' && v !== false
   );
@@ -121,10 +164,18 @@ export default function SearchScreen() {
           scrollEnabled={false}
         />
       ) : (
-        <FlatList<PropertySchema>
-          data={properties}
-          renderItem={({ item }: ListRenderItemInfo<PropertySchema>) => <PropertyCard property={item} />}
-          keyExtractor={(item) => String(item.id)}
+        <FlatList<SearchFeedItem>
+          data={feed}
+          renderItem={({ item, index }: ListRenderItemInfo<SearchFeedItem>) =>
+            item.kind === 'ad' ? (
+              <AdCard ad={item.ad} isVisible={visibleAdKeys.includes(feedItemKey(item, index))} />
+            ) : (
+              <PropertyCard property={item.item} />
+            )
+          }
+          keyExtractor={feedItemKey}
+          viewabilityConfig={viewabilityConfig}
+          onViewableItemsChanged={onViewableItemsChanged}
           onEndReachedThreshold={0.5}
           onEndReached={handleEndReached}
           ListHeaderComponent={<SortPicker />}

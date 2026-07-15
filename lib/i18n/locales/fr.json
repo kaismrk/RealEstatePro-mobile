@@ -320,6 +320,9 @@
     "mapButton": "Carte",
     "saveSearchLabel": "Sauvegarder la recherche",
     "mapViewLabel": "Vue carte",
+    "ad": {
+      "sponsored": "Sponsorisé"
+    },
     "empty": {
       "title": "Aucun bien trouvé",
       "subtitle": "Essayez d'ajuster vos filtres"
@@ -399,6 +402,9 @@
     "title": "Simulateur de prêt",
     "tmmBanner": "Indexé sur le TMM {{tmm}}% (BCT · {{date}}) + {{margin}}% marge bancaire",
     "adPlaceholder": "Espace publicitaire banque",
+    "prefill": {
+      "rateFrom": "Taux {{bank}}"
+    },
     "propertyType": {
       "title": "Type de bien",
       "new": "Neuf (promoteur)",

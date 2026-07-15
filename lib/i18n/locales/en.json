@@ -320,6 +320,9 @@
     "mapButton": "Map",
     "saveSearchLabel": "Save search",
     "mapViewLabel": "Map view",
+    "ad": {
+      "sponsored": "Sponsored"
+    },
     "empty": {
       "title": "No properties found",
       "subtitle": "Try adjusting your filters"
@@ -399,6 +402,9 @@
     "title": "Loan Simulator",
     "tmmBanner": "Indexed on TMM {{tmm}}% (BCT · {{date}}) + {{margin}}% bank margin",
     "adPlaceholder": "Bank ad placeholder",
+    "prefill": {
+      "rateFrom": "Rate from {{bank}}"
+    },
     "propertyType": {
       "title": "Property type",
       "new": "New (from developer)",

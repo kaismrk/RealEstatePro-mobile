@@ -16,6 +16,13 @@ import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+// ── expo-router mock (route params for the bank-ad prefill) ────────────────
+let mockSearchParams: Record<string, string> = {};
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+  useLocalSearchParams: () => mockSearchParams,
+}));
+
 // ── expo-linear-gradient mock (no native module in Jest) ───────────────────
 jest.mock('expo-linear-gradient', () => {
   const React = require('react');
@@ -127,6 +134,7 @@ describe('LoansScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockConfig = mockTNConfig;
+    mockSearchParams = {};
   });
 
   // Test 1 — renders without crash, shows title
@@ -182,6 +190,36 @@ describe('LoansScreen', () => {
   it('renders the debt ratio display', () => {
     renderLoans();
     expect(screen.getByTestId('debt-ratio')).toBeTruthy();
+  });
+
+  // ── Bank-ad prefill (?rate=&bank= route params from internal ad CTAs) ─────
+
+  it('prefills the interest rate and shows the bank chip when params are present', () => {
+    mockSearchParams = { rate: '7.9', bank: 'BIAT' };
+    renderLoans();
+    expect(screen.getByTestId('rate-value')).toHaveTextContent('7.90%');
+    expect(screen.getByTestId('rate-prefill-chip')).toBeTruthy();
+    expect(screen.getByText('Rate from BIAT')).toBeTruthy();
+  });
+
+  it('keeps the config default rate and shows no chip without params', () => {
+    renderLoans();
+    expect(screen.getByTestId('rate-value')).toHaveTextContent('8.50%');
+    expect(screen.queryByTestId('rate-prefill-chip')).toBeNull();
+  });
+
+  it('clamps an out-of-range rate param to the config bounds', () => {
+    mockSearchParams = { rate: '25', bank: 'BIAT' };
+    renderLoans();
+    // maxInterestRate is 12.0 in the TN mock config
+    expect(screen.getByTestId('rate-value')).toHaveTextContent('12.00%');
+  });
+
+  it('ignores a malformed rate param (no chip, default rate)', () => {
+    mockSearchParams = { rate: 'abc', bank: 'BIAT' };
+    renderLoans();
+    expect(screen.getByTestId('rate-value')).toHaveTextContent('8.50%');
+    expect(screen.queryByTestId('rate-prefill-chip')).toBeNull();
   });
 });
 

@@ -320,6 +320,9 @@
     "mapButton": "الخريطة",
     "saveSearchLabel": "حفظ البحث",
     "mapViewLabel": "عرض الخريطة",
+    "ad": {
+      "sponsored": "إعلان مُموَّل"
+    },
     "empty": {
       "title": "لم يتم العثور على عقارات",
       "subtitle": "جرّب تعديل عوامل التصفية"
@@ -399,6 +402,9 @@
     "title": "محاكي القروض",
     "tmmBanner": "مرتبط بنسبة TMM {{tmm}}% (البنك المركزي التونسي · {{date}}) + هامش بنكي {{margin}}%",
     "adPlaceholder": "مساحة إعلانية للبنك",
+    "prefill": {
+      "rateFrom": "نسبة {{bank}}"
+    },
     "propertyType": {
       "title": "نوع العقار",
       "new": "جديد (من باعث عقاري)",
