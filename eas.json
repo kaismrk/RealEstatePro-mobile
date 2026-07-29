@@ -25,7 +25,10 @@
       },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://api.tn.hovioo.com/api/v1",
-        "EXPO_PUBLIC_DEFAULT_COUNTRY": "TN"
+        "EXPO_PUBLIC_DEFAULT_COUNTRY": "TN",
+        "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "22809342323-8m9hf9436t848lco2ci3dj68986a4gie.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "22809342323-trvdsn87g0hgjb189ths6ia8amrnnrus.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "22809342323-pcqe2vuo9msaia72el2equij8sg7t5vf.apps.googleusercontent.com"
       }
     },
     "production": {
@@ -38,7 +41,10 @@
       },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://api.tn.hovioo.com/api/v1",
-        "EXPO_PUBLIC_DEFAULT_COUNTRY": "TN"
+        "EXPO_PUBLIC_DEFAULT_COUNTRY": "TN",
+        "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "22809342323-8m9hf9436t848lco2ci3dj68986a4gie.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "22809342323-trvdsn87g0hgjb189ths6ia8amrnnrus.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "22809342323-pcqe2vuo9msaia72el2equij8sg7t5vf.apps.googleusercontent.com"
       }
     }
   },
