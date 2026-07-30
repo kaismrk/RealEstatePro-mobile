@@ -38,9 +38,13 @@ export class AppErrorBoundary extends Component<Props, State> {
           <Text style={styles.subtitle}>
             An unexpected error occurred. Please try again.
           </Text>
-          {__DEV__ && this.state.error ? (
-            <Text style={styles.devError}>
-              {this.state.error.message}
+          {this.state.error ? (
+            <Text style={styles.devError} numberOfLines={8}>
+              {/* Shown in release too: on a pre-launch product, a user
+                  screenshot of this text is a remote diagnosis. */}
+              {this.state.error.name}: {this.state.error.message}
+              {'\n'}
+              {(this.state.error.stack ?? '').split('\n').slice(1, 4).join('\n')}
             </Text>
           ) : null}
           <TouchableOpacity
