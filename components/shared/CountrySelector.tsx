@@ -29,7 +29,6 @@ export function CountrySelector({ selectedCode, onSelect }: CountrySelectorProps
   const { data: countries, isLoading } = useCountries();
 
   const displayCode = selectedCode ?? '??';
-  const flag = selectedCode ? countryCodeToFlag(selectedCode) : '🌐';
 
   function handleSelect(code: string) {
     onSelect(code);
@@ -62,7 +61,6 @@ export function CountrySelector({ selectedCode, onSelect }: CountrySelectorProps
         disabled={isLoading}
         accessibilityLabel="Select country"
       >
-        <Text style={styles.triggerFlag}>{flag}</Text>
         <Text style={styles.triggerCode}>{displayCode}</Text>
       </TouchableOpacity>
 
@@ -89,7 +87,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.neutral100,
     borderRadius: radius.sm,
   },
-  triggerFlag: { fontSize: 18, marginRight: 4 },
   triggerCode: { fontSize: 14, fontWeight: fontWeight.semibold, color: colors.textPrimary },
   sheetContent: { flex: 1 },
   sheetTitle: {
